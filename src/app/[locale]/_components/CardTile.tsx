@@ -13,6 +13,9 @@ import { Button } from '@/components/Button.tsx'
  */
 export type Owned = number | undefined
 
+/** The game never allows more than two copies of a name in a deck. */
+const MAX_COPIES = 2
+
 /** Ownership cycle: complete -> partial -> none -> complete. */
 export function cycleOwned (current: Owned, max: number): number {
   if (current === undefined || current >= max) return max - 1 >= 0 ? max - 1 : 0
@@ -31,6 +34,27 @@ export function cycleOwned (current: Owned, max: number): number {
  * A hole is dashed and neutral, never red: a copy you have not got yet is an
  * absence, not an error.
  */
+/**
+ * One slot per copy the deck asks for, filled when you own it, laid over the
+ * card itself.
+ *
+ * The pattern is the one MTG Arena uses for owned styles — filled pips rather
+ * than a fraction — and it sits on the art rather than below it so a dense grid
+ * does not pay height for every card. The strip goes at the bottom because the
+ * top of a Pokémon card carries the name and HP, which is how you identify it;
+ * the bottom is flavour text.
+ *
+ * A gradient behind the slots keeps them legible over any artwork, which for
+ * this game ranges from near-white to near-black.
+ *
+ * There are always two slots, the game's maximum, even when the deck only asks
+ * for one. What you own is global: mark a single copy on a deck that needs one
+ * and a deck that needs two would read it as all you have. The slot beyond what
+ * this deck needs is drawn quieter — it is yours, it just is not required here.
+ *
+ * These render as siblings of the card button, not inside it: a button nested
+ * in a button is invalid HTML and swallows its own clicks.
+ */
 export function CopySlots ({
   owned,
   needed,
@@ -46,29 +70,38 @@ export function CopySlots ({
   const have = owned ?? needed
 
   return (
-    <div className='flex items-center justify-center gap-1'>
-      {Array.from({ length: needed }, (_, index) => {
-        const filled = index < have
-        return (
-          <Pressable
-            key={index}
-            // Clicking a filled slot drops to just before it; clicking a hole
-            // fills up to it. Either way one click lands on the intended number.
-            onClick={() => onSet(filled ? index : index + 1)}
-            aria-label={t('copySlot', {
-              name: cardName,
-              index: index + 1,
-              total: needed,
-              owned: filled ? 'yes' : 'no'
-            })}
-            className={`h-2 flex-1 rounded-chip transition-colors duration-150 ${
-              filled
-                ? 'bg-valid hover:bg-valid/80'
-                : 'border border-dashed border-line-control hover:border-ink-low'
-            }`}
-          />
-        )
-      })}
+    <div className='pointer-events-none absolute inset-x-0 bottom-0 rounded-b-surface bg-gradient-to-t from-base/95 via-base/70 to-transparent p-1 pt-4'>
+      <div className='pointer-events-auto flex items-center gap-1'>
+        {Array.from({ length: MAX_COPIES }, (_, index) => {
+          const filled = index < have
+          const required = index < needed
+          return (
+            <Pressable
+              key={index}
+              // Clicking a filled slot drops to just before it; clicking a hole
+              // fills up to it. Either way one click lands on the right number.
+              onClick={() => onSet(filled ? index : index + 1)}
+              aria-label={t('copySlot', {
+                name: cardName,
+                index: index + 1,
+                total: needed,
+                owned: filled ? 'yes' : 'no'
+              })}
+              className={`h-1.5 rounded-chip border transition-colors duration-150 ${
+                required ? 'flex-1' : 'w-3'
+              } ${
+                filled
+                  ? required
+                    ? 'border-valid bg-valid hover:bg-valid/80'
+                    : 'border-valid/40 bg-valid/40 hover:bg-valid/60'
+                  : required
+                    ? 'border-dashed border-ink-mid bg-base/60 hover:border-ink-high'
+                    : 'border-dashed border-ink-low/50 bg-base/40 hover:border-ink-mid'
+              }`}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -154,10 +187,12 @@ export function DeckCardTile ({
           <CardImage
             card={card}
             className={`transition-all duration-150 ${
-              short ? 'opacity-50 saturate-50 ring-1 ring-invalid' : 'group-hover:brightness-110'
+              short ? 'opacity-50 saturate-50' : 'group-hover:brightness-110'
             }`}
           />
         </Pressable>
+
+        <CopySlots owned={owned} needed={copies} onSet={onSetOwned} cardName={card.name} />
 
         <div className='absolute left-1 top-1 flex items-center gap-px rounded-chip bg-base/85 opacity-0 backdrop-blur transition-opacity duration-150 focus-within:opacity-100 group-hover:opacity-100'>
           <Button variant='ghost' onClick={() => onCopies(copies - 1)} aria-label={t('removeCopy', { name: card.name })} className='px-1 py-1'>
@@ -178,7 +213,6 @@ export function DeckCardTile ({
         </Pressable>
       </div>
 
-      <CopySlots owned={owned} needed={copies} onSet={onSetOwned} cardName={card.name} />
     </div>
   )
 }
