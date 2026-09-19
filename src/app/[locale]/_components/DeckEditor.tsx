@@ -7,9 +7,11 @@ import { TextInput } from '@/components/Field.tsx'
 import { ConfirmDialog } from '@/components/Dialog.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Badge } from '@/components/Indicators.tsx'
+import { Notice, NoticeList, type NoticeTone } from '@/components/Notice.tsx'
 import { DeckCardTile, cycleOwned } from './CardTile.tsx'
 import { CardImage } from './CardImage.tsx'
 import { PackRanking } from './PackRanking.tsx'
+import { EvolutionLine } from './EvolutionLine.tsx'
 import { actions } from '@/lib/store.ts'
 import { useStore } from './useStore.ts'
 import { DECK_SIZE, deckSize, validateDeck, type DeckIssue } from '@/lib/deckRules.ts'
@@ -93,7 +95,13 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
         <div className='flex flex-col gap-5'>
           <CardSearch deck={deck} onAdd={add} />
 
-          {gaps.length > 0 && <LineGaps deck={deck} onAdd={add} />}
+          {gaps.length > 0 && (
+            <NoticeList>
+              {gaps.map((gap) => (
+                <EvolutionLine key={gap.missingName} gap={gap} onAdd={add} />
+              ))}
+            </NoticeList>
+          )}
 
           {groups.map((group) => (
             <section key={group.id}>
@@ -123,9 +131,9 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
 
         <aside className='flex flex-col gap-4 lg:sticky lg:top-20 lg:self-start'>
           {issues.length > 0 && (
-            <ul className='flex flex-col gap-1.5 border border-line bg-raised p-3'>
+            <NoticeList>
               {issues.map((issue, index) => <IssueRow key={index} issue={issue} />)}
-            </ul>
+            </NoticeList>
           )}
           <PackRanking analysis={analysis} />
         </aside>
@@ -228,43 +236,6 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
   )
 }
 
-/**
- * An evolution with no pre-evolution. The validator already reports it; this
- * makes it fixable in one click, which is the difference between a warning and
- * a tool.
- */
-function LineGaps ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void }) {
-  const t = useTranslations('editor')
-  const gaps = lineGaps(deck)
-
-  return (
-    <section className='flex flex-col gap-2 border border-warn/40 bg-warn/5 p-3'>
-      {gaps.map((gap) => (
-        <div key={gap.missingName} className='flex flex-wrap items-center gap-x-3 gap-y-2'>
-          <div className='min-w-0 flex-1'>
-            <p className='text-meta text-ink-high'>
-              {t('lineGapTitle', { name: gap.needs.name, from: gap.missingName })}
-            </p>
-            <p className='text-label text-ink-mid'>{t('lineGapBody')}</p>
-          </div>
-          <div className='flex gap-1.5'>
-            {gap.candidates.map((candidate) => (
-              <Pressable
-                key={candidate.id}
-                onClick={() => onAdd(candidate)}
-                aria-label={t('addOne', { name: candidate.name })}
-                className='w-12 transition-transform duration-150 hover:scale-105'
-              >
-                <CardImage card={candidate} />
-              </Pressable>
-            ))}
-          </div>
-        </div>
-      ))}
-    </section>
-  )
-}
-
 /** Slots are drawn, not counted: six placeholders are read, "14/20" is worked out. */
 function EmptySlots ({ remaining }: { remaining: number }) {
   const t = useTranslations('editor')
@@ -294,8 +265,8 @@ function EmptySlots ({ remaining }: { remaining: number }) {
 /** Issues arrive as codes with parameters: the domain does not know the language. */
 function IssueRow ({ issue }: { issue: DeckIssue }) {
   const t = useTranslations('issues')
-  const tone =
-    issue.level === 'error' ? 'text-invalid' : issue.level === 'warning' ? 'text-warn' : 'text-ink-low'
+  const tone: NoticeTone =
+    issue.level === 'error' ? 'error' : issue.level === 'warning' ? 'warning' : 'info'
 
   const message = (): string => {
     switch (issue.code) {
@@ -313,10 +284,5 @@ function IssueRow ({ issue }: { issue: DeckIssue }) {
     }
   }
 
-  return (
-    <li className={`flex gap-1.5 text-label leading-relaxed ${tone}`}>
-      {issue.level !== 'info' && <Icon name='warn' size={12} className='mt-px shrink-0' />}
-      {message()}
-    </li>
-  )
+  return <Notice tone={tone}>{message()}</Notice>
 }

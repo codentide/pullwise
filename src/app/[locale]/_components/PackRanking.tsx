@@ -2,6 +2,7 @@ import { useFormatter, useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
+import { Notice } from '@/components/Notice.tsx'
 import { packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 
@@ -34,11 +35,8 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
 
   if (missing.length === 0) {
     return (
-      <div className='border border-line bg-raised p-4'>
-        <p className='flex items-center gap-2 text-meta text-valid'>
-          <Icon name='check' size={16} />
-          {t('nothingMissing')}
-        </p>
+      <div className='flex flex-col gap-3'>
+        <Notice tone='success'>{t('nothingMissing')}</Notice>
         {unobtainable.length > 0 && <Unobtainable analysis={analysis} />}
       </div>
     )

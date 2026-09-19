@@ -50,6 +50,15 @@ export function groupDeck (deck: Deck): DeckGroup[] {
   return GROUP_ORDER.map((id) => buckets.get(id)!).filter((group) => group.entries.length > 0)
 }
 
+/** One link in an evolution chain: either a card in the deck, or a hole. */
+export interface ChainLink {
+  name: string
+  /** The printing in the deck, when there is one. */
+  inDeck?: Card
+  /** Printings that would fill it, cheapest first. Only on a hole. */
+  candidates?: Card[]
+}
+
 export interface LineGap {
   /** The evolution that is stranded. */
   needs: Card
@@ -57,6 +66,8 @@ export interface LineGap {
   missingName: string
   /** Printings of it that could fill the gap, cheapest rarity first. */
   candidates: Card[]
+  /** The whole line, holes included, basic first. */
+  chain: ChainLink[]
 }
 
 const RARITY_COST = ['C', 'U', 'R', 'RR', 'AR', 'SR', 'SAR', 'IM', 'S', 'SSR', 'UR']
@@ -82,10 +93,43 @@ export function lineGaps (deck: Deck): LineGap[] {
       .sort((a, b) => RARITY_COST.indexOf(a.rarity) - RARITY_COST.indexOf(b.rarity))
       .slice(0, 3)
 
-    gaps.push({ needs: card, missingName: from, candidates })
+    gaps.push({ needs: card, missingName: from, candidates, chain: chainFor(card, entries) })
   }
 
   return gaps
+}
+
+/**
+ * The evolution chain behind a card, from the basic upward, marking which links
+ * the deck has and which are holes.
+ *
+ * Drawing the chain says what a sentence has to explain: a gap in a row of cards
+ * is read as a gap, not parsed as one.
+ */
+function chainFor (card: Card, entries: Array<{ card: Card }>): ChainLink[] {
+  const byName = new Map(entries.map((entry) => [entry.card.name, entry.card]))
+  const chain: ChainLink[] = []
+  const seen = new Set<string>()
+
+  // Walk down from the card towards the basic, one name at a time. Each name
+  // becomes exactly one link, whether the deck has it or not.
+  let name: string | undefined = card.name
+  while (name !== undefined && !seen.has(name)) {
+    seen.add(name)
+
+    const owned = byName.get(name)
+    const options: Card[] = owned != null
+      ? []
+      : (cardsByName.get(normalizeName(name)) ?? [])
+          .slice()
+          .sort((a, b) => RARITY_COST.indexOf(a.rarity) - RARITY_COST.indexOf(b.rarity))
+          .slice(0, 3)
+
+    chain.unshift(owned != null ? { name, inDeck: owned } : { name, candidates: options })
+    name = (owned ?? options[0])?.evolvesFrom
+  }
+
+  return chain
 }
 
 /** First matches for a query, ranked so the obvious card comes first. */

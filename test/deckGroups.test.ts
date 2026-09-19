@@ -55,3 +55,14 @@ test('search puts the prefix match first and the cheapest printing above the rar
 test('an empty query returns nothing rather than everything', () => {
   assert.deepEqual(quickSearch('   '), [])
 })
+
+test('the gap carries the whole evolution line, holes included', () => {
+  // Venusaur alone: two holes behind it (Ivysaur, Bulbasaur).
+  const [gap] = lineGaps(deck(['A1-003']))
+  assert.ok(gap)
+  const names = gap.chain.map((link) => link.name)
+  assert.deepEqual(names, ['Bulbasaur', 'Ivysaur', 'Venusaur'])
+  assert.ok(gap.chain[0]!.inDeck === undefined, 'Bulbasaur is a hole')
+  assert.ok(gap.chain[2]!.inDeck !== undefined, 'Venusaur is the card in the deck')
+  assert.ok((gap.chain[0]!.candidates ?? []).length > 0, 'a hole offers how to fill it')
+})

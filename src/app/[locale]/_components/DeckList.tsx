@@ -12,6 +12,7 @@ import type { Deck } from '@/lib/types.ts'
 import { Button } from '@/components/Button.tsx'
 import { Panel, EmptyState } from '@/components/Panel.tsx'
 import { Heading } from '@/components/Heading.tsx'
+import { Notice } from '@/components/Notice.tsx'
 import { TextInput, Textarea } from '@/components/Field.tsx'
 import { Pressable } from '@/components/Pressable.tsx'
 
@@ -147,11 +148,11 @@ function ImportPanel ({ onDone, onClose }: { onDone: (id: string) => void, onClo
             {t('importParsed', { distinct: parsed.entries.length, total })}
           </span>
           {parsed.unresolved.length > 0 && (
-            <span className='text-warn'>
+            <Notice tone='warning'>
               {t('importUnresolved', { list: parsed.unresolved.slice(0, 3).join(' · ') })}
               {parsed.unresolved.length > 3 &&
                 ` ${t('importUnresolvedMore', { count: parsed.unresolved.length - 3 })}`}
-            </span>
+            </Notice>
           )}
         </div>
       )}
