@@ -66,7 +66,7 @@ function DeckCard ({ deck, onOpen }: { deck: Deck, onOpen: () => void }) {
   return (
     <Pressable
       onClick={onOpen}
-      className='flex w-full flex-col gap-3 rounded-none border border-line bg-raised p-3 text-left transition-colors duration-150 hover:border-line-strong hover:bg-overlay'
+      className='flex w-full flex-col gap-3 rounded-surface border border-line bg-raised p-3 text-left transition-colors duration-150 hover:border-line-strong hover:bg-overlay'
     >
       <div className='flex items-start justify-between gap-2'>
         <span className='truncate font-medium text-ink-high'>{deck.name}</span>

@@ -282,7 +282,7 @@ function EmptySlots ({ remaining }: { remaining: number }) {
         {Array.from({ length: Math.min(remaining, 20) }, (_, index) => (
           <li
             key={index}
-            className='border border-dashed border-line-strong'
+            className='rounded-surface border border-dashed border-line-strong'
             style={{ aspectRatio: 'var(--aspect-card)' }}
           />
         ))}

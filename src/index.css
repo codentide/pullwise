@@ -10,9 +10,12 @@
  * recommendation, the primary action, and the figure that answers the question.
  * If the accent shows up twice on one screen, one of them is wrong.
  *
- * Contrast is verified by test/contrast.test.ts, which fails the build. One
- * value differs from the brand document on purpose: --ink-low ships as #767D83
- * rather than #6B7278, which measured 4.08:1 and would not clear AA for text.
+ * Contrast is verified by test/contrast.test.ts, which fails the build.
+ *
+ * Two things differ from the brand document on purpose:
+ *   · --ink-low is lighter than the specified #6B7278, which measured 4.08:1 and
+ *     would not clear AA for text.
+ *   · Surfaces carry a 6px radius where the document specifies 0.
  */
 
 @theme {
@@ -78,11 +81,14 @@
   /* ── Space — base 4 ───────────────────────────────────────── */
   --spacing: 0.25rem;
 
-  /* ── Form — 4px maximum, and only on touch controls.
-     Cards, tables and panels sit at 0: structure reads through 1px lines,
-     not floating boxes. No shadows anywhere. */
-  --radius-control: 4px;
-  --radius-chip: 2px;
+  /* ── Form ─────────────────────────────────────────────────
+     A deliberate softening of the brand document, which puts cards, tables and
+     panels at 0. Three steps rather than one value, so the hierarchy survives:
+     the smaller the element, the tighter its corner. Still no shadows — depth
+     comes from surface and line, never from a floating box. */
+  --radius-chip: 2px; /* badges, pips, counters */
+  --radius-control: 4px; /* buttons, inputs, selects */
+  --radius-surface: 6px; /* panels, cards, lists, card art */
 
   /* ── Motion — one curve, nothing over 400ms ───────────────── */
   --ease-pw: cubic-bezier(0.2, 0.8, 0.2, 1);

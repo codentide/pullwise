@@ -12,7 +12,7 @@ export function CardImage ({ card, className = '' }: { card: Card, className?: s
 
   return (
     <div
-      className={`relative overflow-hidden rounded-none bg-overlay ${className}`}
+      className={`relative overflow-hidden rounded-surface bg-overlay ${className}`}
       style={{ aspectRatio: 'var(--aspect-card)' }}
     >
       {state !== 'ready' && (

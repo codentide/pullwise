@@ -92,7 +92,7 @@ export default async function CardPage ({ params }: Props) {
               ? <p className='mt-2 text-meta leading-relaxed text-ink-mid'>{t('notFromPacks')}</p>
               : (
                 <>
-                  <ul className='mt-2 flex flex-col gap-px overflow-hidden rounded-none border border-line bg-line'>
+                  <ul className='mt-2 flex flex-col gap-px overflow-hidden rounded-surface border border-line bg-line'>
                     {odds.map((entry) => (
                       <li
                         key={`${entry.pack.set}/${entry.pack.pack}`}
@@ -127,7 +127,7 @@ export default async function CardPage ({ params }: Props) {
                 )}
           </section>
 
-          <section className='rounded-none border border-line bg-raised p-3'>
+          <section className='rounded-surface border border-line bg-raised p-3'>
             <p className='text-meta leading-relaxed text-ink-mid'>{t('ctaBody')}</p>
             <Link
               href='/'

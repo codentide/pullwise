@@ -20,7 +20,7 @@ const VARIANTS: Record<Variant, string> = {
     'bg-invalid px-3 py-1.5 text-meta font-medium text-bg hover:opacity-90 disabled:opacity-40',
   // Full-width affordance for "there could be more here": add cards, add a deck.
   dashed:
-    'w-full rounded-none border border-dashed border-line-strong py-2.5 text-meta text-ink-mid hover:border-line-control hover:text-ink-high',
+    'w-full rounded-surface border border-dashed border-line-strong py-2.5 text-meta text-ink-mid hover:border-line-control hover:text-ink-high',
   link:
     'text-label text-accent underline-offset-4 hover:underline'
 }

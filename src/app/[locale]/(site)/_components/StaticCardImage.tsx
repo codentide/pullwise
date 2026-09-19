@@ -20,7 +20,7 @@ export function StaticCardImage ({
       loading={priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : undefined}
       decoding='async'
-      className={`h-auto w-full rounded-none bg-overlay ${className}`}
+      className={`h-auto w-full rounded-surface bg-overlay ${className}`}
     />
   )
 }

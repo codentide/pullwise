@@ -47,7 +47,7 @@ export function Select ({
         <RadixSelect.Content
           position='popper'
           sideOffset={4}
-          className='z-50 max-h-80 overflow-hidden rounded-none border border-line-strong bg-overlay'
+          className='z-50 max-h-80 overflow-hidden rounded-surface border border-line-strong bg-overlay'
         >
           <RadixSelect.Viewport className='p-1'>
             {options.map((option) => (

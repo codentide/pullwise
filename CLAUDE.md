@@ -46,8 +46,10 @@ preferences:
 - **One accent, once per screen.** Flare (`--color-accent`) is reserved for the
   recommendation, the primary action, and the figure that answers the question.
   If it appears twice on one screen, one of them is wrong.
-- **Radii max out at 4px, and only on touch controls.** Cards, panels and tables
-  sit at 0. Structure reads through 1px lines, never floating boxes. **No shadows.**
+- **Radii follow a three-step scale** — 2px chips, 4px controls, 6px surfaces.
+  This is a deliberate softening of the brand document, which puts cards and
+  panels at 0; the scale keeps the hierarchy the single value would have lost.
+  Structure still reads through 1px lines, and there are still **no shadows**.
 - **Rarity is always doubly encoded** — colour *and* pips, never colour alone.
   The five grades are ours (`src/lib/rarity.ts` maps the game's eleven onto them,
   using the real pull rates); when the game adds a rarity, the table changes and

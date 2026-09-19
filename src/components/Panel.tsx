@@ -9,7 +9,7 @@ export function Panel ({
   return (
     <div
       {...props}
-      className={`rounded-none border border-line bg-raised ${pad === 'sm' ? 'p-3' : 'p-4'} ${className}`}
+      className={`rounded-surface border border-line bg-raised ${pad === 'sm' ? 'p-3' : 'p-4'} ${className}`}
     />
   )
 }
@@ -23,7 +23,7 @@ export function HairlineList ({ className = '', ...props }: ComponentProps<'ul'>
   return (
     <ul
       {...props}
-      className={`flex flex-col gap-px overflow-hidden rounded-none border border-line bg-line ${className}`}
+      className={`flex flex-col gap-px overflow-hidden rounded-surface border border-line bg-line ${className}`}
     />
   )
 }
@@ -37,7 +37,7 @@ export function EmptyState ({ className = '', ...props }: ComponentProps<'div'>)
   return (
     <div
       {...props}
-      className={`rounded-none border border-dashed border-line-strong px-6 py-12 text-center ${className}`}
+      className={`rounded-surface border border-dashed border-line-strong px-6 py-12 text-center ${className}`}
     />
   )
 }
