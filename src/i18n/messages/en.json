@@ -43,7 +43,17 @@
     "closeSearch": "Close search",
     "showMore": "Show more ({count, number} left)",
     "addToDeck": "Add {name} to the deck ({count} in deck)",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "searchPlaceholder": "Search a card, or paste a list…",
+    "searchHint": "Enter adds the first one",
+    "emptySlots": "{count, plural, one {# slot left} other {# slots left}}",
+    "full": "Deck full",
+    "lineGapTitle": "{name} has no {from}",
+    "lineGapBody": "An evolution cannot be played without its line.",
+    "addOne": "Add {name}",
+    "recommendation": "Recommendation",
+    "pastedList": "Recognised {count} cards from the list",
+    "noResults": "Nothing matches “{query}”"
   },
   "card": {
     "ownership": "{name}: you have {have} of {needed}. Change.",
@@ -154,5 +164,11 @@
     "metal": "Metal",
     "dragon": "Dragon",
     "colorless": "Colorless"
+  },
+  "groups": {
+    "basic": "Basic",
+    "evolution": "Evolutions",
+    "trainer": "Trainer",
+    "unclassified": "Unclassified"
   }
 }

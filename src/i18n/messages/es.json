@@ -43,7 +43,17 @@
     "closeSearch": "Cerrar buscador",
     "showMore": "Mostrar más ({count, number} restantes)",
     "addToDeck": "Agregar {name} al mazo ({count} en el mazo)",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "searchPlaceholder": "Busca una carta, o pega una lista…",
+    "searchHint": "Enter agrega la primera",
+    "emptySlots": "{count, plural, one {Queda # hueco} other {Quedan # huecos}}",
+    "full": "Mazo completo",
+    "lineGapTitle": "{name} no tiene {from}",
+    "lineGapBody": "Una evolución no se puede jugar sin su línea.",
+    "addOne": "Agregar {name}",
+    "recommendation": "Recomendación",
+    "pastedList": "Se reconocieron {count} cartas de la lista",
+    "noResults": "Nada coincide con «{query}»"
   },
   "card": {
     "ownership": "{name}: tienes {have} de {needed}. Cambiar.",
@@ -154,5 +164,11 @@
     "metal": "Metal",
     "dragon": "Dragón",
     "colorless": "Incoloro"
+  },
+  "groups": {
+    "basic": "Básicos",
+    "evolution": "Evoluciones",
+    "trainer": "Entrenador",
+    "unclassified": "Sin clasificar"
   }
 }

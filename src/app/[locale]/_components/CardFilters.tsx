@@ -106,9 +106,9 @@ function EnergyFilter ({ value, onChange }: { value: string, onChange: (next: st
           pressed={value === energy}
           onClick={() => onChange(value === energy ? '' : energy)}
           title={names(energy)}
+          className='p-1'
         >
-          <EnergyIcon energy={energy} label={names(energy)} />
-          <span className='hidden sm:inline'>{names(energy)}</span>
+          <EnergyIcon energy={energy} label={names(energy)} size={20} />
         </Chip>
       ))}
     </div>

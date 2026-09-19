@@ -1,4 +1,5 @@
 import neostandard from 'neostandard'
+import reactHooks from 'eslint-plugin-react-hooks'
 
 /**
  * neostandard carries the standard style (no semicolons, single quotes, two
@@ -10,6 +11,18 @@ import neostandard from 'neostandard'
  */
 export default [
   ...neostandard({ ts: true, semi: false }),
+
+  {
+    // RULE: the rules of hooks. neostandard does not ship these, and a hook
+    // called inside a .map() typechecks and lints clean while being a real bug —
+    // one slipped into the deck editor exactly that way.
+    files: ['src/**/*.tsx', 'src/**/*.ts'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn'
+    }
+  },
 
   {
     ignores: ['.next/**', 'dist/**', 'node_modules/**', 'src/data/**']
