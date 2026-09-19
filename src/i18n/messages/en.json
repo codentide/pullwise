@@ -21,7 +21,7 @@
     "pasteList": "Paste a list",
     "empty": "No cards yet",
     "missing": "{count, plural, one {# card missing} other {# cards missing}}",
-    "complete": "Complete",
+    "complete": "You have them all",
     "emptyTitle": "Start with a deck.",
     "emptyBody": "Pullwise never asks you to log your whole collection. Build a deck, mark the few cards you are missing, and it tells you which pack to open to finish it.",
     "emptyAction": "Paste a list you already have",

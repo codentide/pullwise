@@ -21,7 +21,7 @@
     "pasteList": "Pegar lista",
     "empty": "Sin cartas todavía",
     "missing": "{count, plural, one {Te falta # carta} other {Te faltan # cartas}}",
-    "complete": "Completo",
+    "complete": "Las tienes todas",
     "emptyTitle": "Empieza por un mazo.",
     "emptyBody": "Pullwise no te pide cargar tu colección entera. Arma un mazo, marca las pocas cartas que te faltan, y te dice qué sobre conviene abrir para completarlo.",
     "emptyAction": "Pegar una lista que ya tengas",

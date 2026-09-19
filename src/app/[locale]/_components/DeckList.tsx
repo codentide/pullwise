@@ -9,6 +9,9 @@ import { deckSize } from '@/lib/deckRules.ts'
 import { missingFor } from '@/lib/deckAnalysis.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
 import type { Deck } from '@/lib/types.ts'
+
+/** The preview always draws five slots, filled or not. */
+const PREVIEW_SLOTS = 5
 import { Button } from '@/components/Button.tsx'
 import { Panel, EmptyState } from '@/components/Panel.tsx'
 import { Heading } from '@/components/Heading.tsx'
@@ -43,7 +46,7 @@ export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
         : (
           <ul className='grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(15rem,1fr))]'>
             {state.decks.map((deck) => (
-              <li key={deck.id}>
+              <li key={deck.id} className='flex'>
                 <DeckCard deck={deck} onOpen={() => onOpen(deck.id)} />
               </li>
             ))}
@@ -76,16 +79,25 @@ function DeckCard ({ deck, onOpen }: { deck: Deck, onOpen: () => void }) {
         </span>
       </div>
 
-      {preview.length > 0
-        ? (
-          <div className='flex gap-1'>
-            {preview.map((card) => <CardImage key={card.id} card={card} className='w-1/5' />)}
-          </div>
-          )
-        : <p className='py-4 text-center text-meta text-ink-low'>{t('empty')}</p>}
+      <div className='grid grid-cols-5 gap-1'>
+        {preview.map((card) => <CardImage key={card.id} card={card} />)}
+        {Array.from({ length: PREVIEW_SLOTS - preview.length }, (_, index) => (
+          <span
+            key={`slot-${index}`}
+            className='rounded-surface border border-dashed border-line'
+            style={{ aspectRatio: 'var(--aspect-card)' }}
+          />
+        ))}
+      </div>
 
-      <span className={`text-label ${missingCount > 0 ? 'text-invalid' : 'text-valid'}`}>
-        {missingCount > 0 ? t('missing', { count: missingCount }) : t('complete')}
+      <span
+        className={`mt-auto text-label ${missingCount > 0 ? 'text-invalid' : 'text-valid'}`}
+      >
+        {size === 0
+          ? '\u00a0'
+          : missingCount > 0
+            ? t('missing', { count: missingCount })
+            : t('complete')}
       </span>
     </Pressable>
   )

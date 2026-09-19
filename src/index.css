@@ -83,14 +83,15 @@
 
   /* ── Form ─────────────────────────────────────────────────
      Three steps, and zero is not one of them: nothing in this product has a
-     hard corner. The smaller the element, the tighter its radius, which is what
-     keeps the hierarchy legible across a dense grid.
+     hard corner. The radius scales with the element, because a corner reads
+     relative to the edge it sits on — 6px on a 350px panel is invisible, while
+     the same 6px on a 28px badge is a pill.
 
      Still no shadows. Depth comes from surface and line, never from a floating
      box — softening the corners did not change the depth model. */
-  --radius-chip: 2px; /* badges, pips, counters */
-  --radius-control: 4px; /* buttons, inputs, selects */
-  --radius-surface: 6px; /* panels, cards, lists, card art */
+  --radius-chip: 3px; /* badges, pips, counters */
+  --radius-control: 6px; /* buttons, inputs, selects */
+  --radius-surface: 10px; /* panels, notices, lists, card art */
 
   /* ── Motion — one curve, nothing over 400ms ───────────────── */
   --ease-pw: cubic-bezier(0.2, 0.8, 0.2, 1);
