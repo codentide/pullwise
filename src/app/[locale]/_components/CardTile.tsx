@@ -40,12 +40,16 @@ export function cycleOwned (current: Owned, max: number): number {
  *
  * The pattern is the one MTG Arena uses for owned styles — filled pips rather
  * than a fraction — and it sits on the art rather than below it so a dense grid
- * does not pay height for every card. The strip goes at the bottom because the
- * top of a Pokémon card carries the name and HP, which is how you identify it;
- * the bottom is flavour text.
+ * does not pay height for every card.
  *
- * A gradient behind the slots keeps them legible over any artwork, which for
- * this game ranges from near-white to near-black.
+ * It wears the same pill as the other overlaid controls: same surface, same
+ * blur, same radius, tucked against the same margin. Three different treatments
+ * on one card was the reason none of them read as belonging together. The blur
+ * is also what keeps the slots legible over artwork that ranges from near-white
+ * to near-black in this game.
+ *
+ * It sits at the bottom because the top of a Pokémon card carries the name and
+ * HP, which is how you identify it at this size.
  *
  * There are always two slots, the game's maximum, even when the deck only asks
  * for one. What you own is global: mark a single copy on a deck that needs one
@@ -70,38 +74,36 @@ export function CopySlots ({
   const have = owned ?? needed
 
   return (
-    <div className='pointer-events-none absolute inset-x-0 bottom-0 rounded-b-surface bg-gradient-to-t from-base/95 via-base/70 to-transparent p-1 pt-4'>
-      <div className='pointer-events-auto flex items-center gap-1'>
-        {Array.from({ length: MAX_COPIES }, (_, index) => {
-          const filled = index < have
-          const required = index < needed
-          return (
-            <Pressable
-              key={index}
+    <div className='absolute bottom-1 left-1 flex items-center gap-1 rounded-chip bg-base/85 p-1 backdrop-blur'>
+      {Array.from({ length: MAX_COPIES }, (_, index) => {
+        const filled = index < have
+        const required = index < needed
+        return (
+          <Pressable
+            key={index}
               // Clicking a filled slot drops to just before it; clicking a hole
               // fills up to it. Either way one click lands on the right number.
-              onClick={() => onSet(filled ? index : index + 1)}
-              aria-label={t('copySlot', {
-                name: cardName,
-                index: index + 1,
-                total: needed,
-                owned: filled ? 'yes' : 'no'
-              })}
-              className={`h-1.5 rounded-chip border transition-colors duration-150 ${
-                required ? 'flex-1' : 'w-3'
+            onClick={() => onSet(filled ? index : index + 1)}
+            aria-label={t('copySlot', {
+              name: cardName,
+              index: index + 1,
+              total: needed,
+              owned: filled ? 'yes' : 'no'
+            })}
+            className={`h-1.5 rounded-chip border transition-colors duration-150 ${
+                required ? 'w-4' : 'w-2'
               } ${
                 filled
                   ? required
                     ? 'border-valid bg-valid hover:bg-valid/80'
                     : 'border-valid/40 bg-valid/40 hover:bg-valid/60'
                   : required
-                    ? 'border-dashed border-ink-mid bg-base/60 hover:border-ink-high'
-                    : 'border-dashed border-ink-low/50 bg-base/40 hover:border-ink-mid'
+                    ? 'border-dashed border-ink-mid hover:border-ink-high'
+                    : 'border-dashed border-ink-low/50 hover:border-ink-mid'
               }`}
-            />
-          )
-        })}
-      </div>
+          />
+        )
+      })}
     </div>
   )
 }
