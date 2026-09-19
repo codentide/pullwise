@@ -12,10 +12,10 @@
  *
  * Contrast is verified by test/contrast.test.ts, which fails the build.
  *
- * Two things differ from the brand document on purpose:
- *   · --ink-low is lighter than the specified #6B7278, which measured 4.08:1 and
- *     would not clear AA for text.
- *   · Surfaces carry a 6px radius where the document specifies 0.
+ * Two places where this system is the authority over the brand document:
+ *   · --ink-low is lighter than its #6B7278, which measured 4.08:1 and would not
+ *     clear AA for text.
+ *   · The radius scale has no zero. Hard corners were removed from the product.
  */
 
 @theme {
@@ -82,10 +82,12 @@
   --spacing: 0.25rem;
 
   /* ── Form ─────────────────────────────────────────────────
-     A deliberate softening of the brand document, which puts cards, tables and
-     panels at 0. Three steps rather than one value, so the hierarchy survives:
-     the smaller the element, the tighter its corner. Still no shadows — depth
-     comes from surface and line, never from a floating box. */
+     Three steps, and zero is not one of them: nothing in this product has a
+     hard corner. The smaller the element, the tighter its radius, which is what
+     keeps the hierarchy legible across a dense grid.
+
+     Still no shadows. Depth comes from surface and line, never from a floating
+     box — softening the corners did not change the depth model. */
   --radius-chip: 2px; /* badges, pips, counters */
   --radius-control: 4px; /* buttons, inputs, selects */
   --radius-surface: 6px; /* panels, cards, lists, card art */
