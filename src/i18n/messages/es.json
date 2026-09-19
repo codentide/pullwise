@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "title": "Pullwise — qué sobre abrir en Pokémon TCG Pocket",
+    "description": "Arma tu mazo, marca las cartas que te faltan y descubre qué sobre conviene abrir y cuántos vas a necesitar."
+  },
+  "nav": {
+    "decks": "Mazos",
+    "packs": "Sobres",
+    "cards": "Cartas",
+    "catalogue": "{count, number} cartas · hasta {set}",
+    "export": "Exportar",
+    "import": "Importar",
+    "importRestored": "Datos restaurados.",
+    "importFailed": "Ese archivo no es un respaldo de Pullwise.",
+    "buildADeck": "Armar un mazo",
+    "theme": "Cambiar tema"
+  },
+  "decks": {
+    "title": "Mazos",
+    "new": "Mazo nuevo",
+    "pasteList": "Pegar lista",
+    "empty": "Sin cartas todavía",
+    "missing": "{count, plural, one {Te falta # carta} other {Te faltan # cartas}}",
+    "complete": "Completo",
+    "emptyTitle": "Empieza por un mazo.",
+    "emptyBody": "Pullwise no te pide cargar tu colección entera. Arma un mazo, marca las pocas cartas que te faltan, y te dice qué sobre conviene abrir para completarlo.",
+    "emptyAction": "Pegar una lista que ya tengas",
+    "importTitle": "Pegar una lista de mazo",
+    "importName": "Nombre del mazo",
+    "importParsed": "{distinct} cartas distintas · {total} en total",
+    "importUnresolved": "Sin reconocer: {list}",
+    "importUnresolvedMore": "y {count} más",
+    "importSubmit": "Crear mazo",
+    "close": "Cerrar"
+  },
+  "editor": {
+    "back": "Mazos",
+    "deckName": "Nombre del mazo",
+    "delete": "Borrar mazo",
+    "confirmDelete": "¿Borrar \"{name}\"?",
+    "empty": "Agrega cartas para empezar. Se asume que las tienes; marca solo las que te falten.",
+    "addCards": "Agregar cartas",
+    "closeSearch": "Cerrar buscador",
+    "showMore": "Mostrar más ({count, number} restantes)",
+    "addToDeck": "Agregar {name} al mazo ({count} en el mazo)",
+    "cancel": "Cancelar"
+  },
+  "card": {
+    "ownership": "{name}: tienes {have} de {needed}. Cambiar.",
+    "ownershipTitle": "Tienes {have} de las {needed} copias que pide el mazo. Haz clic para cambiar.",
+    "unmarked": "Sin marcar",
+    "markAria": "{name}. {state}. Marcar.",
+    "youHave": "Tienes {count}",
+    "removeCopy": "Quitar una copia de {name} del mazo",
+    "addCopy": "Agregar una copia de {name} al mazo",
+    "removeCard": "Sacar {name} del mazo"
+  },
+  "filters": {
+    "search": "Buscar carta…",
+    "allSets": "Todos los sets",
+    "allKinds": "Pokémon y entrenador",
+    "onlyPokemon": "Solo Pokémon",
+    "onlyTrainer": "Solo entrenador",
+    "allElements": "Toda energía",
+    "allRarities": "Toda rareza",
+    "onlyKnown": "Solo lo que marqué"
+  },
+  "ranking": {
+    "nothingMissing": "No te falta nada de este mazo.",
+    "packsToFinish": "Sobres hasta completarlo",
+    "typical": "típico · {p90} con mala suerte",
+    "strategy": "Abriendo siempre el mejor sobre para lo que falte en cada momento.",
+    "censored": "Alguna carta es tan rara que el cálculo se cortó: tómalo como piso.",
+    "estimated": "estimado",
+    "estimatedTitle": "Este set todavía no publicó sus probabilidades reales: se usan las del set anterior equivalente.",
+    "perPack": "{value}/sobre",
+    "explainer": "El porcentaje es la probabilidad de que un sobre traiga al menos una carta que te falta.",
+    "notFromPacks": "No salen de sobres",
+    "notFromPacksBody": "{list} — son cartas promocionales o de misión, se consiguen por eventos dentro del juego.",
+    "openThis": "Abre este",
+    "perPackLabel": "Por sobre",
+    "toFinishLabel": "Sobres al mazo",
+    "otherPacks": "Otros sobres",
+    "coachAllHere": "{count, plural, one {Te falta # carta y sale de acá} other {Te faltan # cartas y todas salen de acá}}.",
+    "coachMostlyHere": "Te faltan {count} cartas; {here} de ellas salen de acá.",
+    "coachOnlyOne": "Es el único sobre que tiene lo que te falta."
+  },
+  "advisor": {
+    "title": "Qué sobre abrir",
+    "allDecks": "Todos los mazos",
+    "emptyTitle": "Todavía no hay nada que calcular.",
+    "emptyBody": "Arma un mazo y marca las cartas que te faltan. Con eso, Pullwise puede decirte qué sobre conviene abrir y cuántos vas a necesitar."
+  },
+  "browser": {
+    "title": "Cartas",
+    "marked": "Marcaste {known, number} de {total, number}. El resto queda sin opinión, y está bien.",
+    "unmarked": "Explora el catálogo. No hace falta que marques nada: se llena solo al armar mazos.",
+    "noResults": "Ninguna carta coincide con esos filtros."
+  },
+  "issues": {
+    "tooFewCards": "{count, plural, one {Falta # carta} other {Faltan # cartas}} para llegar a {size}.",
+    "tooManyCards": "{count, plural, one {Sobra # carta} other {Sobran # cartas}}: el máximo es {size}.",
+    "tooManyCopies": "{copies} copias de {name}: el máximo son {max}.",
+    "noBasic": "No hay ningún Pokémon básico: el mazo no puede empezar a jugar.",
+    "evolutionWithoutBase": "{name} evoluciona de {from}, que no está en el mazo.",
+    "unknownMetadata": "{count, plural, one {Sin datos para validar # carta} other {Sin datos para validar # cartas}} todavía."
+  },
+  "cardPage": {
+    "metaTitle": "{name} ({id}) — de qué sobre sale",
+    "metaFound": "Sale del sobre {pack} ({set}) con {chance} por sobre; hacen falta unos {packs} sobres.",
+    "metaNotFound": "No sale de sobres: es una carta promocional o de misión.",
+    "metaDescription": "{name}, rareza {rarity} de {set}. {where}",
+    "cardNumber": "carta {number}",
+    "rarity": "rareza {rarity}",
+    "weakTo": "débil a {type}",
+    "evolvesFrom": "Evoluciona de {name}.",
+    "whichPack": "De qué sobre sale",
+    "notFromPacks": "Esta carta no sale de ningún sobre. Es promocional, o se obtiene cumpliendo misiones dentro del juego.",
+    "estimatedOdds": "probabilidad estimada",
+    "perPack": "por sobre",
+    "expected": "Abriendo {pack}, hacen falta <b>{packs} sobres</b> en promedio para que salga. Es un promedio: la mitad de las veces sale antes y la otra mitad, después.",
+    "ctaBody": "¿La quieres para un mazo puntual? Pullwise cruza el mazo entero con lo que ya tienes y te dice qué sobre conviene abrir primero.",
+    "ctaAction": "Armar el mazo",
+    "moreFrom": "Más de {set}"
+  },
+  "packPage": {
+    "metaTitle": "Sobre {pack} ({set}) — qué cartas trae",
+    "metaDescription": "Las {count, number} cartas del sobre {pack} de {set} en Pokémon TCG Pocket, con las probabilidades de cada rareza.",
+    "title": "Sobre {pack}",
+    "cardCount": "{count, number} cartas",
+    "contents": "Qué contiene",
+    "estimatedNote": "Este set todavía no publicó sus probabilidades oficiales: las que usa Pullwise están tomadas del set anterior de igual formato.",
+    "allCards": "Todas las cartas"
+  },
+  "setPage": {
+    "metaTitle": "{name} ({code}) — las {count, number} cartas del set",
+    "metaDescription": "Todas las cartas de {name} en Pokémon TCG Pocket, con los sobres de los que sale cada una.",
+    "released": "salió el {date}",
+    "cardCount": "{count, number} cartas",
+    "packs": "Sobres",
+    "allCards": "Todas las cartas"
+  },
+  "footer": {
+    "disclaimer": "Pullwise es un proyecto de fans sin relación con Nintendo, The Pokémon Company ni DeNA. Los nombres y las imágenes de las cartas pertenecen a sus dueños."
+  },
+  "energies": {
+    "grass": "Planta",
+    "fire": "Fuego",
+    "water": "Agua",
+    "lightning": "Rayo",
+    "psychic": "Psíquico",
+    "fighting": "Lucha",
+    "darkness": "Oscuro",
+    "metal": "Metal",
+    "dragon": "Dragón",
+    "colorless": "Incoloro"
+  }
+}

@@ -1,0 +1,224 @@
+@import 'tailwindcss';
+
+/*
+ * Pullwise — design tokens
+ *
+ * Implements the Pullwise Brand System (v1.0, 2026). Dark is the native theme;
+ * light is a translation, not an inversion.
+ *
+ * One accent, and one use of it per screen. It is reserved for the
+ * recommendation, the primary action, and the figure that answers the question.
+ * If the accent shows up twice on one screen, one of them is wrong.
+ *
+ * Contrast is verified by test/contrast.test.ts, which fails the build. One
+ * value differs from the brand document on purpose: --ink-low ships as #767D83
+ * rather than #6B7278, which measured 4.08:1 and would not clear AA for text.
+ */
+
+@theme {
+  /* ── Surfaces ─────────────────────────────────────────────── */
+  --color-base: #08090a;
+  --color-raised: #0e1012;
+  --color-overlay: #171a1d;
+  --color-line: #23272b;
+  --color-line-strong: #2b3035;
+  --color-line-control: #3a4046;
+
+  /* ── Ink ──────────────────────────────────────────────────── */
+  --color-ink-high: #f2f0ed; /* 17.5:1 */
+  --color-ink-mid: #a2a8ae; /*  8.3:1 */
+  --color-ink-low: #7c838a; /*  4.6:1 on every surface, including overlay */
+
+  /* ── Accent: Flare ────────────────────────────────────────── */
+  --color-accent: #ff4a17;
+  --color-accent-hover: #ff6b42;
+  --color-accent-wash: #2a1108;
+  --color-accent-ink: #08090a; /* text on accent, 5.9:1 */
+
+  /* ── Semantic — deck validation only, never card state ────── */
+  --color-valid: #3fbf87;
+  --color-warn: #e8b33c;
+  --color-invalid: #e8564a;
+
+  /* ── Rarity: five grades of our own, mapped from the game's ──
+     Always doubly encoded, colour plus pips: never colour alone. */
+  --color-rarity-1: #8a9299; /* Base   — comes on its own */
+  --color-rarity-2: #3fa08c; /* Steady — volume */
+  --color-rarity-3: #5b7bd6; /* Keen   — the inflection point */
+  --color-rarity-4: #a465c9; /* Prime  — drives the pack count */
+  --color-rarity-5: #ff4a17; /* Apex   — the only grade that spends the accent */
+
+  /* ── Energy symbols (product data, not brand) ─────────────── */
+  --color-grass: #63bc5a;
+  --color-fire: #ff9c54;
+  --color-water: #4d9ad4;
+  --color-lightning: #f4d23c;
+  --color-psychic: #f97176;
+  --color-fighting: #ce4069;
+  --color-darkness: #8b82a0;
+  --color-metal: #8a8a9e;
+  --color-dragon: #c9a227;
+  --color-colorless: #9aa1ab;
+
+  /* ── Type — ratio 1.25, base 16 ───────────────────────────── */
+  --text-hero: 4rem; /* 64 — the figure that resolves */
+  --text-hero--line-height: 0.875;
+  --text-title: 2rem; /* 32 */
+  --text-title--line-height: 1.1;
+  --text-section: 1.25rem; /* 20 */
+  --text-body: 1rem; /* 16 */
+  --text-body--line-height: 1.5;
+  --text-meta: 0.8125rem; /* 13 */
+  --text-label: 0.6875rem; /* 11 */
+
+  --font-display: var(--font-display-loaded), 'Archivo', system-ui, sans-serif;
+  --font-sans: var(--font-sans-loaded), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono-loaded), ui-monospace, monospace;
+
+  /* ── Space — base 4 ───────────────────────────────────────── */
+  --spacing: 0.25rem;
+
+  /* ── Form — 4px maximum, and only on touch controls.
+     Cards, tables and panels sit at 0: structure reads through 1px lines,
+     not floating boxes. No shadows anywhere. */
+  --radius-control: 4px;
+  --radius-chip: 2px;
+
+  /* ── Motion — one curve, nothing over 400ms ───────────────── */
+  --ease-pw: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-press: 120ms;
+  --duration-state: 180ms;
+  --duration-figure: 280ms;
+  --duration-reorder: 400ms;
+
+  /* Real proportion of the card images from the CDN. */
+  --aspect-card: 367 / 512;
+}
+
+/* Light is a translation, not an inversion: warm paper, never pure white.
+   The accent darkens so white text on it still clears 4.5:1. */
+@layer theme {
+  [data-theme='light'] {
+    --color-base: #fbfaf8;
+    --color-raised: #ffffff;
+    --color-overlay: #ffffff;
+    --color-line: #e3e0db;
+    --color-line-strong: #d4d0ca;
+    --color-line-control: #b4afa8;
+    --color-ink-high: #13161a;
+    --color-ink-mid: #4a4f54;
+    --color-ink-low: #6b7278;
+    --color-accent: #d93d0c;
+    --color-accent-hover: #c23508;
+    --color-accent-wash: #fdeee8;
+    --color-accent-ink: #ffffff;
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--color-base);
+    color: var(--color-ink-high);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Data reads in columns: without fixed-width figures the percentages dance
+     and the ranking becomes unreadable. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* Set and pack names stay in mono and in English — that is how the player
+     recognises them from the game, without translating in their head. */
+  .game-name {
+    font-family: var(--font-mono);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border: 2px solid var(--color-base);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-line-control);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ── Motion: three gestures, nothing more ───────────────────────
+   Fast, mechanical, weighted — a calculating machine, not a celebration. */
+@layer utilities {
+  /* M—01 Roll-up: every figure that changes enters from below, masked. */
+  @keyframes pw-roll {
+    from {
+      transform: translateY(0.45em);
+      opacity: 0;
+    }
+  }
+  .pw-roll {
+    animation: pw-roll var(--duration-figure) var(--ease-pw);
+  }
+
+  /* M—02 Stamp: marking a card as missing lands like a rubber stamp.
+     The only rotation in the system. */
+  @keyframes pw-stamp {
+    0% {
+      transform: scale(1.35) rotate(-6deg);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(0.94) rotate(-6deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(-6deg);
+      opacity: 1;
+    }
+  }
+  .pw-stamp {
+    animation: pw-stamp var(--duration-state) var(--ease-pw);
+  }
+
+  /* M—03 Recount: bars recalculate in a 60ms cascade when the ranking reorders.
+     Rows move, they do not disappear. */
+  @keyframes pw-fill {
+    from {
+      width: 0;
+    }
+  }
+  .pw-fill {
+    animation: pw-fill var(--duration-reorder) var(--ease-pw);
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "title": "Pullwise — which pack to open in Pokémon TCG Pocket",
+    "description": "Build your deck, mark the cards you are missing, and find out which pack to open and how many you will need."
+  },
+  "nav": {
+    "decks": "Decks",
+    "packs": "Packs",
+    "cards": "Cards",
+    "catalogue": "{count, number} cards · through {set}",
+    "export": "Export",
+    "import": "Import",
+    "importRestored": "Data restored.",
+    "importFailed": "That file is not a Pullwise backup.",
+    "buildADeck": "Build a deck",
+    "theme": "Switch theme"
+  },
+  "decks": {
+    "title": "Decks",
+    "new": "New deck",
+    "pasteList": "Paste a list",
+    "empty": "No cards yet",
+    "missing": "{count, plural, one {# card missing} other {# cards missing}}",
+    "complete": "Complete",
+    "emptyTitle": "Start with a deck.",
+    "emptyBody": "Pullwise never asks you to log your whole collection. Build a deck, mark the few cards you are missing, and it tells you which pack to open to finish it.",
+    "emptyAction": "Paste a list you already have",
+    "importTitle": "Paste a decklist",
+    "importName": "Deck name",
+    "importParsed": "{distinct} distinct cards · {total} in total",
+    "importUnresolved": "Not recognised: {list}",
+    "importUnresolvedMore": "and {count} more",
+    "importSubmit": "Create deck",
+    "close": "Close"
+  },
+  "editor": {
+    "back": "Decks",
+    "deckName": "Deck name",
+    "delete": "Delete deck",
+    "confirmDelete": "Delete \"{name}\"?",
+    "empty": "Add cards to get started. They are assumed to be yours — only mark the ones you are missing.",
+    "addCards": "Add cards",
+    "closeSearch": "Close search",
+    "showMore": "Show more ({count, number} left)",
+    "addToDeck": "Add {name} to the deck ({count} in deck)",
+    "cancel": "Cancel"
+  },
+  "card": {
+    "ownership": "{name}: you have {have} of {needed}. Change.",
+    "ownershipTitle": "You have {have} of the {needed} copies this deck needs. Click to change.",
+    "unmarked": "Not marked",
+    "markAria": "{name}. {state}. Mark.",
+    "youHave": "You have {count}",
+    "removeCopy": "Remove one copy of {name} from the deck",
+    "addCopy": "Add one copy of {name} to the deck",
+    "removeCard": "Remove {name} from the deck"
+  },
+  "filters": {
+    "search": "Search card…",
+    "allSets": "All sets",
+    "allKinds": "Pokémon and trainer",
+    "onlyPokemon": "Pokémon only",
+    "onlyTrainer": "Trainer only",
+    "allElements": "Any energy",
+    "allRarities": "Any rarity",
+    "onlyKnown": "Only what I marked"
+  },
+  "ranking": {
+    "nothingMissing": "You are not missing anything for this deck.",
+    "packsToFinish": "Packs to finish it",
+    "typical": "typical · {p90} with bad luck",
+    "strategy": "Always opening the best pack for whatever is missing at the time.",
+    "censored": "One card is so rare the calculation was cut short: treat this as a floor.",
+    "estimated": "estimated",
+    "estimatedTitle": "This set has not published its real odds yet: the previous equivalent set's are used.",
+    "perPack": "{value}/pack",
+    "explainer": "The percentage is the chance that a pack contains at least one card you are missing.",
+    "notFromPacks": "Not available from packs",
+    "notFromPacksBody": "{list} — these are promo or mission cards, earned through in-game events.",
+    "openThis": "Open this",
+    "perPackLabel": "Per pack",
+    "toFinishLabel": "Packs to the deck",
+    "otherPacks": "Other packs",
+    "coachAllHere": "{count, plural, one {You are missing # card and it comes from here} other {You are missing # cards and they all come from here}}.",
+    "coachMostlyHere": "You are missing {count} cards; {here} of them come from here.",
+    "coachOnlyOne": "It is the only pack that has what you are missing."
+  },
+  "advisor": {
+    "title": "Which pack to open",
+    "allDecks": "All decks",
+    "emptyTitle": "Nothing to calculate yet.",
+    "emptyBody": "Build a deck and mark the cards you are missing. With that, Pullwise can tell you which pack is worth opening and how many you will need."
+  },
+  "browser": {
+    "title": "Cards",
+    "marked": "You marked {known, number} of {total, number}. The rest stays unopined, and that is fine.",
+    "unmarked": "Browse the catalogue. You do not need to mark anything: it fills in as you build decks.",
+    "noResults": "No card matches those filters."
+  },
+  "issues": {
+    "tooFewCards": "{count, plural, one {# card short} other {# cards short}} of {size}.",
+    "tooManyCards": "{count, plural, one {# card over} other {# cards over}} the limit of {size}.",
+    "tooManyCopies": "{copies} copies of {name}: the maximum is {max}.",
+    "noBasic": "There is no Basic Pokémon: the deck cannot start play.",
+    "evolutionWithoutBase": "{name} evolves from {from}, which is not in the deck.",
+    "unknownMetadata": "{count, plural, one {# card has no data} other {# cards have no data}} to validate yet."
+  },
+  "cardPage": {
+    "metaTitle": "{name} ({id}) — which pack it comes from",
+    "metaFound": "Comes from the {pack} pack ({set}) at {chance} per pack; about {packs} packs needed.",
+    "metaNotFound": "Not available from packs: it is a promo or mission card.",
+    "metaDescription": "{name}, {rarity} rarity from {set}. {where}",
+    "cardNumber": "card {number}",
+    "rarity": "{rarity} rarity",
+    "weakTo": "weak to {type}",
+    "evolvesFrom": "Evolves from {name}.",
+    "whichPack": "Which pack it comes from",
+    "notFromPacks": "This card does not come from any pack. It is a promo, or it is earned by completing in-game missions.",
+    "estimatedOdds": "estimated odds",
+    "perPack": "per pack",
+    "expected": "Opening {pack}, it takes on average <b>{packs} packs</b> for it to show up. It is an average: half the time it comes sooner and half the time later.",
+    "ctaBody": "Want it for a specific deck? Pullwise cross-checks the whole deck against what you already own and tells you which pack to open first.",
+    "ctaAction": "Build the deck",
+    "moreFrom": "More from {set}"
+  },
+  "packPage": {
+    "metaTitle": "{pack} pack ({set}) — what cards it holds",
+    "metaDescription": "The {count, number} cards in the {pack} pack from {set} in Pokémon TCG Pocket, with the odds for every rarity.",
+    "title": "{pack} pack",
+    "cardCount": "{count, number} cards",
+    "contents": "What it holds",
+    "estimatedNote": "This set has not published its official odds yet: the ones Pullwise uses are taken from the previous set of the same format.",
+    "allCards": "All cards"
+  },
+  "setPage": {
+    "metaTitle": "{name} ({code}) — all {count, number} cards",
+    "metaDescription": "Every card in {name} for Pokémon TCG Pocket, with the packs each one comes from.",
+    "released": "released {date}",
+    "cardCount": "{count, number} cards",
+    "packs": "Packs",
+    "allCards": "All cards"
+  },
+  "footer": {
+    "disclaimer": "Pullwise is a fan project with no connection to Nintendo, The Pokémon Company or DeNA. Card names and images belong to their owners."
+  },
+  "energies": {
+    "grass": "Grass",
+    "fire": "Fire",
+    "water": "Water",
+    "lightning": "Lightning",
+    "psychic": "Psychic",
+    "fighting": "Fighting",
+    "darkness": "Darkness",
+    "metal": "Metal",
+    "dragon": "Dragon",
+    "colorless": "Colorless"
+  }
+}

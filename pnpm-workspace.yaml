@@ -1,0 +1,7 @@
+# pnpm 11.23 replaced `onlyBuiltDependencies` with `allowBuilds`, and silently
+# ignores the old key. Without this, `pnpm install` exits 1 — and since pnpm 11
+# runs an implicit install before every script, that breaks dev, build and test.
+allowBuilds:
+  esbuild: true
+  '@parcel/watcher': true
+  '@swc/core': true

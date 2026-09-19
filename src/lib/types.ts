@@ -1,0 +1,71 @@
+export type CardId = string
+
+export interface Card {
+  id: CardId
+  set: string
+  number: number
+  name: string
+  rarity: string
+  /** Packs within the set that can yield this card. Empty = not from packs. */
+  packs: string[]
+  type?: 'pokemon' | 'supporter' | 'item' | 'tool' | 'Fossil'
+  element?: string
+  /** 'basic' | '1' | '2'. Absent when the dataset does not carry it. */
+  stage?: string
+  evolvesFrom?: string
+  weakness?: string
+  /** Metadata was copied from another card with the same name, not sourced. */
+  inferred?: boolean
+}
+
+export interface CardSet {
+  code: string
+  series: string
+  name: string
+  releaseDate: string
+  packs: string[]
+  obtainableFromPacks: boolean
+}
+
+/** One pack variant within a set: the common one and the 0.05% rare pack. */
+export interface PackVariant {
+  appearance_rate: number
+  cards: number
+  /** slot -> rarity -> probability, as a percentage. */
+  slots: Record<string, Record<string, number>>
+}
+
+export type PullRates = Record<string, Record<string, PackVariant>>
+/** set -> pack -> rarity -> how many distinct cards of that rarity it can yield. */
+export type PoolCounts = Record<string, Record<string, Record<string, number>>>
+
+/** A concrete pack you can open in the game. */
+export interface PackRef {
+  set: string
+  pack: string
+}
+
+/** A card you are missing, and how many copies of it. */
+export interface MissingCard {
+  card: Card
+  needed: number
+}
+
+export interface DeckEntry {
+  cardId: CardId
+  /** Copies the deck asks for: 1 or 2. */
+  copies: number
+}
+
+export interface Deck {
+  id: string
+  name: string
+  entries: DeckEntry[]
+  updatedAt: number
+}
+
+/**
+ * Copies you own of each card. Global, not per deck.
+ * A missing key means UNKNOWN, which is not the same as zero.
+ */
+export type Knowledge = Record<CardId, number>
