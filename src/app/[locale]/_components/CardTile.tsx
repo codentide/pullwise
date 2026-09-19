@@ -54,16 +54,18 @@ export function CopyLights ({
       aria-label={t('copyLights', { name: cardName, have, needed })}
       className='absolute bottom-1 left-1 flex items-center gap-1 rounded-chip bg-base/85 p-1 opacity-0 backdrop-blur transition-opacity duration-150 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100'
     >
-      {Array.from({ length: needed }, (_, index) => (
-        <span
-          key={index}
-          className={`size-2 rounded-full transition-all duration-150 ${
-            index < have
-              ? 'bg-valid shadow-[0_0_6px_var(--color-valid)]'
-              : 'border border-ink-low'
-          }`}
-        />
-      ))}
+      <span className='flex h-[11px] items-center gap-1'>
+        {Array.from({ length: needed }, (_, index) => (
+          <span
+            key={index}
+            className={`size-2 rounded-full transition-all duration-150 ${
+              index < have
+                ? 'bg-valid shadow-[0_0_6px_var(--color-valid)]'
+                : 'border border-ink-low'
+            }`}
+          />
+        ))}
+      </span>
     </Pressable>
   )
 }
@@ -171,7 +173,7 @@ export function DeckCardTile ({
           aria-label={t('removeCard', { name: card.name })}
           className='absolute right-1 top-1 rounded-chip bg-base/85 p-1 text-ink-mid opacity-0 backdrop-blur transition-opacity duration-150 hover:text-invalid focus-visible:opacity-100 group-hover:opacity-100'
         >
-          <Icon name='close' size={11} />
+          <Icon name='trash' size={11} />
         </Pressable>
       </div>
 
