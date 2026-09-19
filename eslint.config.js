@@ -58,10 +58,19 @@ export default [
     // src/index.css, which is where the verified contrast ratios live.
     files: ['src/app/**/*.tsx', 'src/components/**/*.tsx'],
     rules: {
-      'no-restricted-syntax': ['error', {
-        selector: 'Literal[value=/#[0-9a-fA-F]{3,8}\\b|\\brgba?\\(|\\bhsla?\\(/]',
-        message: 'No raw colours in components: use a token from src/index.css.'
-      }]
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/#[0-9a-fA-F]{3,8}\\b|\\brgba?\\(|\\bhsla?\\(/]',
+          message: 'No raw colours in components: use a token from src/index.css.'
+        },
+        {
+          // Zero was removed from the radius scale. Nothing in this product has a
+          // hard corner, and a stray rounded-none is how that erodes.
+          selector: 'Literal[value=/\\brounded-none\\b/]',
+          message: 'Hard corners are not in the system: use rounded-chip, -control or -surface.'
+        }
+      ]
     }
   },
 
