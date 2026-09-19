@@ -102,36 +102,12 @@ export function rarityBreakdown (set: string, pack: string): Array<[string, numb
 }
 
 /**
- * A card that stands in for a pack.
+ * The pack's own artwork, as the game prints it.
  *
- * The game gives each booster its own artwork, and no public source carries it:
- * Limitless serves card art only, and TCGdex's set logos stop at B2 — the 2026
- * sets are missing, which is what people are opening.
- *
- * So the pack is represented by a card instead. Most packs are named after a
- * Pokémon ("Mewtwo", "Charizard"), and that card is the one players associate
- * with the booster; where there is no namesake, the rarest card in the pack
- * stands in, which is informative in its own right — it is the prize.
- *
- * Either way there is always an image, which is what keeps the screen coherent.
+ * No card API carries this — Limitless serves cards only and TCGdex's set logos
+ * stop at B2 — but Bulbagarden Archives has every one of the 28, so
+ * `pnpm sync:packs` pulls them into public/packs/ once rather than hotlinking
+ * another server on every view.
  */
-const PACK_FACE_RARITY = ['UR', 'SSR', 'S', 'IM', 'SAR', 'SR', 'AR', 'RR', 'R', 'U', 'C']
-
-export function packFace (set: string, pack: string): Card | undefined {
-  const inPack = cardsInPack(set, pack)
-  if (inPack.length === 0) return undefined
-
-  const wanted = normalizeName(pack)
-  const namesake = inPack
-    .filter((card) => normalizeName(card.name).startsWith(wanted))
-    .sort(
-      (a, b) =>
-        PACK_FACE_RARITY.indexOf(a.rarity) - PACK_FACE_RARITY.indexOf(b.rarity)
-    )[0]
-
-  if (namesake != null) return namesake
-
-  return [...inPack].sort(
-    (a, b) => PACK_FACE_RARITY.indexOf(a.rarity) - PACK_FACE_RARITY.indexOf(b.rarity)
-  )[0]
-}
+export const packArt = (set: string, pack: string): string =>
+  `/packs/${set}-${pack.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}.webp`

@@ -104,9 +104,54 @@ const main = async () => {
     inferredCount++
   }
 
+  // Lo que sigue sin clasificar se busca en TCGdex, que publica su metadata con
+  // otro calendario y cubre sets que el dataset primario todavía no trae. Va sólo
+  // sobre las que faltan, y en lotes.
+  const stillMissing = cards.filter((c) => c.type === undefined)
+  let fromTcgdex = 0
+
+  if (stillMissing.length > 0) {
+    console.log(`  consultando TCGdex por ${stillMissing.length} cartas sin clasificar…`)
+    const BATCH = 24
+    for (let i = 0; i < stillMissing.length; i += BATCH) {
+      await Promise.all(
+        stillMissing.slice(i, i + BATCH).map(async (card) => {
+          const id = `${card.set}-${String(card.number).padStart(3, '0')}`
+          try {
+            const res = await fetch(`https://api.tcgdex.net/v2/en/cards/${id}`)
+            if (!res.ok) return
+            const d = await res.json()
+            if (d.category == null) return
+
+            // TCGdex usa otro vocabulario: Pokemon/Trainer y Basic/Stage1/Stage2.
+            card.type =
+              d.category === 'Pokemon'
+                ? 'pokemon'
+                : String(d.trainerType ?? 'item').toLowerCase()
+            card.element = d.types?.[0]?.toLowerCase()
+            card.stage =
+              d.stage === 'Basic'
+                ? 'basic'
+                : d.stage === 'Stage1'
+                  ? '1'
+                  : d.stage === 'Stage2'
+                    ? '2'
+                    : undefined
+            card.evolvesFrom = d.evolveFrom ?? undefined
+            card.inferred = true
+            fromTcgdex++
+          } catch {
+            // Lo que TCGdex tampoco tiene queda sin clasificar, que es honesto.
+          }
+        })
+      )
+    }
+  }
+
   const known = cards.filter((c) => c.type !== undefined).length
   console.log(
-    `  metadata: ${known}/${cards.length} cartas (${inferredCount} inferidas por nombre)`
+    `  metadata: ${known}/${cards.length} cartas ` +
+      `(${inferredCount} por nombre, ${fromTcgdex} desde TCGdex)`
   )
 
   // Packs reales por set, derivados de las cartas.

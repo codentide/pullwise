@@ -3,8 +3,7 @@ import { Icon } from '@/components/Icon.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
-import { CardImage } from './CardImage.tsx'
-import { packFace, packMath, setName } from '@/lib/gameData.ts'
+import { packArt, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 
 /**
@@ -48,7 +47,6 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
   // How much of what is missing this one pack actually covers — the coach line
   // is only honest if it knows.
   const coveredHere = missing.filter((entry) => packMath.isInPack(entry.card, winner.pack)).length
-  const face = packFace(winner.pack.set, winner.pack.pack)
   const missingCount = missing.length
 
   return (
@@ -59,11 +57,13 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
         </p>
 
         <div className='flex gap-4 p-4'>
-          {face != null && (
-            <span className='hidden w-16 shrink-0 @md:block'>
-              <CardImage card={face} />
-            </span>
-          )}
+          <img
+            src={packArt(winner.pack.set, winner.pack.pack)}
+            alt=''
+            width={320}
+            height={618}
+            className='hidden w-16 shrink-0 self-start @md:block'
+          />
 
           <div className='min-w-0 flex-1'>
             <p className='game-name text-label uppercase tracking-[0.1em] text-ink-low'>

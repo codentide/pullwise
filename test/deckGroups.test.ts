@@ -24,8 +24,9 @@ test('counts copies, not distinct cards — that is what adds up to 20', () => {
 })
 
 test('cards with no metadata get their own group, never a guess', () => {
-  // Shuckle: never printed in an older set, so nothing to infer its type from.
-  const groups = groupDeck(deck(['B2-003']))
+  // Mega Latios ex: no older printing to infer from, and not in TCGdex either.
+  // If this ever starts passing metadata, upstream caught up — pick another.
+  const groups = groupDeck(deck(['PROMO-B-024']))
   assert.equal(groups.length, 1)
   assert.equal(groups[0]!.id, 'unclassified')
 })

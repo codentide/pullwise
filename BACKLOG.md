@@ -66,6 +66,10 @@ carries both the shareable link and the scannable code.
 
 ## Waiting on someone else
 
+- **Type data for B3 onwards.** 511 cards still have no type or stage, so they
+  land in the deck editor's "unclassified" group. Neither the primary dataset nor
+  TCGdex publishes it yet; `sync-data.mjs` already asks both and will pick it up
+  when either does.
 - **Spanish card art.** TCGdex covers 11 of 23 sets and none from 2026, so a deck
   would render half in each language. `imageUrl()` already accepts a locale and
   ignores it; when coverage catches up this becomes a data change, not code.
