@@ -64,7 +64,8 @@
     "removeCopy": "Remove one copy of {name} from the deck",
     "addCopy": "Add one copy of {name} to the deck",
     "removeCard": "Remove {name} from the deck",
-    "copySlot": "{name}: copy {index} of {total}. {owned, select, yes {You have it} other {Missing}}. Click to change."
+    "copySlot": "{name}: copy {index} of {total}. {owned, select, yes {You have it} other {Missing}}. Click to change.",
+    "copyLights": "{name}: {have} of {needed} copies owned. Press to change."
   },
   "filters": {
     "search": "Search card…",

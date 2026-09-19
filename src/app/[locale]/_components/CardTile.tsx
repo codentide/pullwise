@@ -13,9 +13,6 @@ import { Button } from '@/components/Button.tsx'
  */
 export type Owned = number | undefined
 
-/** The game never allows more than two copies of a name in a deck. */
-const MAX_COPIES = 2
-
 /** Ownership cycle: complete -> partial -> none -> complete. */
 export function cycleOwned (current: Owned, max: number): number {
   if (current === undefined || current >= max) return max - 1 >= 0 ? max - 1 : 0
@@ -24,42 +21,20 @@ export function cycleOwned (current: Owned, max: number): number {
 }
 
 /**
- * One slot per copy the deck asks for, filled when you own it.
+ * Copies you own, as lights that switch on.
  *
- * The count of slots says what the deck needs and the fill says what you have —
- * two facts that were compressed into "1/2", which had to be decoded. Each slot
- * is its own button, so marking the second copy is a direct click rather than
- * cycling a counter until it lands on the right number.
+ * One circle per copy the deck asks for. The whole pill is a single button:
+ * pressing it turns on the next light, and once they are all lit the next press
+ * starts over at none. One control, one gesture, no aiming at a specific dot.
  *
- * A hole is dashed and neutral, never red: a copy you have not got yet is an
- * absence, not an error.
+ * It only appears on hover, like the other overlaid controls — the card itself
+ * already says something is missing by going dim, so the detail of how many is
+ * what the hover reveals. Touch devices have no hover, so there it stays put.
+ *
+ * Rendered as a sibling of the card button rather than inside it: a button
+ * nested in a button is invalid HTML and swallows its own clicks.
  */
-/**
- * One slot per copy the deck asks for, filled when you own it, laid over the
- * card itself.
- *
- * The pattern is the one MTG Arena uses for owned styles — filled pips rather
- * than a fraction — and it sits on the art rather than below it so a dense grid
- * does not pay height for every card.
- *
- * It wears the same pill as the other overlaid controls: same surface, same
- * blur, same radius, tucked against the same margin. Three different treatments
- * on one card was the reason none of them read as belonging together. The blur
- * is also what keeps the slots legible over artwork that ranges from near-white
- * to near-black in this game.
- *
- * It sits at the bottom because the top of a Pokémon card carries the name and
- * HP, which is how you identify it at this size.
- *
- * There are always two slots, the game's maximum, even when the deck only asks
- * for one. What you own is global: mark a single copy on a deck that needs one
- * and a deck that needs two would read it as all you have. The slot beyond what
- * this deck needs is drawn quieter — it is yours, it just is not required here.
- *
- * These render as siblings of the card button, not inside it: a button nested
- * in a button is invalid HTML and swallows its own clicks.
- */
-export function CopySlots ({
+export function CopyLights ({
   owned,
   needed,
   onSet,
@@ -74,37 +49,22 @@ export function CopySlots ({
   const have = owned ?? needed
 
   return (
-    <div className='absolute bottom-1 left-1 flex items-center gap-1 rounded-chip bg-base/85 p-1 backdrop-blur'>
-      {Array.from({ length: MAX_COPIES }, (_, index) => {
-        const filled = index < have
-        const required = index < needed
-        return (
-          <Pressable
-            key={index}
-              // Clicking a filled slot drops to just before it; clicking a hole
-              // fills up to it. Either way one click lands on the right number.
-            onClick={() => onSet(filled ? index : index + 1)}
-            aria-label={t('copySlot', {
-              name: cardName,
-              index: index + 1,
-              total: needed,
-              owned: filled ? 'yes' : 'no'
-            })}
-            className={`h-1.5 rounded-chip border transition-colors duration-150 ${
-                required ? 'w-4' : 'w-2'
-              } ${
-                filled
-                  ? required
-                    ? 'border-valid bg-valid hover:bg-valid/80'
-                    : 'border-valid/40 bg-valid/40 hover:bg-valid/60'
-                  : required
-                    ? 'border-dashed border-ink-mid hover:border-ink-high'
-                    : 'border-dashed border-ink-low/50 hover:border-ink-mid'
-              }`}
-          />
-        )
-      })}
-    </div>
+    <Pressable
+      onClick={() => onSet(have >= needed ? 0 : have + 1)}
+      aria-label={t('copyLights', { name: cardName, have, needed })}
+      className='absolute bottom-1 left-1 flex items-center gap-1 rounded-chip bg-base/85 p-1 opacity-0 backdrop-blur transition-opacity duration-150 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100'
+    >
+      {Array.from({ length: needed }, (_, index) => (
+        <span
+          key={index}
+          className={`size-2 rounded-full transition-all duration-150 ${
+            index < have
+              ? 'bg-valid shadow-[0_0_6px_var(--color-valid)]'
+              : 'border border-ink-low'
+          }`}
+        />
+      ))}
+    </Pressable>
   )
 }
 
@@ -194,7 +154,7 @@ export function DeckCardTile ({
           />
         </Pressable>
 
-        <CopySlots owned={owned} needed={copies} onSet={onSetOwned} cardName={card.name} />
+        <CopyLights owned={owned} needed={copies} onSet={onSetOwned} cardName={card.name} />
 
         <div className='absolute left-1 top-1 flex items-center gap-px rounded-chip bg-base/85 opacity-0 backdrop-blur transition-opacity duration-150 focus-within:opacity-100 group-hover:opacity-100'>
           <Button variant='ghost' onClick={() => onCopies(copies - 1)} aria-label={t('removeCopy', { name: card.name })} className='px-1 py-1'>
