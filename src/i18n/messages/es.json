@@ -92,7 +92,7 @@
     "toFinishLabel": "Sobres al mazo",
     "otherPacks": "Otros sobres",
     "coachAllHere": "{count, plural, one {Te falta # carta y sale de acá} other {Te faltan # cartas y todas salen de acá}}.",
-    "coachMostlyHere": "Te faltan {count} cartas; {here} de ellas salen de acá.",
+    "coachMostlyHere": "Te faltan {count} cartas; {here, plural, one {# de ellas sale} other {# de ellas salen}} de acá.",
     "coachOnlyOne": "Es el único sobre que tiene lo que te falta."
   },
   "advisor": {
