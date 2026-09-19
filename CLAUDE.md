@@ -57,6 +57,10 @@ preferences:
 - **Semantic colours are for deck validation only.** Never for a card's state:
   *unknown is not an error*. Unknown renders dashed and grey — a pause, not an
   alarm. Never red, never struck through, never counted.
+- **UI icons come from Lucide**, mapped by role in `src/components/Icon.tsx` —
+  call sites name the job ('pack', 'deck'), never the shape, so the source can
+  change without the meaning moving. Energy symbols stay hand-drawn: no general
+  icon set carries the ten TCG energies.
 - **Set and pack names go in mono and in English** (`.game-name`), in both
   locales: that is how the player recognises them from the game.
 - **Every estimate carries a `~`.** An exact number where there is chance is a

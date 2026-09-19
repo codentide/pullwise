@@ -32,7 +32,7 @@ These are specific to the product and should not be replaced by generic
 equivalents from a manual:
 
 `CardImage` · `StaticCardImage` · `CardTile` · `DeckCardTile` · `OwnedPill` ·
-`EnergyIcon` (10 energy discs) · `Icon` (11 UI glyphs) · `CardFilters` ·
+`EnergyIcon` (10 energy discs, hand-drawn) · `CardFilters` ·
 `CardGridLinks` · `PackRanking` · `SiteChrome`
 
 ## The closed set
@@ -43,7 +43,7 @@ or extends it, and cannot reach for a raw element. Native tags are banned outsid
 
 ### Built
 
-`Button` (primary · quiet · ghost) · `Panel` · `HairlineList` + `HairlineRow` ·
+`Button` (6 variants) · `Icon` (Lucide) · `Panel` · `HairlineList` + `HairlineRow` ·
 `EmptyState` · `Heading` (page · section · sub)
 
 ### Missing — these are what the app still does with raw elements
