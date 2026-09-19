@@ -25,7 +25,14 @@ export default [
   },
 
   {
-    ignores: ['.next/**', 'dist/**', 'node_modules/**', 'src/data/**']
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      // Generated: sync-data.mjs writes these, Next writes next-env.d.ts.
+      // Linting a generated file means fixing it on every build, forever.
+      'src/data/**',
+      'next-env.d.ts'
+    ]
   },
 
   {
