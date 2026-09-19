@@ -139,9 +139,19 @@ test('energy icons clear 3:1 on the base surface', () => {
   }
 })
 
-test('semantic colours clear 4.5:1 — they carry validation text', () => {
-  for (const name of ['valid', 'warn', 'invalid']) {
-    const ratio = contrast(dark.get(name)!, dark.get('base')!)
-    assert.ok(ratio >= 4.5, `--color-${name} is ${ratio.toFixed(2)}:1`)
+test('semantic colours clear 4.5:1 in both themes — they carry validation text', () => {
+  // Checking only the dark theme is what let the light amber ship at 1.84:1.
+  for (const [themeName, theme] of [['dark', dark], ['light', light]] as const) {
+    for (const name of ['valid', 'warn', 'invalid']) {
+      const colour = theme.get(name)
+      assert.ok(colour !== undefined, `${themeName}: --color-${name} is not defined`)
+      for (const [surfaceName, surface] of surfaces(theme)) {
+        const ratio = contrast(colour, surface)
+        assert.ok(
+          ratio >= 4.5,
+          `${themeName}: --color-${name} (${colour}) is ${ratio.toFixed(2)}:1 on ${surfaceName}`
+        )
+      }
+    }
   }
 })

@@ -120,6 +120,12 @@
     --color-accent-hover: #c23508;
     --color-accent-wash: #fdeee8;
     --color-accent-ink: #ffffff;
+    /* The semantic colours are tuned for a dark ground and wash out on paper:
+       on #fbfaf8 the amber measured 1.84:1. These are the same hues carried
+       down until they clear 4.5:1 for text. */
+    --color-valid: #17724d;
+    --color-warn: #8a6512;
+    --color-invalid: #c4372b;
   }
 }
 
