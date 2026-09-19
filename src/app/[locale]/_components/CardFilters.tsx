@@ -34,7 +34,7 @@ export function CardFilters ({
           value={value.text}
           onChange={(event) => set('text', event.target.value)}
           placeholder={t('search')}
-          className='w-full py-1.5 pl-7 pr-2'
+          className='w-full py-2 pl-6 pr-2'
         />
       </div>
 

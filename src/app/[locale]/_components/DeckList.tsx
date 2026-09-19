@@ -26,7 +26,7 @@ export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
       <div className='flex flex-wrap items-center gap-2'>
         <Heading level='page'>{t('title')}</Heading>
         <div className='ml-auto flex gap-2'>
-          <Button variant='quiet' className='px-3 py-1.5 text-meta' onClick={() => setImporting((open) => !open)}>
+          <Button variant='quiet' className='px-3 py-2 text-meta' onClick={() => setImporting((open) => !open)}>
             {t('pasteList')}
           </Button>
           <Button onClick={() => onOpen(actions.createDeck(t('new')))}>

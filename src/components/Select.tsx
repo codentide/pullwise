@@ -35,7 +35,7 @@ export function Select ({
     <RadixSelect.Root value={value} onValueChange={onChange}>
       <RadixSelect.Trigger
         aria-label={ariaLabel}
-        className={`flex items-center gap-1.5 rounded-control border border-line-control bg-raised px-2 py-1.5 text-meta text-ink-high transition-colors duration-150 hover:border-ink-low data-[state=open]:border-accent ${className}`}
+        className={`flex items-center gap-2 rounded-control border border-line-control bg-raised px-2 py-2 text-meta text-ink-high transition-colors duration-150 hover:border-ink-low data-[state=open]:border-accent ${className}`}
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon className='text-ink-low'>
@@ -54,7 +54,7 @@ export function Select ({
               <RadixSelect.Item
                 key={option.value}
                 value={option.value}
-                className='flex cursor-pointer items-center gap-2 rounded-chip px-2 py-1.5 text-meta text-ink-mid outline-none data-[highlighted]:bg-overlay data-[highlighted]:text-ink-high data-[state=checked]:text-accent'
+                className='flex cursor-pointer items-center gap-2 rounded-chip px-2 py-2 text-meta text-ink-mid outline-none data-[highlighted]:bg-overlay data-[highlighted]:text-ink-high data-[state=checked]:text-accent'
               >
                 <RadixSelect.ItemText>{option.label}</RadixSelect.ItemText>
               </RadixSelect.Item>

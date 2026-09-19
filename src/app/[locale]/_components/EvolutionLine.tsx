@@ -22,13 +22,17 @@ export function EvolutionLine ({ gap, onAdd }: { gap: LineGap, onAdd: (card: Car
   return (
     <Notice tone='warning'>
       <p className='text-ink-high'>
-        {t('lineGapTitle', { name: gap.needs.name, from: gap.missingName })}
+        {t.rich('lineGapTitle', {
+          name: gap.needs.name,
+          from: gap.missingName,
+          n: (chunks) => <span className='game-name'>{chunks}</span>
+        })}
       </p>
       <p className='text-label text-ink-mid'>{t('lineGapBody')}</p>
 
-      <ol className='mt-2.5 flex flex-wrap items-center gap-1.5'>
+      <ol className='mt-3 flex flex-wrap items-center gap-2'>
         {gap.chain.map((link, index) => (
-          <li key={link.name} className='flex items-center gap-1.5'>
+          <li key={link.name} className='flex items-center gap-2'>
             {index > 0 && (
               <span aria-hidden className='font-mono text-label text-ink-low'>→</span>
             )}

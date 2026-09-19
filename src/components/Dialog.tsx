@@ -42,7 +42,7 @@ export function ConfirmDialog ({
           )}
           <div className='mt-4 flex justify-end gap-2'>
             <RadixDialog.Close asChild>
-              <Button variant='quiet' className='px-3 py-1.5 text-meta'>{cancelLabel}</Button>
+              <Button variant='quiet' className='px-3 py-2 text-meta'>{cancelLabel}</Button>
             </RadixDialog.Close>
             <Button
               variant={destructive ? 'danger' : 'primary'}

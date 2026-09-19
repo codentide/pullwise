@@ -69,7 +69,7 @@ export default async function CardPage ({ params }: Props) {
       <article className='grid gap-6 sm:grid-cols-[14rem_1fr]'>
         <div><StaticCardImage card={card} priority /></div>
 
-        <div className='flex flex-col gap-5'>
+        <div className='flex flex-col gap-6'>
           <header>
             <Heading level='page'>{card.name}</Heading>
             <p className='mt-1 text-meta text-ink-mid'>
@@ -96,7 +96,7 @@ export default async function CardPage ({ params }: Props) {
                     {odds.map((entry) => (
                       <li
                         key={`${entry.pack.set}/${entry.pack.pack}`}
-                        className='flex items-center gap-3 bg-raised px-3 py-2.5'
+                        className='flex items-center gap-3 bg-raised px-3 py-3'
                       >
                         <div className='min-w-0 flex-1'>
                           <p className='truncate text-meta text-ink-high'>{entry.pack.pack}</p>
@@ -131,7 +131,7 @@ export default async function CardPage ({ params }: Props) {
             <p className='text-meta leading-relaxed text-ink-mid'>{t('ctaBody')}</p>
             <Link
               href='/'
-              className='mt-2 inline-block rounded-control bg-accent px-3 py-1.5 text-meta font-medium text-accent-ink'
+              className='mt-2 inline-block rounded-control bg-accent px-3 py-2 text-meta font-medium text-accent-ink'
             >
               {t('ctaAction')}
             </Link>
@@ -140,7 +140,7 @@ export default async function CardPage ({ params }: Props) {
       </article>
 
       {sameSet.length > 0 && (
-        <section className='mt-8'>
+        <section className='mt-6'>
           <Heading level='sub'>{t('moreFrom', { set: setName(card.set) })}</Heading>
           <CardGridLinks cards={sameSet} showRarity={false} />
         </section>

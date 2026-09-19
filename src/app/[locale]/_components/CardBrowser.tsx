@@ -58,7 +58,7 @@ export function CardBrowser () {
       />
 
       {results.length === 0
-        ? <p className='py-16 text-center text-meta text-ink-low'>{t('noResults')}</p>
+        ? <p className='py-12 text-center text-meta text-ink-low'>{t('noResults')}</p>
         : (
           <>
             <ul className='grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(6.5rem,1fr))]'>

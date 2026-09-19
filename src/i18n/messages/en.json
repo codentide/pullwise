@@ -48,7 +48,7 @@
     "searchHint": "Enter adds the first one",
     "emptySlots": "{count, plural, one {# slot left} other {# slots left}}",
     "full": "Deck full",
-    "lineGapTitle": "{name} has no {from}",
+    "lineGapTitle": "<n>{name}</n> has no <n>{from}</n>",
     "lineGapBody": "An evolution cannot be played without its line.",
     "addOne": "Add {name}",
     "recommendation": "Recommendation",
@@ -110,9 +110,9 @@
   "issues": {
     "tooFewCards": "{count, plural, one {# card short} other {# cards short}} of {size}.",
     "tooManyCards": "{count, plural, one {# card over} other {# cards over}} the limit of {size}.",
-    "tooManyCopies": "{copies} copies of {name}: the maximum is {max}.",
+    "tooManyCopies": "{copies} copies of <n>{name}</n>: the maximum is {max}.",
     "noBasic": "There is no Basic Pokémon: the deck cannot start play.",
-    "evolutionWithoutBase": "{name} evolves from {from}, which is not in the deck.",
+    "evolutionWithoutBase": "<n>{name}</n> evolves from <n>{from}</n>, which is not in the deck.",
     "unknownMetadata": "{count, plural, one {# card has no data} other {# cards have no data}} to validate yet."
   },
   "cardPage": {

@@ -23,7 +23,7 @@ export function Badge ({
   return (
     <span
       {...props}
-      className={`inline-flex items-center gap-0.5 rounded-chip px-1 text-label font-medium ${TONES[tone]} ${className}`}
+      className={`inline-flex items-center gap-1 rounded-chip px-1 text-label font-medium ${TONES[tone]} ${className}`}
     />
   )
 }
@@ -77,7 +77,7 @@ export function Chip ({
     <button
       {...props}
       aria-pressed={pressed}
-      className={`flex items-center gap-1 rounded-control px-1.5 py-1 text-label transition-colors duration-150 ${
+      className={`flex items-center gap-1 rounded-control px-2 py-1 text-label transition-colors duration-150 ${
         pressed ? 'bg-overlay text-ink-high' : 'text-ink-low hover:bg-overlay'
       } ${className}`}
     />

@@ -58,14 +58,14 @@ export default async function SetPage ({ params }: Props) {
       </header>
 
       {set.packs.length > 0 && (
-        <section className='mt-5'>
+        <section className='mt-6'>
           <Heading level='sub'>{t('packs')}</Heading>
           <ul className='mt-2 flex flex-wrap gap-2'>
             {set.packs.map((pack) => (
               <li key={pack}>
                 <Link
                   href={`/pack/${set.code}/${encodeURIComponent(pack)}`}
-                  className='block rounded-control border border-line-control px-3 py-1.5 text-meta text-ink-high transition-colors duration-150 hover:border-accent hover:text-accent'
+                  className='block rounded-control border border-line-control px-3 py-2 text-meta text-ink-high transition-colors duration-150 hover:border-accent hover:text-accent'
                 >
                   {pack}
                 </Link>

@@ -70,7 +70,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
             </Badge>
           )}
 
-          <div className='mt-4 flex flex-wrap items-end gap-x-8 gap-y-4'>
+          <div className='mt-4 flex flex-wrap items-end gap-x-6 gap-y-4'>
             <Figure
               value={percent(winner.chanceOfUseful)}
               label={t('perPackLabel')}
@@ -101,7 +101,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
             {rest.map((entry, index) => (
               <li
                 key={`${entry.pack.set}/${entry.pack.pack}`}
-                className='flex items-center gap-3 border-b border-line py-2.5'
+                className='flex items-center gap-3 border-b border-line py-3'
               >
                 <span className='tnum font-mono text-label text-ink-low'>
                   {String(index + 2).padStart(2, '0')}
@@ -111,7 +111,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
                     {entry.pack.pack}
                     <span className='text-ink-low'> — {setName(entry.pack.set)}</span>
                   </p>
-                  <div className='mt-1.5 h-px bg-line'>
+                  <div className='mt-2 h-px bg-line'>
                     <div
                       className='pw-fill h-px bg-line-control'
                       style={{
@@ -157,7 +157,7 @@ function Unobtainable ({ analysis }: { analysis: DeckAnalysis }) {
   const t = useTranslations('ranking')
   return (
     <div className='border border-line bg-raised p-3'>
-      <p className='flex items-center gap-1.5 text-label text-warn'>
+      <p className='flex items-center gap-2 text-label text-warn'>
         <Icon name='warn' size={12} />
         {t('notFromPacks')}
       </p>

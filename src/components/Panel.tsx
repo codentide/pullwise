@@ -29,7 +29,7 @@ export function HairlineList ({ className = '', ...props }: ComponentProps<'ul'>
 }
 
 export function HairlineRow ({ className = '', ...props }: ComponentProps<'li'>) {
-  return <li {...props} className={`flex items-center gap-3 bg-raised px-3 py-2.5 ${className}`} />
+  return <li {...props} className={`flex items-center gap-3 bg-raised px-3 py-3 ${className}`} />
 }
 
 /** Dashed placeholder for "there is nothing here yet". */

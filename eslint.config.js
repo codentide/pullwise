@@ -65,6 +65,17 @@ export default [
           message: 'No raw colours in components: use a token from src/index.css.'
         },
         {
+          // The spacing scale is 4 / 8 / 12 / 16 / 24 / 48 / 96 — Tailwind's
+          // 1, 2, 3, 4, 6, 12 and 24. Half-steps and the values in between are
+          // not on it. An audit found 59 of 193 spacing utilities had drifted
+          // off the scale before this rule existed.
+          // `gap-px` is exempt: it is not spacing, it is what draws hairlines.
+          selector:
+            'Literal[value=/\\b(?:p|px|py|pt|pb|pl|pr|m|mt|mb|ml|mr|mx|my|gap|gap-x|gap-y|space-x|space-y)-(?:0\\.5|1\\.5|2\\.5|3\\.5|5|7|8|9|10|11|14|16|20)\\b/]',
+          message:
+            'Off the spacing scale. Use 1, 2, 3, 4, 6, 12 or 24 (4/8/12/16/24/48/96px).'
+        },
+        {
           // Zero was removed from the radius scale. Nothing in this product has a
           // hard corner, and a stray rounded-none is how that erodes.
           selector: 'Literal[value=/\\brounded-none\\b/]',

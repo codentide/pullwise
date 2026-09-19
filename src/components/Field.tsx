@@ -5,7 +5,7 @@ import type { ComponentProps } from 'react'
 import { Icon } from './Icon.tsx'
 
 const FIELD =
-  'rounded-control border border-line-control bg-raised px-2 py-1.5 text-meta text-ink-high placeholder:text-ink-low transition-colors duration-150 focus:border-accent'
+  'rounded-control border border-line-control bg-raised px-2 py-2 text-meta text-ink-high placeholder:text-ink-low transition-colors duration-150 focus:border-accent'
 
 export function TextInput ({ className = '', ...props }: ComponentProps<'input'>) {
   return <input {...props} className={`${FIELD} ${className}`} />
@@ -25,7 +25,7 @@ export function Checkbox ({
   label: string
 }) {
   return (
-    <label className='flex cursor-pointer items-center gap-1.5 text-meta text-ink-mid'>
+    <label className='flex cursor-pointer items-center gap-2 text-meta text-ink-mid'>
       <RadixCheckbox.Root
         checked={checked}
         onCheckedChange={(next) => onChange(next === true)}

@@ -48,7 +48,7 @@
     "searchHint": "Enter agrega la primera",
     "emptySlots": "{count, plural, one {Queda # hueco} other {Quedan # huecos}}",
     "full": "Mazo completo",
-    "lineGapTitle": "{name} no tiene {from}",
+    "lineGapTitle": "<n>{name}</n> no tiene <n>{from}</n>",
     "lineGapBody": "Una evolución no se puede jugar sin su línea.",
     "addOne": "Agregar {name}",
     "recommendation": "Recomendación",
@@ -110,9 +110,9 @@
   "issues": {
     "tooFewCards": "{count, plural, one {Falta # carta} other {Faltan # cartas}} para llegar a {size}.",
     "tooManyCards": "{count, plural, one {Sobra # carta} other {Sobran # cartas}}: el máximo es {size}.",
-    "tooManyCopies": "{copies} copias de {name}: el máximo son {max}.",
+    "tooManyCopies": "{copies} copias de <n>{name}</n>: el máximo son {max}.",
     "noBasic": "No hay ningún Pokémon básico: el mazo no puede empezar a jugar.",
-    "evolutionWithoutBase": "{name} evoluciona de {from}, que no está en el mazo.",
+    "evolutionWithoutBase": "<n>{name}</n> evoluciona de <n>{from}</n>, que no está en el mazo.",
     "unknownMetadata": "{count, plural, one {Sin datos para validar # carta} other {Sin datos para validar # cartas}} todavía."
   },
   "cardPage": {

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
 import { Button } from '@/components/Button.tsx'
@@ -55,7 +55,7 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
   return (
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center gap-2'>
-        <Button variant='ghost' onClick={onBack} className='px-1.5'>
+        <Button variant='ghost' onClick={onBack} className='px-2'>
           <Icon name='back' size={14} />
           {t('back')}
         </Button>
@@ -75,7 +75,7 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
           variant='ghost'
           onClick={() => setConfirmingDelete(true)}
           aria-label={t('delete')}
-          className='p-1.5 text-ink-low hover:text-invalid'
+          className='p-2 text-ink-low hover:text-invalid'
         >
           <Icon name='trash' />
         </Button>
@@ -92,7 +92,7 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
       </div>
 
       <div className='grid gap-6 lg:grid-cols-[2fr_1fr]'>
-        <div className='flex flex-col gap-5'>
+        <div className='flex flex-col gap-6'>
           <CardSearch deck={deck} onAdd={add} />
 
           {gaps.length > 0 && (
@@ -189,7 +189,7 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
             if (event.key === 'Escape') setQuery('')
           }}
           placeholder={t('searchPlaceholder')}
-          className='w-full py-2.5 pl-8 pr-3 text-body'
+          className='w-full py-3 pl-6 pr-3 text-body'
         />
       </div>
 
@@ -268,17 +268,24 @@ function IssueRow ({ issue }: { issue: DeckIssue }) {
   const tone: NoticeTone =
     issue.level === 'error' ? 'error' : issue.level === 'warning' ? 'warning' : 'info'
 
-  const message = (): string => {
+  // Card and pack names render in mono in both locales — that is how the player
+  // sees them in the game. The message catalogue marks them with <n>, so the
+  // domain still knows nothing about typography.
+  const gameName = (chunks: ReactNode): ReactNode => (
+    <span className='game-name'>{chunks}</span>
+  )
+
+  const message = (): ReactNode => {
     switch (issue.code) {
       case 'tooFewCards':
       case 'tooManyCards':
         return t(issue.code, { count: issue.count, size: issue.size })
       case 'tooManyCopies':
-        return t(issue.code, { name: issue.name, copies: issue.copies, max: issue.max })
+        return t.rich(issue.code, { name: issue.name, copies: issue.copies, max: issue.max, n: gameName })
       case 'noBasic':
         return t(issue.code)
       case 'evolutionWithoutBase':
-        return t(issue.code, { name: issue.name, from: issue.from })
+        return t.rich(issue.code, { name: issue.name, from: issue.from, n: gameName })
       case 'unknownMetadata':
         return t(issue.code, { count: issue.count })
     }

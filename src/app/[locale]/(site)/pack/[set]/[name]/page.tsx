@@ -67,13 +67,13 @@ export default async function PackPage ({ params }: Props) {
         </p>
       </header>
 
-      <section className='mt-5'>
+      <section className='mt-6'>
         <Heading level='sub'>{t('contents')}</Heading>
         <ul className='mt-2 flex flex-wrap gap-2'>
           {breakdown.map(([rarity, count]) => (
             <li
               key={rarity}
-              className='tnum rounded-control border border-line bg-raised px-2.5 py-1 text-meta text-ink-mid'
+              className='tnum rounded-control border border-line bg-raised px-3 py-1 text-meta text-ink-mid'
             >
               <span className='font-medium text-ink-high'>{rarity}</span> · {count}
             </li>

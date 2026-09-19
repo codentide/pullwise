@@ -47,7 +47,7 @@ export function OwnedPill ({
       onClick={onClick}
       aria-label={t('ownership', { name: cardName, have, needed })}
       title={t('ownershipTitle', { have, needed })}
-      className={`tnum flex w-full items-center justify-center gap-1 rounded-control py-0.5 text-label font-medium transition-colors duration-150 ${tone}`}
+      className={`tnum flex w-full items-center justify-center gap-1 rounded-control py-1 text-label font-medium transition-colors duration-150 ${tone}`}
     >
       {complete && <Icon name='check' size={11} />}
       {have}/{needed}
@@ -95,7 +95,7 @@ export function CardTile ({
           </span>
         )}
       </Pressable>
-      <div className='flex items-baseline justify-between gap-1 px-0.5'>
+      <div className='flex items-baseline justify-between gap-1 px-1'>
         <span className='truncate text-label text-ink-mid' title={card.name}>
           {card.name}
         </span>
@@ -142,11 +142,11 @@ export function DeckCardTile ({
         </Pressable>
 
         <div className='absolute left-1 top-1 flex items-center gap-px rounded-chip bg-base/85 opacity-0 backdrop-blur transition-opacity duration-150 focus-within:opacity-100 group-hover:opacity-100'>
-          <Button variant='ghost' onClick={() => onCopies(copies - 1)} aria-label={t('removeCopy', { name: card.name })} className='px-1 py-0.5'>
+          <Button variant='ghost' onClick={() => onCopies(copies - 1)} aria-label={t('removeCopy', { name: card.name })} className='px-1 py-1'>
             <Icon name='minus' size={11} />
           </Button>
           <span className='tnum min-w-[1.1rem] text-center text-label text-ink-high'>{copies}</span>
-          <Button variant='ghost' onClick={() => onCopies(copies + 1)} disabled={copies >= 2} aria-label={t('addCopy', { name: card.name })} className='px-1 py-0.5'>
+          <Button variant='ghost' onClick={() => onCopies(copies + 1)} disabled={copies >= 2} aria-label={t('addCopy', { name: card.name })} className='px-1 py-1'>
             <Icon name='plus' size={11} />
           </Button>
         </div>
@@ -154,7 +154,7 @@ export function DeckCardTile ({
         <Pressable
           onClick={onRemove}
           aria-label={t('removeCard', { name: card.name })}
-          className='absolute right-1 top-1 rounded-chip bg-base/85 p-0.5 text-ink-mid opacity-0 backdrop-blur transition-opacity duration-150 hover:text-invalid focus-visible:opacity-100 group-hover:opacity-100'
+          className='absolute right-1 top-1 rounded-chip bg-base/85 p-1 text-ink-mid opacity-0 backdrop-blur transition-opacity duration-150 hover:text-invalid focus-visible:opacity-100 group-hover:opacity-100'
         >
           <Icon name='close' size={11} />
         </Pressable>

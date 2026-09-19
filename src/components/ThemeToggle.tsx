@@ -39,7 +39,7 @@ export function ThemeToggle ({ label }: { label: string }) {
       onClick={toggle}
       aria-label={label}
       title={label}
-      className='rounded-control p-1.5 text-ink-low transition-colors duration-150 hover:text-ink-high'
+      className='rounded-control p-2 text-ink-low transition-colors duration-150 hover:text-ink-high'
     >
       <Icon name={theme === 'light' ? 'moon' : 'sun'} size={14} />
     </button>

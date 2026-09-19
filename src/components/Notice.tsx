@@ -35,10 +35,10 @@ export function Notice ({
 
   return (
     <div
-      className={`flex items-start gap-2.5 rounded-control px-2.5 py-2 text-meta leading-relaxed ${style.box}`}
+      className={`flex items-start gap-3 rounded-control px-3 py-2 text-meta leading-relaxed ${style.box}`}
       role={tone === 'error' ? 'alert' : undefined}
     >
-      <Icon name={style.glyph} size={14} className={`mt-0.5 shrink-0 ${style.icon}`} />
+      <Icon name={style.glyph} size={14} className={`mt-1 shrink-0 ${style.icon}`} />
       <div className='min-w-0 flex-1'>{children}</div>
       {action != null && <div className='shrink-0'>{action}</div>}
     </div>
@@ -47,5 +47,5 @@ export function Notice ({
 
 /** A stack of notices, separated enough to read as separate statements. */
 export function NoticeList ({ children }: { children: ReactNode }) {
-  return <div className='flex flex-col gap-1.5'>{children}</div>
+  return <div className='flex flex-col gap-2'>{children}</div>
 }
