@@ -8,7 +8,7 @@ import { ConfirmDialog } from '@/components/Dialog.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Notice, NoticeList, type NoticeTone } from '@/components/Notice.tsx'
-import { DeckCardTile, cycleOwned } from './CardTile.tsx'
+import { DeckCardTile } from './CardTile.tsx'
 import { CardImage } from './CardImage.tsx'
 import { PackRanking } from './PackRanking.tsx'
 import { EvolutionLine } from './EvolutionLine.tsx'
@@ -115,8 +115,7 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
                       card={card}
                       copies={copies}
                       owned={state.knowledge[card.id]}
-                      onCycleOwned={() =>
-                        actions.setOwned(card.id, cycleOwned(state.knowledge[card.id], copies))}
+                      onSetOwned={(owned) => actions.setOwned(card.id, owned)}
                       onCopies={(next) => actions.setCopies(deck.id, card.id, next)}
                       onRemove={() => actions.setCopies(deck.id, card.id, 0)}
                     />

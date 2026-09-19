@@ -63,7 +63,8 @@
     "youHave": "Tienes {count}",
     "removeCopy": "Quitar una copia de {name} del mazo",
     "addCopy": "Agregar una copia de {name} al mazo",
-    "removeCard": "Sacar {name} del mazo"
+    "removeCard": "Sacar {name} del mazo",
+    "copySlot": "{name}: copia {index} de {total}. {owned, select, yes {La tienes} other {Te falta}}. Haz clic para cambiar."
   },
   "filters": {
     "search": "Buscar carta…",

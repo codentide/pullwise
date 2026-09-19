@@ -20,38 +20,56 @@ export function cycleOwned (current: Owned, max: number): number {
   return current - 1
 }
 
-export function OwnedPill ({
+/**
+ * One slot per copy the deck asks for, filled when you own it.
+ *
+ * The count of slots says what the deck needs and the fill says what you have —
+ * two facts that were compressed into "1/2", which had to be decoded. Each slot
+ * is its own button, so marking the second copy is a direct click rather than
+ * cycling a counter until it lands on the right number.
+ *
+ * A hole is dashed and neutral, never red: a copy you have not got yet is an
+ * absence, not an error.
+ */
+export function CopySlots ({
   owned,
   needed,
-  onClick,
+  onSet,
   cardName
 }: {
   owned: Owned
   needed: number
-  onClick: () => void
+  onSet: (owned: number) => void
   cardName: string
 }) {
   const t = useTranslations('card')
   const have = owned ?? needed
-  const complete = have >= needed
-  const none = have <= 0
-
-  const tone = complete
-    ? 'bg-valid/12 text-valid'
-    : none
-      ? 'bg-invalid/12 text-invalid'
-      : 'bg-warn/12 text-warn'
 
   return (
-    <Pressable
-      onClick={onClick}
-      aria-label={t('ownership', { name: cardName, have, needed })}
-      title={t('ownershipTitle', { have, needed })}
-      className={`tnum flex w-full items-center justify-center gap-1 rounded-control py-1 text-label font-medium transition-colors duration-150 ${tone}`}
-    >
-      {complete && <Icon name='check' size={11} />}
-      {have}/{needed}
-    </Pressable>
+    <div className='flex items-center justify-center gap-1'>
+      {Array.from({ length: needed }, (_, index) => {
+        const filled = index < have
+        return (
+          <Pressable
+            key={index}
+            // Clicking a filled slot drops to just before it; clicking a hole
+            // fills up to it. Either way one click lands on the intended number.
+            onClick={() => onSet(filled ? index : index + 1)}
+            aria-label={t('copySlot', {
+              name: cardName,
+              index: index + 1,
+              total: needed,
+              owned: filled ? 'yes' : 'no'
+            })}
+            className={`h-2 flex-1 rounded-chip transition-colors duration-150 ${
+              filled
+                ? 'bg-valid hover:bg-valid/80'
+                : 'border border-dashed border-line-control hover:border-ink-low'
+            }`}
+          />
+        )
+      })}
+    </div>
   )
 }
 
@@ -110,14 +128,14 @@ export function DeckCardTile ({
   card,
   copies,
   owned,
-  onCycleOwned,
+  onSetOwned,
   onCopies,
   onRemove
 }: {
   card: Card
   copies: number
   owned: Owned
-  onCycleOwned: () => void
+  onSetOwned: (owned: number) => void
   onCopies: (next: number) => void
   onRemove: () => void
 }) {
@@ -129,7 +147,7 @@ export function DeckCardTile ({
     <div className='group flex flex-col gap-1'>
       <div className='relative'>
         <Pressable
-          onClick={onCycleOwned}
+          onClick={() => onSetOwned(have >= copies ? 0 : copies)}
           aria-label={t('ownership', { name: card.name, have, needed: copies })}
           className='block w-full'
         >
@@ -160,7 +178,7 @@ export function DeckCardTile ({
         </Pressable>
       </div>
 
-      <OwnedPill owned={owned} needed={copies} onClick={onCycleOwned} cardName={card.name} />
+      <CopySlots owned={owned} needed={copies} onSet={onSetOwned} cardName={card.name} />
     </div>
   )
 }
