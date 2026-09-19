@@ -3,7 +3,8 @@ import { Icon } from '@/components/Icon.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
-import { packMath, setName } from '@/lib/gameData.ts'
+import { CardImage } from './CardImage.tsx'
+import { packFace, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 
 /**
@@ -47,50 +48,59 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
   // How much of what is missing this one pack actually covers — the coach line
   // is only honest if it knows.
   const coveredHere = missing.filter((entry) => packMath.isInPack(entry.card, winner.pack)).length
+  const face = packFace(winner.pack.set, winner.pack.pack)
   const missingCount = missing.length
 
   return (
     <div className='flex flex-col gap-6'>
-      <section className='@container border border-line bg-raised'>
+      <section className='@container overflow-hidden rounded-surface border border-line bg-raised'>
         <p className='border-b border-line px-4 py-2 font-mono text-label uppercase tracking-[0.14em] text-accent'>
           {t('openThis')}
         </p>
 
-        <div className='p-4'>
-          <p className='game-name text-label uppercase tracking-[0.1em] text-ink-low'>
-            {setName(winner.pack.set)}
-          </p>
-          <Heading level='gameName' as='h3' className='mt-1'>
-            {winner.pack.pack}
-          </Heading>
-          {winner.estimated && (
-            <Badge tone='warn' className='mt-2' title={t('estimatedTitle')}>
-              <Icon name='warn' size={10} />
-              {t('estimated')}
-            </Badge>
+        <div className='flex gap-4 p-4'>
+          {face != null && (
+            <span className='hidden w-16 shrink-0 @md:block'>
+              <CardImage card={face} />
+            </span>
           )}
 
-          <div className='mt-4 flex flex-wrap items-end gap-x-6 gap-y-4'>
-            <Figure
-              value={percent(winner.chanceOfUseful)}
-              label={t('perPackLabel')}
-              accent
-            />
-            {simulation != null && (
-              <Figure
-                value={`~${simulation.packsMedian}${simulation.censored ? '+' : ''}`}
-                label={t('toFinishLabel')}
-              />
+          <div className='min-w-0 flex-1'>
+            <p className='game-name text-label uppercase tracking-[0.1em] text-ink-low'>
+              {setName(winner.pack.set)}
+            </p>
+            <Heading level='gameName' as='h3' className='mt-1'>
+              {winner.pack.pack}
+            </Heading>
+            {winner.estimated && (
+              <Badge tone='warn' className='mt-2' title={t('estimatedTitle')}>
+                <Icon name='warn' size={10} />
+                {t('estimated')}
+              </Badge>
             )}
-          </div>
 
-          <p className='mt-4 max-w-prose text-meta leading-relaxed text-ink-mid'>
-            {rest.length === 0
-              ? t('coachOnlyOne')
-              : coveredHere === missingCount
-                ? t('coachAllHere', { count: missingCount })
-                : t('coachMostlyHere', { count: missingCount, here: coveredHere })}
-          </p>
+            <div className='mt-4 flex flex-wrap items-end gap-x-6 gap-y-4'>
+              <Figure
+                value={percent(winner.chanceOfUseful)}
+                label={t('perPackLabel')}
+                accent
+              />
+              {simulation != null && (
+                <Figure
+                  value={`~${simulation.packsMedian}${simulation.censored ? '+' : ''}`}
+                  label={t('toFinishLabel')}
+                />
+              )}
+            </div>
+
+            <p className='mt-4 max-w-prose text-meta leading-relaxed text-ink-mid'>
+              {rest.length === 0
+                ? t('coachOnlyOne')
+                : coveredHere === missingCount
+                  ? t('coachAllHere', { count: missingCount })
+                  : t('coachMostlyHere', { count: missingCount, here: coveredHere })}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -156,16 +166,13 @@ function Figure ({ value, label, accent = false }: { value: string, label: strin
 function Unobtainable ({ analysis }: { analysis: DeckAnalysis }) {
   const t = useTranslations('ranking')
   return (
-    <div className='border border-line bg-raised p-3'>
-      <p className='flex items-center gap-2 text-label text-warn'>
-        <Icon name='warn' size={12} />
-        {t('notFromPacks')}
-      </p>
-      <p className='mt-1 text-label leading-relaxed text-ink-mid'>
+    <Notice tone='warning'>
+      <p>{t('notFromPacks')}</p>
+      <p className='text-label text-ink-mid'>
         {t('notFromPacksBody', {
           list: analysis.unobtainable.map((entry) => entry.card.name).join(' · ')
         })}
       </p>
-    </div>
+    </Notice>
   )
 }

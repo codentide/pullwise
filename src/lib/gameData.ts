@@ -100,3 +100,38 @@ export function rarityBreakdown (set: string, pack: string): Array<[string, numb
     (a, b) => RARITY_ORDER.indexOf(a[0]) - RARITY_ORDER.indexOf(b[0])
   )
 }
+
+/**
+ * A card that stands in for a pack.
+ *
+ * The game gives each booster its own artwork, and no public source carries it:
+ * Limitless serves card art only, and TCGdex's set logos stop at B2 — the 2026
+ * sets are missing, which is what people are opening.
+ *
+ * So the pack is represented by a card instead. Most packs are named after a
+ * Pokémon ("Mewtwo", "Charizard"), and that card is the one players associate
+ * with the booster; where there is no namesake, the rarest card in the pack
+ * stands in, which is informative in its own right — it is the prize.
+ *
+ * Either way there is always an image, which is what keeps the screen coherent.
+ */
+const PACK_FACE_RARITY = ['UR', 'SSR', 'S', 'IM', 'SAR', 'SR', 'AR', 'RR', 'R', 'U', 'C']
+
+export function packFace (set: string, pack: string): Card | undefined {
+  const inPack = cardsInPack(set, pack)
+  if (inPack.length === 0) return undefined
+
+  const wanted = normalizeName(pack)
+  const namesake = inPack
+    .filter((card) => normalizeName(card.name).startsWith(wanted))
+    .sort(
+      (a, b) =>
+        PACK_FACE_RARITY.indexOf(a.rarity) - PACK_FACE_RARITY.indexOf(b.rarity)
+    )[0]
+
+  if (namesake != null) return namesake
+
+  return [...inPack].sort(
+    (a, b) => PACK_FACE_RARITY.indexOf(a.rarity) - PACK_FACE_RARITY.indexOf(b.rarity)
+  )[0]
+}
