@@ -8,6 +8,7 @@ import {
   Minus,
   Moon,
   Package,
+  Copy,
   Plus,
   QrCode,
   Search,
@@ -32,7 +33,7 @@ import {
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
-  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode'
+  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy'
 
 const ICONS: Record<Name, LucideIcon> = {
   deck: Layers,
@@ -49,6 +50,7 @@ const ICONS: Record<Name, LucideIcon> = {
   // The link between two cards in an evolution chain, not a direction on screen.
   evolvesTo: ArrowRight,
   getCode: QrCode,
+  copy: Copy,
   chevron: ChevronDown,
   sun: Sun,
   moon: Moon

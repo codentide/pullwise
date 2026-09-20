@@ -62,8 +62,11 @@
     "energyInferred": "Deducida de tus Pokémon",
     "getCode": "Obtener código del mazo",
     "getCodeHint": "Escaneálo en el juego para importar este mazo. Las cartas que no marcaste aparecen ahí como lista de compras — no hace falta tenerlas antes.",
-    "getCodeErrorWrongSize": "Este código necesita exactamente 20 cartas. Este mazo tiene {size}.",
-    "getCodeErrorNoEnergy": "Elegí un tipo de energía para incluirlo en el código — no hay ninguno marcado, y los Pokémon de este mazo tampoco sugieren uno."
+    "getCodeErrorNoEnergy": "Elegí un tipo de energía para incluirlo en el código — no hay ninguno marcado, y los Pokémon de este mazo tampoco sugieren uno.",
+    "getCodeErrorEmpty": "Agregá una carta a este mazo antes de generar un código.",
+    "getCodeSize": "{size}/{total} cartas",
+    "getCodeCopy": "Copiar código",
+    "getCodeCopied": "¡Copiado!"
   },
   "card": {
     "ownership": "{name}: tienes {have} de {needed}. Cambiar.",

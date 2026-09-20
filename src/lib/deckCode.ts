@@ -11,19 +11,23 @@
  * deck *is*, not what you own. Scanning it into the game with cards missing
  * is confirmed to work — the game turns the gaps into an in-game shopping
  * list, which is the whole reason this exists.
+ *
+ * Nor does deck *size*: `createDeckCode` has no notion of 20, and neither does
+ * this. A deck still being built is still a real, scannable thing — it just
+ * imports fewer cards. The only floor is having something to encode at all.
  */
 import { ENERGY, createDeckCode } from 'ptcgp-deckcode'
-import { DECK_SIZE, deckCards, deckSize } from './deckRules.ts'
+import { deckCards, deckSize } from './deckRules.ts'
 import { resolvedEnergy } from './energy.ts'
 import type { Deck } from './types.ts'
 
 export type DeckCodeResult =
-  | { ok: true, code: string }
-  | { ok: false, reason: 'wrongSize' }
+  | { ok: true, code: string, energy: string[] }
+  | { ok: false, reason: 'empty' }
   | { ok: false, reason: 'noEnergy' }
 
 export function buildDeckCode (deck: Deck): DeckCodeResult {
-  if (deckSize(deck) !== DECK_SIZE) return { ok: false, reason: 'wrongSize' }
+  if (deckSize(deck) === 0) return { ok: false, reason: 'empty' }
 
   // The game's Energy Zone only ever offers 8 basic types — dragon and
   // colorless are real card elements but never a zone option, because a
@@ -49,5 +53,5 @@ export function buildDeckCode (deck: Deck): DeckCodeResult {
     return Array<number>(copies).fill(card.deckBuilderNr)
   })
 
-  return { ok: true, code: createDeckCode(nrs, encodable) }
+  return { ok: true, code: createDeckCode(nrs, encodable), energy: encodable }
 }

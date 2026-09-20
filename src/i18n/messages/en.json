@@ -62,8 +62,11 @@
     "energyInferred": "Guessed from your Pokémon",
     "getCode": "Get deck code",
     "getCodeHint": "Scan it in-game to import this deck. Cards you have not marked show up there as a shopping list — you do not need to own them first.",
-    "getCodeErrorWrongSize": "This code needs exactly 20 cards. This deck has {size}.",
-    "getCodeErrorNoEnergy": "Pick an energy type to include it in the code — none is set, and this deck’s Pokémon do not suggest one either."
+    "getCodeErrorNoEnergy": "Pick an energy type to include it in the code — none is set, and this deck’s Pokémon do not suggest one either.",
+    "getCodeErrorEmpty": "Add a card to this deck before generating a code.",
+    "getCodeSize": "{size}/{total} cards",
+    "getCodeCopy": "Copy code",
+    "getCodeCopied": "Copied!"
   },
   "card": {
     "ownership": "{name}: you have {have} of {needed}. Change.",
