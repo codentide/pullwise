@@ -7,7 +7,7 @@ import { Icon } from '@/components/Icon.tsx'
 import { Dialog } from '@/components/Dialog.tsx'
 import { Notice } from '@/components/Notice.tsx'
 import { EnergyIcon, isEnergy } from '@/components/EnergyIcon.tsx'
-import { buildDeckCode } from '@/lib/deckCode.ts'
+import { buildDeckCode, type DeckCodeResult } from '@/lib/deckCode.ts'
 import { DECK_SIZE, deckSize } from '@/lib/deckRules.ts'
 import type { Deck } from '@/lib/types.ts'
 
@@ -23,7 +23,9 @@ import type { Deck } from '@/lib/types.ts'
  */
 export function DeckCodeButton ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
+  const names = useTranslations('energies')
   const [open, setOpen] = useState(false)
+  const result = useMemo(() => buildDeckCode(deck), [deck])
 
   return (
     <>
@@ -31,17 +33,34 @@ export function DeckCodeButton ({ deck }: { deck: Deck }) {
         <Icon name='getCode' size={14} />
         {t('getCode')}
       </Button>
-      <Dialog open={open} onOpenChange={setOpen} title={deck.name} size='md'>
-        <DeckCodeContent deck={deck} />
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t('getCodeTitle')}
+        size='md'
+        headerExtra={result.ok
+          ? (
+            <div className='flex shrink-0 items-center gap-2 pt-1'>
+              <span className='tnum font-mono text-label text-ink-mid'>
+                {t('getCodeSize', { size: deckSize(deck), total: DECK_SIZE })}
+              </span>
+              <div className='flex gap-1'>
+                {result.energy.filter(isEnergy).map((energy) => (
+                  <EnergyIcon key={energy} energy={energy} size={16} label={names(energy)} />
+                ))}
+              </div>
+            </div>
+            )
+          : undefined}
+      >
+        <DeckCodeContent result={result} />
       </Dialog>
     </>
   )
 }
 
-function DeckCodeContent ({ deck }: { deck: Deck }) {
+function DeckCodeContent ({ result }: { result: DeckCodeResult }) {
   const t = useTranslations('editor')
-  const names = useTranslations('energies')
-  const result = useMemo(() => buildDeckCode(deck), [deck])
   const [dataUrl, setDataUrl] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
@@ -85,18 +104,7 @@ function DeckCodeContent ({ deck }: { deck: Deck }) {
   return (
     <div className='mt-4 flex flex-wrap items-start gap-4'>
       <div className='min-w-[10rem] flex-1'>
-        <div className='flex items-center gap-2'>
-          <span className='tnum font-mono text-label text-ink-mid'>
-            {t('getCodeSize', { size: deckSize(deck), total: DECK_SIZE })}
-          </span>
-          <div className='flex gap-1'>
-            {result.energy.filter(isEnergy).map((energy) => (
-              <EnergyIcon key={energy} energy={energy} size={18} label={names(energy)} />
-            ))}
-          </div>
-        </div>
-
-        <Button variant='quiet' onClick={copyCode} className='mt-4 justify-center py-2 text-meta'>
+        <Button variant='quiet' onClick={copyCode} className='justify-center py-2 text-meta'>
           <Icon name={copied ? 'check' : 'copy'} size={14} />
           {t(copied ? 'getCodeCopied' : 'getCodeCopy')}
         </Button>

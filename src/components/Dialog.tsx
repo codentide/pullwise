@@ -24,12 +24,15 @@ export function Dialog ({
   onOpenChange,
   title,
   size = 'sm',
+  /** A fact about the content, not another action — a count, a set of icons. */
+  headerExtra,
   children
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   title: string
   size?: keyof typeof WIDTH
+  headerExtra?: ReactNode
   children: ReactNode
 }) {
   return (
@@ -37,9 +40,12 @@ export function Dialog ({
       <RadixDialog.Portal>
         <RadixDialog.Overlay className='fixed inset-0 z-40 bg-base/70 backdrop-blur-sm' />
         <RadixDialog.Content className={`fixed left-1/2 top-1/2 z-50 ${WIDTH[size]} -translate-x-1/2 -translate-y-1/2 rounded-surface border border-line-strong bg-raised p-4`}>
-          <RadixDialog.Title asChild>
-            <Heading level='section'>{title}</Heading>
-          </RadixDialog.Title>
+          <div className='flex items-start justify-between gap-3'>
+            <RadixDialog.Title asChild>
+              <Heading level='section'>{title}</Heading>
+            </RadixDialog.Title>
+            {headerExtra}
+          </div>
           {children}
         </RadixDialog.Content>
       </RadixDialog.Portal>

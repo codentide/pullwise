@@ -66,7 +66,8 @@
     "getCodeErrorEmpty": "Agregá una carta a este mazo antes de generar un código.",
     "getCodeSize": "{size}/{total} cartas",
     "getCodeCopy": "Copiar código",
-    "getCodeCopied": "¡Copiado!"
+    "getCodeCopied": "¡Copiado!",
+    "getCodeTitle": "Exportar mazo por QR"
   },
   "card": {
     "ownership": "{name}: tienes {have} de {needed}. Cambiar.",

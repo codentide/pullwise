@@ -66,7 +66,8 @@
     "getCodeErrorEmpty": "Add a card to this deck before generating a code.",
     "getCodeSize": "{size}/{total} cards",
     "getCodeCopy": "Copy code",
-    "getCodeCopied": "Copied!"
+    "getCodeCopied": "Copied!",
+    "getCodeTitle": "Export deck via QR"
   },
   "card": {
     "ownership": "{name}: you have {have} of {needed}. Change.",
