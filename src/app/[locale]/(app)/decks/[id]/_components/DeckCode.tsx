@@ -40,7 +40,7 @@ export function DeckCodeButton ({ deck }: { deck: Deck }) {
         size='md'
         headerExtra={result.ok
           ? (
-            <div className='flex shrink-0 items-center gap-2 pt-1'>
+            <div className='flex shrink-0 items-center gap-2 rounded-chip bg-overlay px-2 py-1'>
               <span className='tnum font-mono text-label text-ink-mid'>
                 {t('getCodeSize', { size: deckSize(deck), total: DECK_SIZE })}
               </span>
@@ -102,14 +102,26 @@ function DeckCodeContent ({ result }: { result: DeckCodeResult }) {
   // the caller's request — the QR is the thing a phone needs to find fast, so
   // it takes the side a right-handed scan naturally lands on.
   return (
-    <div className='mt-4 flex flex-wrap items-start gap-4'>
-      <div className='min-w-[10rem] flex-1'>
-        <Button variant='quiet' onClick={copyCode} className='justify-center py-2 text-meta'>
-          <Icon name={copied ? 'check' : 'copy'} size={14} />
-          {t(copied ? 'getCodeCopied' : 'getCodeCopy')}
-        </Button>
+    <div className='mt-4 flex flex-wrap items-stretch gap-4'>
+      <div className='flex min-w-[10rem] flex-1 flex-col justify-between'>
+        <p className='text-label leading-relaxed text-ink-low'>{t('getCodeHint')}</p>
 
-        <p className='mt-3 text-label leading-relaxed text-ink-low'>{t('getCodeHint')}</p>
+        <div className='mt-3 flex items-center gap-2 rounded-control bg-overlay px-3 py-2'>
+          <code
+            title={result.code}
+            className='min-w-0 flex-1 truncate font-mono text-label text-ink-mid'
+          >
+            {result.code}
+          </code>
+          <Button
+            variant='ghost'
+            onClick={copyCode}
+            aria-label={t(copied ? 'getCodeCopied' : 'getCodeCopy')}
+            className='shrink-0 p-2'
+          >
+            <Icon name={copied ? 'check' : 'copy'} size={14} />
+          </Button>
+        </div>
       </div>
 
       {dataUrl != null && (
