@@ -53,7 +53,11 @@
     "addOne": "Add {name}",
     "recommendation": "Recommendation",
     "pastedList": "Recognised {count} cards from the list",
-    "noResults": "Nothing matches “{query}”"
+    "noResults": "Nothing matches “{query}”",
+    "pageTitle": "Deck",
+    "notFoundTitle": "This deck is not on this device.",
+    "notFoundBody": "Pullwise keeps your decks in your own browser, never on a server, so a deck link only opens where the deck was built.",
+    "notFoundAction": "Back to your decks"
   },
   "card": {
     "ownership": "{name}: you have {have} of {needed}. Change.",
@@ -172,5 +176,10 @@
     "evolution": "Evolutions",
     "trainer": "Trainer",
     "unclassified": "Unclassified"
+  },
+  "home": {
+    "headline": "Which pack finishes your deck?",
+    "body": "Build the deck you want, mark the few cards you are missing, and Pullwise works out which pack to open and how many it will take. No account, and nobody has to log 3,879 cards.",
+    "setsTitle": "Every set"
   }
 }

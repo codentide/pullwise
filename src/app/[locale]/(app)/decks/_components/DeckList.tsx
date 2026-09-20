@@ -1,9 +1,11 @@
+'use client'
+
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
-import { CardImage } from './CardImage.tsx'
+import { CardImage } from '@/components/CardImage.tsx'
 import { actions } from '@/lib/store.ts'
-import { useStore } from './useStore.ts'
+import { useStore } from '@/hooks/useStore.ts'
 import { cardsById } from '@/lib/gameData.ts'
 import { deckSize } from '@/lib/deckRules.ts'
 import { missingFor } from '@/lib/deckAnalysis.ts'
@@ -15,7 +17,7 @@ import { Panel, EmptyState } from '@/components/Panel.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
 import { TextInput, Textarea } from '@/components/Field.tsx'
-import { Pressable } from '@/components/Pressable.tsx'
+import { Link, useRouter } from '@/i18n/navigation.ts'
 
 /** The preview always draws five slots, filled or not. */
 const PREVIEW_SLOTS = 5
@@ -27,10 +29,14 @@ const PREVIEW_SLOTS = 5
  */
 const DECK_COLUMNS = '[grid-template-columns:repeat(auto-fill,minmax(18rem,1fr))]'
 
-export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
+export function DeckList () {
   const t = useTranslations('decks')
   const state = useStore()
+  const router = useRouter()
   const [importing, setImporting] = useState(false)
+
+  /** A new deck is only useful open, so creating one goes straight into it. */
+  const openNew = (): void => router.push(`/decks/${actions.createDeck(t('new'))}`)
 
   return (
     <div className='flex flex-col gap-4'>
@@ -40,14 +46,19 @@ export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
           <Button variant='quiet' className='px-3 py-2 text-meta' onClick={() => setImporting((open) => !open)}>
             {t('pasteList')}
           </Button>
-          <Button onClick={() => onOpen(actions.createDeck(t('new')))}>
+          <Button onClick={openNew}>
             <Icon name='plus' size={14} />
             {t('new')}
           </Button>
         </div>
       </div>
 
-      {importing && <ImportPanel onDone={onOpen} onClose={() => setImporting(false)} />}
+      {importing && (
+        <ImportPanel
+          onDone={(id) => router.push(`/decks/${id}`)}
+          onClose={() => setImporting(false)}
+        />
+      )}
 
       {state.decks.length === 0
         ? <DecksEmpty onImport={() => setImporting(true)} />
@@ -55,7 +66,7 @@ export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
           <ul className={`grid gap-3 ${DECK_COLUMNS}`}>
             {state.decks.map((deck) => (
               <li key={deck.id} className='flex'>
-                <DeckCard deck={deck} onOpen={() => onOpen(deck.id)} />
+                <DeckCard deck={deck} />
               </li>
             ))}
           </ul>
@@ -64,7 +75,7 @@ export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
   )
 }
 
-function DeckCard ({ deck, onOpen }: { deck: Deck, onOpen: () => void }) {
+function DeckCard ({ deck }: { deck: Deck }) {
   const t = useTranslations('decks')
   const state = useStore()
   const size = deckSize(deck)
@@ -76,9 +87,9 @@ function DeckCard ({ deck, onOpen }: { deck: Deck, onOpen: () => void }) {
   })
 
   return (
-    <Pressable
-      onClick={onOpen}
-      className='flex w-full flex-col gap-3 rounded-surface border border-line bg-raised p-3 text-left transition-colors duration-150 hover:border-line-strong hover:bg-overlay'
+    <Link
+      href={`/decks/${deck.id}`}
+      className='flex w-full flex-col gap-3 rounded-surface border border-line bg-raised p-3 transition-colors duration-150 hover:border-line-strong hover:bg-overlay'
     >
       <div className='flex items-start justify-between gap-2'>
         <span className='truncate font-medium text-ink-high'>{deck.name}</span>
@@ -111,7 +122,7 @@ function DeckCard ({ deck, onOpen }: { deck: Deck, onOpen: () => void }) {
             ? <><Icon name='pack' size={11} />{t('missing', { count: missingCount })}</>
             : t('complete')}
       </span>
-    </Pressable>
+    </Link>
   )
 }
 

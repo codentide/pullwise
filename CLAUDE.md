@@ -28,12 +28,17 @@ route until a **second** route needs it; only then does it move up to
 `src/components/`. Do not pre-emptively promote anything.
 
 ```
-src/app/[locale]/            the interactive app (client)
+src/app/[locale]/(app)/      the tool — one route per view, client, noindex
 src/app/[locale]/(site)/     public static pages (server, indexable)
 src/components/              shared by 2+ routes — empty is a valid state
+src/hooks/                   React's window onto the domain, shared the same way
 src/lib/                     the domain: no framework, runs in Node tests
 src/data/                    generated, never hand-edited
 ```
+
+The three views are **routes, not tab state**: `/decks`, `/decks/[id]`, `/packs`,
+`/cards`. Each `page.tsx` stays a server component so it can carry its own
+metadata, and renders the client view underneath.
 
 Imports: `@/` across folders, `./` within one, always with the `.ts`/`.tsx`
 extension — the tests run on plain Node, which does not resolve bare specifiers.
@@ -46,8 +51,8 @@ preferences:
 - **One accent, once per screen.** Flare (`--color-accent`) is reserved for the
   recommendation, the primary action, and the figure that answers the question.
   If it appears twice on one screen, one of them is wrong.
-- **Nothing has a hard corner.** The radius scale is 2px chips / 4px controls /
-  6px surfaces, and **zero is not on it** — `rounded-none` is banned by lint.
+- **Nothing has a hard corner.** The radius scale is 3px chips / 6px controls /
+  10px surfaces, and **zero is not on it** — `rounded-none` is banned by lint.
   (The brand document specifies 0 for cards and panels; this system overrides
   it.) Structure still reads through 1px lines, and there are still **no shadows**.
 - **Rarity is always doubly encoded** — colour *and* pips, never colour alone.

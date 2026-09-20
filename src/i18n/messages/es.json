@@ -53,7 +53,11 @@
     "addOne": "Agregar {name}",
     "recommendation": "Recomendación",
     "pastedList": "Se reconocieron {count} cartas de la lista",
-    "noResults": "Nada coincide con «{query}»"
+    "noResults": "Nada coincide con «{query}»",
+    "pageTitle": "Mazo",
+    "notFoundTitle": "Este mazo no está en este dispositivo.",
+    "notFoundBody": "Pullwise guarda tus mazos en tu propio navegador, nunca en un servidor, así que el enlace de un mazo solo abre donde se armó.",
+    "notFoundAction": "Volver a tus mazos"
   },
   "card": {
     "ownership": "{name}: tienes {have} de {needed}. Cambiar.",
@@ -172,5 +176,10 @@
     "evolution": "Evoluciones",
     "trainer": "Entrenador",
     "unclassified": "Sin clasificar"
+  },
+  "home": {
+    "headline": "¿Qué sobre completa tu mazo?",
+    "body": "Arma el mazo que quieres, marca las pocas cartas que te faltan y Pullwise calcula qué sobre conviene abrir y cuántos vas a necesitar. Sin cuenta, y sin que nadie tenga que cargar 3.879 cartas.",
+    "setsTitle": "Todas las expansiones"
   }
 }

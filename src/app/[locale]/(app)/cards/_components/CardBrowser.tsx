@@ -1,9 +1,11 @@
+'use client'
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { CardTile, cycleOwned } from './CardTile.tsx'
+import { CardTile, cycleOwned } from '@/components/CardTile.tsx'
 import { CardFilters } from './CardFilters.tsx'
 import { actions } from '@/lib/store.ts'
-import { useStore } from './useStore.ts'
+import { useStore } from '@/hooks/useStore.ts'
 import { cards as allCards } from '@/lib/gameData.ts'
 import { emptyFilters, filterCards, type Filters } from '@/lib/filters.ts'
 import { Heading } from '@/components/Heading.tsx'

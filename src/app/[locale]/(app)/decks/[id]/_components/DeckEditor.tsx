@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
-import { Button } from '@/components/Button.tsx'
+import { Button, ButtonLink } from '@/components/Button.tsx'
+import { useRouter } from '@/i18n/navigation.ts'
 import { Pressable } from '@/components/Pressable.tsx'
 import { TextInput } from '@/components/Field.tsx'
 import { ConfirmDialog } from '@/components/Dialog.tsx'
@@ -9,12 +10,12 @@ import { Heading } from '@/components/Heading.tsx'
 import { EmptyState } from '@/components/Panel.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Notice, NoticeList, type NoticeTone } from '@/components/Notice.tsx'
-import { DeckCardTile } from './CardTile.tsx'
-import { CardImage } from './CardImage.tsx'
-import { PackRanking } from './PackRanking.tsx'
+import { DeckCardTile } from '@/components/CardTile.tsx'
+import { CardImage } from '@/components/CardImage.tsx'
+import { PackRanking } from '@/components/PackRanking.tsx'
 import { EvolutionLine } from './EvolutionLine.tsx'
 import { actions } from '@/lib/store.ts'
-import { useStore } from './useStore.ts'
+import { useStore } from '@/hooks/useStore.ts'
 import { DECK_SIZE, deckSize, validateDeck, type DeckIssue } from '@/lib/deckRules.ts'
 import { groupDeck, lineGaps, quickSearch } from '@/lib/deckGroups.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
@@ -46,10 +47,11 @@ const DECK_GRID =
  * sits fixed on the right, recalculating on its own. There is never a save step
  * before seeing the number.
  */
-export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }) {
+export function DeckEditor ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
   const groupName = useTranslations('groups')
   const state = useStore()
+  const router = useRouter()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const size = deckSize(deck)
@@ -74,10 +76,10 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
   return (
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center gap-2'>
-        <Button variant='ghost' onClick={onBack} className='px-2'>
+        <ButtonLink variant='ghost' href='/decks' className='px-2'>
           <Icon name='back' size={14} />
           {t('back')}
-        </Button>
+        </ButtonLink>
 
         <TextInput
           value={deck.name}
@@ -106,7 +108,8 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
           confirmLabel={t('delete')}
           cancelLabel={t('cancel')}
           destructive
-          onConfirm={() => { actions.deleteDeck(deck.id); onBack() }}
+          // replace, not push: the deleted deck's URL should not be one Back away.
+          onConfirm={() => { actions.deleteDeck(deck.id); router.replace('/decks') }}
         />
       </div>
 

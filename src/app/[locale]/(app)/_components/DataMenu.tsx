@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { actions } from '@/lib/store.ts'
-import { useStore } from './useStore.ts'
+import { useStore } from '@/hooks/useStore.ts'
 import { Button } from '@/components/Button.tsx'
 import { HiddenFileInput } from '@/components/Field.tsx'
 

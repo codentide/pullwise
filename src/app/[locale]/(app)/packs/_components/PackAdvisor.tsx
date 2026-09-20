@@ -1,7 +1,9 @@
+'use client'
+
 import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { PackRanking } from './PackRanking.tsx'
-import { useStore } from './useStore.ts'
+import { PackRanking } from '@/components/PackRanking.tsx'
+import { useStore } from '@/hooks/useStore.ts'
 import { analyzeMissing, missingAcrossDecks, missingFor } from '@/lib/deckAnalysis.ts'
 import { EmptyState } from '@/components/Panel.tsx'
 import { Select } from '@/components/Select.tsx'

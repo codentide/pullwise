@@ -6,6 +6,7 @@
  * file, not every call site.
  */
 import type { ComponentProps } from 'react'
+import { Link } from '@/i18n/navigation.ts'
 
 type Variant = 'primary' | 'quiet' | 'ghost' | 'danger' | 'dashed' | 'link'
 
@@ -25,15 +26,28 @@ const VARIANTS: Record<Variant, string> = {
     'text-label text-accent underline-offset-4 hover:underline'
 }
 
+const BASE =
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-control transition-colors duration-150'
+
 export function Button ({
   variant = 'primary',
   className = '',
   ...props
 }: ComponentProps<'button'> & { variant?: Variant }) {
-  return (
-    <button
-      {...props}
-      className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-control transition-colors duration-150 ${VARIANTS[variant]} ${className}`}
-    />
-  )
+  return <button {...props} className={`${BASE} ${VARIANTS[variant]} ${className}`} />
+}
+
+/**
+ * The same shapes, as a link.
+ *
+ * A control that navigates has to be an anchor: middle-click, open-in-new-tab
+ * and the status bar all come from the element, not from an onClick. It should
+ * not have to restate the look to get them.
+ */
+export function ButtonLink ({
+  variant = 'primary',
+  className = '',
+  ...props
+}: ComponentProps<typeof Link> & { variant?: Variant }) {
+  return <Link {...props} className={`${BASE} ${VARIANTS[variant]} ${className}`} />
 }

@@ -1,9 +1,17 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation.ts'
 import { Wordmark } from '@/components/Wordmark.tsx'
+import { ButtonLink } from '@/components/Button.tsx'
 
-/** Shell for the public pages: they are the front door from a search engine. */
-export async function SiteChrome ({ children }: { children: React.ReactNode }) {
+/**
+ * Shell for the public pages: they are the front door from a search engine.
+ *
+ * `cta` is off on the home page only. One accent per screen is a brand rule, and
+ * there the hero already carries the same button — two of them made it two.
+ */
+export async function SiteChrome (
+  { children, cta = true }: { children: React.ReactNode, cta?: boolean }
+) {
   const t = await getTranslations()
 
   return (
@@ -13,12 +21,7 @@ export async function SiteChrome ({ children }: { children: React.ReactNode }) {
           <Link href='/' aria-label='Pullwise'>
             <Wordmark />
           </Link>
-          <Link
-            href='/'
-            className='ml-auto rounded-control bg-accent px-3 py-2 text-meta font-medium text-accent-ink transition-opacity duration-150 hover:opacity-90'
-          >
-            {t('nav.buildADeck')}
-          </Link>
+          {cta && <ButtonLink href='/decks' className='ml-auto'>{t('nav.buildADeck')}</ButtonLink>}
         </div>
       </header>
       <main className='mx-auto max-w-5xl px-4 py-6'>{children}</main>

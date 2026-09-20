@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { Pressable } from '@/components/Pressable.tsx'
 import { Notice } from '@/components/Notice.tsx'
-import { CardImage } from './CardImage.tsx'
+import { CardImage } from '@/components/CardImage.tsx'
 import type { ChainLink, LineGap } from '@/lib/deckGroups.ts'
 import type { Card } from '@/lib/types.ts'
 
