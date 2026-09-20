@@ -8,7 +8,7 @@ import { SearchField, TextInput } from '@/components/Field.tsx'
 import { ConfirmDialog } from '@/components/Dialog.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { EmptyState } from '@/components/Panel.tsx'
-import { Badge, Chip } from '@/components/Indicators.tsx'
+import { Badge } from '@/components/Indicators.tsx'
 import { EnergyIcon, isEnergy } from '@/components/EnergyIcon.tsx'
 import { Notice, NoticeList, type NoticeTone } from '@/components/Notice.tsx'
 import { DeckCardTile } from '@/components/CardTile.tsx'
@@ -204,6 +204,11 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
  * The energy zone. Toggling a symbol is what turns the guess into a fact —
  * one press, and this deck stops being inferred forever, the same moment
  * ownership stops being unknown the first time a card gets marked.
+ *
+ * Bare spheres, not chips in boxes: EnergyIcon already draws its own disc, and
+ * a square button around a circle read as two containers fighting each other.
+ * A ring on the lit ones and dimmed opacity on the rest carries the state
+ * without adding a box.
  */
 function EnergyZone ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
@@ -218,23 +223,27 @@ function EnergyZone ({ deck }: { deck: Deck }) {
   }
 
   return (
-    <section>
-      <Heading level='eyebrow' as='h3' className='flex items-center gap-2'>
+    <section className='flex flex-wrap items-center gap-3'>
+      <Heading level='eyebrow' as='h3' className='flex shrink-0 items-center gap-2'>
         {t('energyZone')}
         {inferred && <Badge tone='neutral'>{t('energyInferred')}</Badge>}
       </Heading>
-      <div className='mt-2 flex flex-wrap gap-1'>
+      <div className='flex flex-wrap gap-2 sm:ml-auto'>
         {ELEMENTS.filter(isEnergy).map((element) => (
-          <Chip
+          <Pressable
             key={element}
-            pressed={energy.includes(element)}
             onClick={() => toggle(element)}
+            aria-pressed={energy.includes(element)}
             title={names(element)}
             aria-label={names(element)}
-            className='p-1'
+            className={`rounded-full transition-opacity duration-150 ${
+              energy.includes(element)
+                ? 'ring-2 ring-accent'
+                : 'opacity-35 hover:opacity-70'
+            }`}
           >
-            <EnergyIcon energy={element} size={22} />
-          </Chip>
+            <EnergyIcon energy={element} size={26} />
+          </Pressable>
         ))}
       </div>
     </section>
