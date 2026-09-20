@@ -88,10 +88,11 @@ export function CardTile ({
       <Pressable
         onClick={onCycle}
         aria-label={t('markAria', { name: card.name, state })}
-        className='relative block w-full rounded-surface ring-offset-2 ring-offset-base transition-transform duration-150 hover:scale-[1.03]'
+        className='relative block w-full rounded-control ring-offset-2 ring-offset-base transition-transform duration-150 hover:scale-[1.03]'
       >
         <CardImage
           card={card}
+          radius='control'
           className={
             owned === 0
               ? 'opacity-45 saturate-50 outline outline-1 outline-invalid'
