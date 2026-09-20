@@ -10,14 +10,22 @@ import { missingFor } from '@/lib/deckAnalysis.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
 import type { Deck } from '@/lib/types.ts'
 
-/** The preview always draws five slots, filled or not. */
-const PREVIEW_SLOTS = 5
 import { Button } from '@/components/Button.tsx'
 import { Panel, EmptyState } from '@/components/Panel.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
 import { TextInput, Textarea } from '@/components/Field.tsx'
 import { Pressable } from '@/components/Pressable.tsx'
+
+/** The preview always draws five slots, filled or not. */
+const PREVIEW_SLOTS = 5
+
+/**
+ * Three across at most. At four the preview thumbnails fell to 48px, which is
+ * under what it takes to recognise a card by its art — and recognising the deck
+ * at a glance is the only job this card has.
+ */
+const DECK_COLUMNS = '[grid-template-columns:repeat(auto-fill,minmax(18rem,1fr))]'
 
 export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
   const t = useTranslations('decks')
@@ -44,7 +52,7 @@ export function DeckList ({ onOpen }: { onOpen: (id: string) => void }) {
       {state.decks.length === 0
         ? <DecksEmpty onImport={() => setImporting(true)} />
         : (
-          <ul className='grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(15rem,1fr))]'>
+          <ul className={`grid gap-3 ${DECK_COLUMNS}`}>
             {state.decks.map((deck) => (
               <li key={deck.id} className='flex'>
                 <DeckCard deck={deck} onOpen={() => onOpen(deck.id)} />
@@ -80,23 +88,27 @@ function DeckCard ({ deck, onOpen }: { deck: Deck, onOpen: () => void }) {
       </div>
 
       <div className='grid grid-cols-5 gap-1'>
-        {preview.map((card) => <CardImage key={card.id} card={card} />)}
+        {preview.map((card) => <CardImage key={card.id} card={card} radius='chip' />)}
         {Array.from({ length: PREVIEW_SLOTS - preview.length }, (_, index) => (
           <span
             key={`slot-${index}`}
-            className='rounded-surface border border-dashed border-line'
+            className='rounded-chip border border-dashed border-line'
             style={{ aspectRatio: 'var(--aspect-card)' }}
           />
         ))}
       </div>
 
-      <span
-        className={`mt-auto text-label ${missingCount > 0 ? 'text-invalid' : 'text-valid'}`}
-      >
+      {/*
+        What you are short of is information, not a fault. Red here framed an
+        ordinary half-collected deck as a failure and pushed the user towards
+        the collection — which is the trap this app exists to avoid. Finishing
+        one still gets its green: an acknowledgement asks for nothing.
+      */}
+      <span className={`mt-auto flex items-center gap-1 text-label ${missingCount > 0 ? 'text-ink-mid' : 'text-valid'}`}>
         {size === 0
           ? '\u00a0'
           : missingCount > 0
-            ? t('missing', { count: missingCount })
+            ? <><Icon name='pack' size={11} />{t('missing', { count: missingCount })}</>
             : t('complete')}
       </span>
     </Pressable>

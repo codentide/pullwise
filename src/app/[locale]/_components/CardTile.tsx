@@ -150,6 +150,7 @@ export function DeckCardTile ({
         >
           <CardImage
             card={card}
+            radius='control'
             className={`transition-all duration-150 ${
               short ? 'opacity-50 saturate-50' : 'group-hover:brightness-110'
             }`}

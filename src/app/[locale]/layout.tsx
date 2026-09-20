@@ -46,7 +46,14 @@ export default async function LocaleLayout ({
   setRequestLocale(locale)
 
   return (
-    <html lang={locale} className={fontVariables}>
+    /*
+      ThemeScript stamps data-theme and color-scheme on this element before
+      React hydrates, which is the whole point of it — and which React then
+      reports as a mismatch on every light-theme page load. The warning is
+      correct and the divergence is deliberate, so it is declared here rather
+      than left as a permanent error in the console.
+    */
+    <html lang={locale} className={fontVariables} suppressHydrationWarning>
       <head>
         <ThemeScript />
       </head>

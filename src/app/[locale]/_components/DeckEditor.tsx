@@ -6,6 +6,7 @@ import { Pressable } from '@/components/Pressable.tsx'
 import { TextInput } from '@/components/Field.tsx'
 import { ConfirmDialog } from '@/components/Dialog.tsx'
 import { Heading } from '@/components/Heading.tsx'
+import { EmptyState } from '@/components/Panel.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Notice, NoticeList, type NoticeTone } from '@/components/Notice.tsx'
 import { DeckCardTile } from './CardTile.tsx'
@@ -19,6 +20,16 @@ import { groupDeck, lineGaps, quickSearch } from '@/lib/deckGroups.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
 import { analyzeDeck } from '@/lib/deckAnalysis.ts'
 import type { Card, Deck } from '@/lib/types.ts'
+
+/**
+ * The deck reads as a deck, not as a catalogue: enough columns that all twenty
+ * cards are on screen at once. The count comes from the column's own width, not
+ * the viewport's — the same grid sits beside the ranking on a desktop and alone
+ * on a tablet, and a viewport breakpoint cannot tell those apart. It kept the
+ * tiles at 200px and a full deck at two screens tall.
+ */
+const DECK_GRID =
+  'grid gap-2 grid-cols-3 @xs:grid-cols-4 @md:grid-cols-5 @xl:grid-cols-6 @3xl:grid-cols-7 @4xl:grid-cols-8'
 
 /**
  * The deck editor.
@@ -42,7 +53,15 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const size = deckSize(deck)
-  const issues = validateDeck(deck)
+  // Two of the six issue codes are already on screen, and in a better form, so
+  // the aside would only be repeating itself:
+  //   · `tooFewCards` — the empty slots under the deck draw the same shortfall,
+  //     and a red error while you are still adding cards reads as a scolding.
+  //   · `evolutionWithoutBase` — EvolutionLine draws the broken chain above the
+  //     deck with a button that fixes it. `lineGaps` groups by the missing base,
+  //     so it covers every card this code would have flagged.
+  const SAID_ELSEWHERE = ['tooFewCards', 'evolutionWithoutBase']
+  const issues = validateDeck(deck).filter((issue) => !SAID_ELSEWHERE.includes(issue.code))
   const groups = groupDeck(deck)
   const gaps = lineGaps(deck)
   const analysis = useMemo(() => analyzeDeck(deck, state.knowledge), [deck, state.knowledge])
@@ -92,15 +111,22 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
       </div>
 
       <div className='grid gap-6 lg:grid-cols-[2fr_1fr]'>
-        <div className='flex flex-col gap-6'>
+        <div className='@container flex flex-col gap-6'>
           <CardSearch deck={deck} onAdd={add} />
 
+          {/*
+            Two up once there is room. Each broken line is a short heading and a
+            chain of three thumbnails, so at full width three of them were 540px
+            of mostly empty panel sitting between the search field and the deck.
+          */}
           {gaps.length > 0 && (
-            <NoticeList>
+            <ul className='grid gap-2 @2xl:grid-cols-2'>
               {gaps.map((gap) => (
-                <EvolutionLine key={gap.missingName} gap={gap} onAdd={add} />
+                <li key={gap.missingName}>
+                  <EvolutionLine gap={gap} onAdd={add} />
+                </li>
               ))}
-            </NoticeList>
+            </ul>
           )}
 
           {groups.map((group) => (
@@ -108,7 +134,7 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
               <Heading level='eyebrow' as='h3'>
                 {groupName(group.id)} · {group.count}
               </Heading>
-              <ul className='mt-2 grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr))]'>
+              <ul className={`mt-2 ${DECK_GRID}`}>
                 {group.entries.map(({ card, copies }) => (
                   <li key={card.id}>
                     <DeckCardTile
@@ -125,7 +151,19 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
             </section>
           ))}
 
-          <EmptySlots remaining={DECK_SIZE - size} />
+          {/*
+            An empty deck is not a deck with twenty holes in it. Twenty dashed
+            boxes and a green "you are not missing anything" is what the editor
+            used to greet a new deck with — a wall of nothing, and a reassurance
+            about a deck that does not exist yet. It gets a sentence instead.
+          */}
+          {size === 0
+            ? (
+              <EmptyState>
+                <p className='mx-auto max-w-md text-meta leading-relaxed text-ink-mid'>{t('empty')}</p>
+              </EmptyState>
+              )
+            : <EmptySlots remaining={DECK_SIZE - size} />}
         </div>
 
         <aside className='flex flex-col gap-4 lg:sticky lg:top-20 lg:self-start'>
@@ -134,7 +172,7 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
               {issues.map((issue, index) => <IssueRow key={index} issue={issue} />)}
             </NoticeList>
           )}
-          <PackRanking analysis={analysis} />
+          {size > 0 && <PackRanking analysis={analysis} />}
         </aside>
       </div>
     </div>
@@ -214,6 +252,7 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
                       >
                         <CardImage
                           card={card}
+                          radius='control'
                           className={`transition-transform duration-150 group-hover:scale-[1.04] ${
                             index === 0 ? 'outline outline-1 outline-accent' : ''
                           }`}
@@ -235,24 +274,34 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
   )
 }
 
-/** Slots are drawn, not counted: six placeholders are read, "14/20" is worked out. */
+/**
+ * The room that is left. Slots are drawn, not counted: six placeholders are
+ * read, "14/20" has to be worked out.
+ *
+ * Drawn small, though. At card size, eight empty slots took up more of the page
+ * than the twelve cards above them, so a half-built deck looked mostly absent —
+ * the opposite of what this app is for. A tray keeps the reading and gives the
+ * absence the weight it deserves.
+ */
 function EmptySlots ({ remaining }: { remaining: number }) {
   const t = useTranslations('editor')
   if (remaining <= 0) {
-    return <p className='font-mono text-label uppercase tracking-[0.14em] text-valid'>{t('full')}</p>
+    return (
+      <p className='flex items-center gap-2 font-mono text-label uppercase tracking-[0.14em] text-valid'>
+        <Icon name='check' size={12} />
+        {t('full')}
+      </p>
+    )
   }
 
   return (
     <section>
       <Heading level='eyebrow' as='h3'>{t('emptySlots', { count: remaining })}</Heading>
-      <ul
-        aria-hidden
-        className='mt-2 grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr))]'
-      >
-        {Array.from({ length: Math.min(remaining, 20) }, (_, index) => (
+      <ul aria-hidden className='mt-2 flex flex-wrap gap-2'>
+        {Array.from({ length: remaining }, (_, index) => (
           <li
             key={index}
-            className='rounded-surface border border-dashed border-line-strong'
+            className='w-12 rounded-control border border-dashed border-line-strong'
             style={{ aspectRatio: 'var(--aspect-card)' }}
           />
         ))}

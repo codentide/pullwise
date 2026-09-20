@@ -40,7 +40,7 @@ export function EvolutionLine ({ gap, onAdd }: { gap: LineGap, onAdd: (card: Car
             {link.inDeck != null
               ? (
                 <span className='w-12 opacity-60' title={link.name}>
-                  <CardImage card={link.inDeck} />
+                  <CardImage card={link.inDeck} radius='chip' />
                 </span>
                 )
               : (
@@ -64,7 +64,7 @@ function Hole ({ link, onAdd }: { link: ChainLink, onAdd: (card: Card) => void }
   if (candidate == null) {
     return (
       <span
-        className='grid w-12 place-items-center rounded-surface border border-dashed border-warn text-label text-warn'
+        className='grid w-12 place-items-center rounded-chip border border-dashed border-warn text-label text-warn'
         style={{ aspectRatio: 'var(--aspect-card)' }}
       >
         ?
@@ -77,14 +77,14 @@ function Hole ({ link, onAdd }: { link: ChainLink, onAdd: (card: Card) => void }
       onClick={() => onAdd(candidate)}
       aria-label={t('addOne', { name: candidate.name })}
       title={`${candidate.name} · ${candidate.set}`}
-      className='relative w-12 rounded-surface transition-transform duration-150 hover:scale-105'
+      className='relative w-12 rounded-chip transition-transform duration-150 hover:scale-105'
     >
       <span className='block opacity-40'>
-        <CardImage card={candidate} />
+        <CardImage card={candidate} radius='chip' />
       </span>
       <span
         aria-hidden
-        className='absolute inset-0 grid place-items-center rounded-surface border border-dashed border-warn bg-base/40 font-mono text-section text-warn'
+        className='absolute inset-0 grid place-items-center rounded-chip border border-dashed border-warn bg-base/40 font-mono text-section text-warn'
       >
         +
       </span>
