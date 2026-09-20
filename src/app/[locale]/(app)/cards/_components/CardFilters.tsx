@@ -1,8 +1,7 @@
 import { useTranslations } from 'next-intl'
-import { Icon } from '@/components/Icon.tsx'
 import { EnergyIcon, isEnergy } from '@/components/EnergyIcon.tsx'
 import { Select } from '@/components/Select.tsx'
-import { TextInput, Checkbox } from '@/components/Field.tsx'
+import { SearchField, Checkbox } from '@/components/Field.tsx'
 import { Chip } from '@/components/Indicators.tsx'
 import { ELEMENTS, RARITIES, setsNewestFirst, type Filters } from '@/lib/filters.ts'
 
@@ -23,20 +22,14 @@ export function CardFilters ({
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <div className='relative min-w-[12rem] flex-1'>
-        <Icon
-          name='search'
-          size={14}
-          className='pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-ink-low'
-        />
-        <TextInput
-          type='search'
-          value={value.text}
-          onChange={(event) => set('text', event.target.value)}
-          placeholder={t('search')}
-          className='w-full py-2 pl-6 pr-2'
-        />
-      </div>
+      <SearchField
+        pad='sm'
+        type='search'
+        value={value.text}
+        onChange={(event) => set('text', event.target.value)}
+        placeholder={t('search')}
+        className='min-w-[12rem] flex-1'
+      />
 
       <Select
         value={value.set}

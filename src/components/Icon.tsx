@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   ChevronDown,
   Layers,
@@ -30,7 +31,7 @@ import {
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
-  | 'back' | 'chevron' | 'sun' | 'moon'
+  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon'
 
 const ICONS: Record<Name, LucideIcon> = {
   deck: Layers,
@@ -44,6 +45,8 @@ const ICONS: Record<Name, LucideIcon> = {
   warn: TriangleAlert,
   trash: Trash2,
   back: ArrowLeft,
+  // The link between two cards in an evolution chain, not a direction on screen.
+  evolvesTo: ArrowRight,
   chevron: ChevronDown,
   sun: Sun,
   moon: Moon

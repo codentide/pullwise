@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { Pressable } from '@/components/Pressable.tsx'
+import { Icon } from '@/components/Icon.tsx'
 import { Notice } from '@/components/Notice.tsx'
 import { CardImage } from '@/components/CardImage.tsx'
 import type { ChainLink, LineGap } from '@/lib/deckGroups.ts'
@@ -40,9 +41,7 @@ export function EvolutionLine ({ gap, onAdd }: { gap: LineGap, onAdd: (card: Car
         <ol className='flex shrink-0 flex-wrap items-center gap-2'>
           {gap.chain.map((link, index) => (
             <li key={link.name} className='flex items-center gap-2'>
-              {index > 0 && (
-                <span aria-hidden className='font-mono text-label text-ink-low'>→</span>
-              )}
+              {index > 0 && <Icon name='evolvesTo' size={12} className='text-ink-low' />}
 
               {link.inDeck != null
                 ? (

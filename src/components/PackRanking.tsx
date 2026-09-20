@@ -9,6 +9,10 @@ import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 /**
  * PT—01 Pack ranking · PT—03 The figure that resolves.
  *
+ * The winner shows its artwork. A pack is a thing a player recognises by sight
+ * long before they read its name, and the panel had been hiding the image below
+ * 28rem — which is every width the deck editor's aside has ever been.
+ *
  * One winner treated as a headline; everything else as a league table. The big
  * number never repeats below. Probability and estimated packs always appear
  * together — one without the other misleads — and under them a line of why, in
@@ -62,7 +66,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
             alt=''
             width={320}
             height={618}
-            className='hidden w-16 shrink-0 self-start @md:block'
+            className='w-16 shrink-0 self-start rounded-control @xs:w-20 @sm:w-24'
           />
 
           <div className='min-w-0 flex-1'>

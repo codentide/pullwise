@@ -4,7 +4,7 @@ import { Icon } from '@/components/Icon.tsx'
 import { Button, ButtonLink } from '@/components/Button.tsx'
 import { useRouter } from '@/i18n/navigation.ts'
 import { Pressable } from '@/components/Pressable.tsx'
-import { TextInput } from '@/components/Field.tsx'
+import { SearchField, TextInput } from '@/components/Field.tsx'
 import { ConfirmDialog } from '@/components/Dialog.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { EmptyState } from '@/components/Panel.tsx'
@@ -75,31 +75,45 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
 
   return (
     <div className='flex flex-col gap-6'>
-      <div className='flex flex-wrap items-center gap-2'>
-        <ButtonLink variant='ghost' href='/decks' className='px-2'>
+      {/*
+        A head, not a line. Back, name, count and delete were four things of the
+        same weight sharing one row, so the deck's own name — the only one of
+        them anyone reads — carried no more presence than the bin next to it.
+        The way back goes above as a step, the name becomes the page title it
+        already was, and the count stops floating: as a chip it reads as the
+        deck's state rather than as two loose numbers.
+      */}
+      <header className='flex flex-col gap-2 border-b border-line pb-4'>
+        <ButtonLink variant='ghost' href='/decks' className='-ml-2 self-start px-2'>
           <Icon name='back' size={14} />
           {t('back')}
         </ButtonLink>
 
-        <TextInput
-          value={deck.name}
-          onChange={(event) => actions.renameDeck(deck.id, event.target.value)}
-          aria-label={t('deckName')}
-          className='min-w-0 flex-1 border-transparent bg-transparent px-2 py-1 font-display text-section font-semibold tracking-tight hover:border-line'
-        />
+        <div className='flex flex-wrap items-center gap-3'>
+          <TextInput
+            value={deck.name}
+            onChange={(event) => actions.renameDeck(deck.id, event.target.value)}
+            variant='title'
+            aria-label={t('deckName')}
+            className='min-w-0 flex-1 border-transparent bg-transparent hover:border-line'
+          />
 
-        <span className={`tnum font-mono text-meta ${size === DECK_SIZE ? 'text-ink-mid' : 'text-warn'}`}>
-          {size}/{DECK_SIZE}
-        </span>
+          <Badge
+            tone={size === DECK_SIZE ? 'have' : 'warn'}
+            className='tnum shrink-0 px-2 py-1 font-mono text-meta'
+          >
+            {size}/{DECK_SIZE}
+          </Badge>
 
-        <Button
-          variant='ghost'
-          onClick={() => setConfirmingDelete(true)}
-          aria-label={t('delete')}
-          className='p-2 text-ink-low hover:text-invalid'
-        >
-          <Icon name='trash' />
-        </Button>
+          <Button
+            variant='ghost'
+            onClick={() => setConfirmingDelete(true)}
+            aria-label={t('delete')}
+            className='p-2 text-ink-low hover:text-invalid'
+          >
+            <Icon name='trash' />
+          </Button>
+        </div>
 
         <ConfirmDialog
           open={confirmingDelete}
@@ -111,7 +125,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
           // replace, not push: the deleted deck's URL should not be one Back away.
           onConfirm={() => { actions.deleteDeck(deck.id); router.replace('/decks') }}
         />
-      </div>
+      </header>
 
       <div className='grid gap-6 lg:grid-cols-[2fr_1fr]'>
         <div className='@container flex flex-col gap-6'>
@@ -201,30 +215,22 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
 
   return (
     <section className='flex flex-col gap-2'>
-      <div className='relative'>
-        <Icon
-          name='search'
-          size={15}
-          className='pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-low'
-        />
-        <TextInput
-          ref={inputRef}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          onPaste={(event) => {
-            if (handlePaste(event.clipboardData.getData('text'))) event.preventDefault()
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && results[0] != null) {
-              event.preventDefault()
-              onAdd(results[0])
-            }
-            if (event.key === 'Escape') setQuery('')
-          }}
-          placeholder={t('searchPlaceholder')}
-          className='w-full py-3 pl-6 pr-3 text-body'
-        />
-      </div>
+      <SearchField
+        ref={inputRef}
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        onPaste={(event) => {
+          if (handlePaste(event.clipboardData.getData('text'))) event.preventDefault()
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && results[0] != null) {
+            event.preventDefault()
+            onAdd(results[0])
+          }
+          if (event.key === 'Escape') setQuery('')
+        }}
+        placeholder={t('searchPlaceholder')}
+      />
 
       {pasted != null && (
         <p className='text-label text-valid'>{t('pastedList', { count: pasted })}</p>

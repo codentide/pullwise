@@ -86,6 +86,16 @@ component, never copied into a call site.
 
 Worth knowing because they recur, and because each one now has a test:
 
+**A base component's Tailwind class silently beating the caller's.** Tailwind
+resolves two utilities for the same property by their order in the generated
+stylesheet, not by their order in the class attribute — so `className` on a
+component that already sets that property is a coin flip. It has happened three
+times: `CardImage` pinning the panel radius on a 48px thumbnail, `Notice` pinning
+the padding under a card image, and `TextInput` pinning `text-meta` under a
+caller's `text-title`, which shipped a 13px deck title that read as 32px in the
+source. Each time the fix is the same: the property becomes a variant on the
+component, never an override at the call site.
+
 **Contrast that looks fine.** Three separate times: the darkness energy icon at
 2.6:1 (invisible), `--ink-low` at 4.08:1, and all three semantic colours in the
 light theme (amber at 1.84:1). Every one shipped looking plausible. `contrast.test.ts`
