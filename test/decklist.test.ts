@@ -58,3 +58,16 @@ test('traduce el código de promo del formato de listas al del dataset', () => {
   assert.equal(unresolved.length, 0)
   assert.equal(entries[0]!.cardId, 'PROMO-A-001')
 })
+
+test('resuelve un set con sufijo en minúscula sin importar cómo lo tipeen', () => {
+  // Bug real: 13 de los 23 sets llevan sufijo minúscula en su id (B1a, A2b...).
+  // Antes, el código se forzaba a mayúsculas ("B1A"), que no existe, y la
+  // búsqueda caía en el fallback por nombre — que devuelve OTRA impresión, con
+  // otros sobres, sin avisar de nada. Probado con las tres formas de tipear
+  // que alguien realmente usaría.
+  for (const raw of ['B1a', 'b1a', 'B1A']) {
+    const { entries, unresolved } = parseDecklist(`1 Magnezone ${raw} 26`)
+    assert.equal(unresolved.length, 0, `no resolvió "${raw}"`)
+    assert.equal(entries[0]!.cardId, 'B1a-026', `"${raw}" resolvió a la impresión equivocada`)
+  }
+})
