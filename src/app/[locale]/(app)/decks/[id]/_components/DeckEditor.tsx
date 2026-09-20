@@ -207,8 +207,9 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
  *
  * Bare spheres, not chips in boxes: EnergyIcon already draws its own disc, and
  * a square button around a circle read as two containers fighting each other.
- * A ring on the lit ones and dimmed opacity on the rest carries the state
- * without adding a box.
+ * On vs off is opacity alone — a ring sat outside the shape as a second
+ * object, and a glow on top of an already-saturated disc was too much on top
+ * of too much.
  */
 function EnergyZone ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
@@ -237,9 +238,7 @@ function EnergyZone ({ deck }: { deck: Deck }) {
             title={names(element)}
             aria-label={names(element)}
             className={`rounded-full transition-opacity duration-150 ${
-              energy.includes(element)
-                ? 'ring-2 ring-accent'
-                : 'opacity-35 hover:opacity-70'
+              energy.includes(element) ? '' : 'opacity-35 hover:opacity-70'
             }`}
           >
             <EnergyIcon energy={element} size={26} />
