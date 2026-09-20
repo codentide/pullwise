@@ -10,6 +10,13 @@ import type { Card } from '@/lib/types.ts'
  * The corner scales with the tile. A 10px radius reads as a soft corner on a
  * 200px card in the catalogue and as a lozenge on a 48px thumbnail in a deck
  * preview, so the caller says how big the art is going to be.
+ *
+ * `trim` is for the smallest thumbnails. The artwork carries the physical card's
+ * own rounded corner — a transparent arc about a tenth of the width — so below
+ * roughly 60px the tile reads as heavily rounded no matter what radius the box
+ * has, and 3px is already the bottom of the scale. Zooming past the frame clips
+ * that arc off. It costs a sliver of white border, which is the one part of a
+ * card nobody is looking at.
  */
 const RADIUS = {
   chip: 'rounded-chip',
@@ -20,10 +27,12 @@ const RADIUS = {
 export function CardImage ({
   card,
   radius = 'surface',
+  trim = false,
   className = ''
 }: {
   card: Card
   radius?: keyof typeof RADIUS
+  trim?: boolean
   className?: string
 }) {
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading')
@@ -46,8 +55,8 @@ export function CardImage ({
         onLoad={() => setState('ready')}
         onError={() => setState('failed')}
         className={`h-full w-full object-cover transition-opacity duration-200 ${
-          state === 'ready' ? 'opacity-100' : 'opacity-0'
-        }`}
+          trim ? 'scale-[1.18]' : ''
+        } ${state === 'ready' ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
   )

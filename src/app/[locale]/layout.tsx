@@ -26,9 +26,9 @@ export async function generateMetadata (
 
 export const viewport: Viewport = {
   // The browser paints the chrome from this before any CSS exists, so it cannot
-  // read a token. It must stay in sync with --color-bg in src/index.css.
+  // read a token. It must stay in sync with --color-base in src/index.css.
   // eslint-disable-next-line no-restricted-syntax
-  themeColor: '#0e1013',
+  themeColor: '#08090a',
   colorScheme: 'dark'
 }
 
