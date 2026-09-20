@@ -70,6 +70,18 @@ the model four times in one session — more often than it has stopped a human.
 ships lighter than specified (the specified value measured 4.08:1) and the radius
 scale has no zero (the user removed hard corners from the product).
 
+**The brand system's source lives outside this repo**, which cost a day: the app
+was built to it while only the brief we sent — `docs/design-brief.md` — was
+versioned, so nothing here said what the logo was and one got invented. It is a
+Claude Design project, readable through the DesignSync MCP:
+
+    project 8a3b1d38-43ce-4710-abce-633464507b13
+    file    "Pullwise Brand System.dc.html"     (§03 is the wordmark and mark)
+
+Its palette was checked against `src/index.css` hex by hex and matches, the two
+overrides above excepted. Anything taken from it belongs in a token or a
+component, never copied into a call site.
+
 ## The bug patterns this codebase produces
 
 Worth knowing because they recur, and because each one now has a test:

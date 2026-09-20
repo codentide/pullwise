@@ -38,6 +38,11 @@
   --color-accent-wash: #2a1108;
   --color-accent-ink: #08090a; /* text on accent, 5.9:1 */
 
+  /* The mark's ground. Flare here, but not everywhere: the brand system forbids
+     the accent as a large field on a light surface, so on paper the square goes
+     to full ink. Hence a token of its own and not --color-accent. */
+  --color-mark: #ff4a17;
+
   /* ── Semantic — deck validation only, never card state ────── */
   --color-valid: #3fbf87;
   --color-warn: #e8b33c;
@@ -121,6 +126,7 @@
     --color-accent-hover: #c23508;
     --color-accent-wash: #fdeee8;
     --color-accent-ink: #ffffff;
+    --color-mark: #13161a;
     /* The semantic colours are tuned for a dark ground and wash out on paper:
        on #fbfaf8 the amber measured 1.84:1. These are the same hues carried
        down until they clear 4.5:1 for text. */

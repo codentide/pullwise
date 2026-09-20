@@ -1,5 +1,9 @@
+<!--
+  Pullwise mark — Brand System §03. A square of Flare with a slot cut on the
+  system's 14° diagonal: a pack seen edge-on. Sharp corners are the manual's;
+  the product's radius scale governs surfaces, not the mark.
+-->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0E1013"/>
-  <path d="M16 6l9 3.6v12.8L16 26l-9-3.6V9.6z" fill="none" stroke="#4DA3FF" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M7 9.6l9 3.6 9-3.6M16 13.2V26" fill="none" stroke="#4DA3FF" stroke-width="2.2" stroke-linejoin="round" opacity=".55"/>
+  <rect width="32" height="32" fill="#FF4A17"/>
+  <path d="M12.8 7.47 23.46 7.47 19.21 24.53 8.54 24.53Z" fill="#08090A"/>
 </svg>

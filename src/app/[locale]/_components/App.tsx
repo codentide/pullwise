@@ -12,6 +12,7 @@ import { ThemeToggle } from '@/components/ThemeToggle.tsx'
 import { useStore } from './useStore.ts'
 import { meta } from '@/lib/gameData.ts'
 import { Pressable } from '@/components/Pressable.tsx'
+import { Wordmark } from '@/components/Wordmark.tsx'
 
 type Tab = 'decks' | 'packs' | 'cards'
 
@@ -38,8 +39,8 @@ export function App () {
     <div className='min-h-dvh'>
       <header className='sticky top-0 z-20 border-b border-line bg-base/85 backdrop-blur'>
         <div className='mx-auto flex max-w-[1180px] flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3'>
-          <Pressable onClick={() => go('decks')} className='text-body font-semibold tracking-tight text-ink-high'>
-            Pullwise
+          <Pressable onClick={() => go('decks')} aria-label='Pullwise'>
+            <Wordmark />
           </Pressable>
 
           <nav className='flex items-center gap-1'>
