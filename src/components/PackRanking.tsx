@@ -157,7 +157,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
                     gives it the same visual weight as the two lines beside it
                     without competing with the hero figure above.
                   */}
-                  <span className='tnum shrink-0 text-body text-ink-mid'>
+                  <span className='tnum shrink-0 font-mono text-body text-ink-mid'>
                     {percent(entry.chanceOfUseful)}
                   </span>
                 </Link>
