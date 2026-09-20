@@ -6,7 +6,6 @@ import { Button } from '@/components/Button.tsx'
 import { Icon } from '@/components/Icon.tsx'
 import { Dialog } from '@/components/Dialog.tsx'
 import { Notice } from '@/components/Notice.tsx'
-import { Heading } from '@/components/Heading.tsx'
 import { EnergyIcon, isEnergy } from '@/components/EnergyIcon.tsx'
 import { buildDeckCode } from '@/lib/deckCode.ts'
 import { DECK_SIZE, deckSize } from '@/lib/deckRules.ts'
@@ -32,7 +31,7 @@ export function DeckCodeButton ({ deck }: { deck: Deck }) {
         <Icon name='getCode' size={14} />
         {t('getCode')}
       </Button>
-      <Dialog open={open} onOpenChange={setOpen} title={t('getCode')} size='md'>
+      <Dialog open={open} onOpenChange={setOpen} title={deck.name} size='md'>
         <DeckCodeContent deck={deck} />
       </Dialog>
     </>
@@ -86,9 +85,7 @@ function DeckCodeContent ({ deck }: { deck: Deck }) {
   return (
     <div className='mt-4 flex flex-wrap items-start gap-4'>
       <div className='min-w-[10rem] flex-1'>
-        <Heading level='sub' as='p' className='truncate'>{deck.name}</Heading>
-
-        <div className='mt-1 flex items-center gap-2'>
+        <div className='flex items-center gap-2'>
           <span className='tnum font-mono text-label text-ink-mid'>
             {t('getCodeSize', { size: deckSize(deck), total: DECK_SIZE })}
           </span>
@@ -107,18 +104,16 @@ function DeckCodeContent ({ deck }: { deck: Deck }) {
         <p className='mt-3 text-label leading-relaxed text-ink-low'>{t('getCodeHint')}</p>
       </div>
 
-      <div className='shrink-0 rounded-surface border border-line-strong bg-raised p-3'>
-        <div className='aspect-square w-[140px] overflow-hidden rounded-control bg-overlay'>
-          {dataUrl != null && (
-            <img
-              src={dataUrl}
-              alt=''
-              className='h-full w-full object-contain opacity-0 transition-opacity duration-200'
-              onLoad={(event) => { event.currentTarget.style.opacity = '1' }}
-            />
-          )}
-        </div>
-      </div>
+      {dataUrl != null && (
+        <img
+          src={dataUrl}
+          alt=''
+          width={150}
+          height={150}
+          className='shrink-0 rounded-control opacity-0 transition-opacity duration-200'
+          onLoad={(event) => { event.currentTarget.style.opacity = '1' }}
+        />
+      )}
     </div>
   )
 }
