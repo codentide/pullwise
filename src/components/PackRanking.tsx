@@ -114,13 +114,13 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
 
       {rest.length > 0 && (
         <section>
-          <Heading level='eyebrow' as='h4'>{t('otherPacks')}</Heading>
+          <Heading level='eyebrow' as='h4' className='px-3'>{t('otherPacks')}</Heading>
           <ol className='mt-2'>
             {rest.map((entry, index) => (
               <li key={`${entry.pack.set}/${entry.pack.pack}`} className='border-b border-line'>
                 <Link
                   href={packHref(entry.pack.set, entry.pack.pack)}
-                  className='flex items-center gap-3 py-3 transition-colors duration-150 hover:bg-overlay'
+                  className='flex items-center gap-4 px-3 py-3 transition-colors duration-150 hover:bg-overlay'
                 >
                   <span className='tnum font-mono text-label text-ink-low'>
                     {String(index + 2).padStart(2, '0')}
@@ -150,7 +150,14 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
                       />
                     </div>
                   </div>
-                  <span className='tnum shrink-0 text-meta text-ink-mid'>
+                  {/*
+                    Sized to the row it sits in, not to the word "meta": a
+                    single-line label next to a name-plus-bar block read as an
+                    afterthought squeezed against something taller. text-body
+                    gives it the same visual weight as the two lines beside it
+                    without competing with the hero figure above.
+                  */}
+                  <span className='tnum shrink-0 text-body text-ink-mid'>
                     {percent(entry.chanceOfUseful)}
                   </span>
                 </Link>
