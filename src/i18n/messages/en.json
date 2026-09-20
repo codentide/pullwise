@@ -99,7 +99,8 @@
     "otherPacks": "Other packs",
     "coachAllHere": "{count, plural, one {You are missing # card and it comes from here} other {You are missing # cards and they all come from here}}.",
     "coachMostlyHere": "You are missing {count} cards; {here, plural, one {# of them comes} other {# of them come}} from here.",
-    "coachOnlyOne": "It is the only pack that has what you are missing."
+    "coachOnlyOne": "It is the only pack that has what you are missing.",
+    "relativeToWinner": "How this pack compares to the recommended one above."
   },
   "advisor": {
     "title": "Which pack to open",

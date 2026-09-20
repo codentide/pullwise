@@ -111,3 +111,7 @@ export function rarityBreakdown (set: string, pack: string): Array<[string, numb
  */
 export const packArt = (set: string, pack: string): string =>
   `/packs/${set}-${pack.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}.webp`
+
+/** The public detail page for a pack — same encoding as its generateStaticParams. */
+export const packHref = (set: string, pack: string): string =>
+  `/pack/${set}/${encodeURIComponent(pack)}`

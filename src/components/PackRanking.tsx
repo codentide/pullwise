@@ -3,7 +3,8 @@ import { Icon } from '@/components/Icon.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
-import { packArt, packMath, setName } from '@/lib/gameData.ts'
+import { Link } from '@/i18n/navigation.ts'
+import { packArt, packHref, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 
 /**
@@ -60,7 +61,10 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
           {t('openThis')}
         </p>
 
-        <div className='flex gap-4 p-4'>
+        <Link
+          href={packHref(winner.pack.set, winner.pack.pack)}
+          className='flex gap-4 p-4 transition-colors duration-150 hover:bg-overlay'
+        >
           <img
             src={packArt(winner.pack.set, winner.pack.pack)}
             alt=''
@@ -105,7 +109,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
                   : t('coachMostlyHere', { count: missingCount, here: coveredHere })}
             </p>
           </div>
-        </div>
+        </Link>
       </section>
 
       {rest.length > 0 && (
@@ -113,30 +117,43 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
           <Heading level='eyebrow' as='h4'>{t('otherPacks')}</Heading>
           <ol className='mt-2'>
             {rest.map((entry, index) => (
-              <li
-                key={`${entry.pack.set}/${entry.pack.pack}`}
-                className='flex items-center gap-3 border-b border-line py-3'
-              >
-                <span className='tnum font-mono text-label text-ink-low'>
-                  {String(index + 2).padStart(2, '0')}
-                </span>
-                <div className='min-w-0 flex-1'>
-                  <p className='game-name truncate text-meta text-ink-high'>
-                    {entry.pack.pack}
-                    <span className='text-ink-low'> — {setName(entry.pack.set)}</span>
-                  </p>
-                  <div className='mt-2 h-px bg-line'>
+              <li key={`${entry.pack.set}/${entry.pack.pack}`} className='border-b border-line'>
+                <Link
+                  href={packHref(entry.pack.set, entry.pack.pack)}
+                  className='flex items-center gap-3 py-3 transition-colors duration-150 hover:bg-overlay'
+                >
+                  <span className='tnum font-mono text-label text-ink-low'>
+                    {String(index + 2).padStart(2, '0')}
+                  </span>
+                  <div className='min-w-0 flex-1'>
+                    <p className='game-name truncate text-meta text-ink-high'>
+                      {entry.pack.pack}
+                      <span className='text-ink-low'> — {setName(entry.pack.set)}</span>
+                    </p>
+                    {/*
+                      The bar reads relative to the winner's own chance, which is
+                      the big number above — not to 100%, and not to this row's own
+                      percentage, which sits right next to it. `aria-hidden`
+                      because the text beside it already says the number; the bar
+                      is only there to make six rows scannable at a glance.
+                    */}
                     <div
-                      className='pw-fill h-px bg-line-control'
-                      style={{
-                        width: `${Math.max(2, (entry.chanceOfUseful / winner.chanceOfUseful) * 100)}%`
-                      }}
-                    />
+                      aria-hidden
+                      className='mt-2 h-px bg-line'
+                      title={t('relativeToWinner')}
+                    >
+                      <div
+                        className='pw-fill h-px bg-line-control'
+                        style={{
+                          width: `${Math.max(2, (entry.chanceOfUseful / winner.chanceOfUseful) * 100)}%`
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-                <span className='tnum shrink-0 text-meta text-ink-mid'>
-                  {percent(entry.chanceOfUseful)}
-                </span>
+                  <span className='tnum shrink-0 text-meta text-ink-mid'>
+                    {percent(entry.chanceOfUseful)}
+                  </span>
+                </Link>
               </li>
             ))}
           </ol>
