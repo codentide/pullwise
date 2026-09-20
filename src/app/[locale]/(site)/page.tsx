@@ -32,7 +32,7 @@ export default async function HomePage ({ params }: Props) {
   const nav = await getTranslations({ locale, namespace: 'nav' })
 
   return (
-    <SiteChrome cta={false}>
+    <SiteChrome>
       <section className='max-w-2xl py-12'>
         <Heading level='title'>{t('headline')}</Heading>
         <p className='mt-4 text-body leading-relaxed text-ink-mid'>{t('body')}</p>

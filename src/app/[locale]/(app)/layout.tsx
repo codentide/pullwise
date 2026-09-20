@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { AppHeader } from './_components/AppHeader.tsx'
+import { AppHeader } from '@/components/AppHeader.tsx'
 
 /**
  * The tool's shell.
