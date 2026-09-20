@@ -79,14 +79,19 @@ const replaceDeck = (decks: Deck[], id: string, update: (deck: Deck) => Deck) =>
   decks.map((deck) => (deck.id === id ? touch(update(deck)) : deck))
 
 export const actions = {
-  createDeck (name = 'Mazo nuevo', entries: DeckEntry[] = []): string {
-    const deck: Deck = { id: newId(), name, entries, updatedAt: Date.now() }
+  createDeck (name = 'Mazo nuevo', entries: DeckEntry[] = [], energy?: string[]): string {
+    const deck: Deck = { id: newId(), name, entries, energy, updatedAt: Date.now() }
     commit({ ...state, decks: [deck, ...state.decks] })
     return deck.id
   },
 
   renameDeck (id: string, name: string) {
     commit({ ...state, decks: replaceDeck(state.decks, id, (deck) => ({ ...deck, name })) })
+  },
+
+  /** `undefined` puts the energy zone back to inferred rather than clearing it. */
+  setEnergy (id: string, energy: string[] | undefined) {
+    commit({ ...state, decks: replaceDeck(state.decks, id, (deck) => ({ ...deck, energy })) })
   },
 
   deleteDeck (id: string) {

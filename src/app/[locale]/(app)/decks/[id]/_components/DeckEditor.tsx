@@ -8,7 +8,8 @@ import { SearchField, TextInput } from '@/components/Field.tsx'
 import { ConfirmDialog } from '@/components/Dialog.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { EmptyState } from '@/components/Panel.tsx'
-import { Badge } from '@/components/Indicators.tsx'
+import { Badge, Chip } from '@/components/Indicators.tsx'
+import { EnergyIcon, isEnergy } from '@/components/EnergyIcon.tsx'
 import { Notice, NoticeList, type NoticeTone } from '@/components/Notice.tsx'
 import { DeckCardTile } from '@/components/CardTile.tsx'
 import { CardImage } from '@/components/CardImage.tsx'
@@ -20,6 +21,8 @@ import { DECK_SIZE, deckSize, validateDeck, type DeckIssue } from '@/lib/deckRul
 import { groupDeck, lineGaps, quickSearch } from '@/lib/deckGroups.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
 import { analyzeDeck } from '@/lib/deckAnalysis.ts'
+import { resolvedEnergy } from '@/lib/energy.ts'
+import { ELEMENTS } from '@/lib/filters.ts'
 import type { Card, Deck } from '@/lib/types.ts'
 
 /**
@@ -34,6 +37,12 @@ const DECK_GRID =
 
 /**
  * The deck editor.
+ *
+ * The energy zone sits right under the header, before the search field: it is
+ * as much a part of "what this deck is" as its name, not a setting tucked
+ * away. It is inferred from the deck's own Pokémon until the player actually
+ * taps a symbol or pastes a list that names one — the same explicit-beats-
+ * inferred rule the rest of the app already lives by for ownership.
  *
  * The search field is permanent rather than hidden behind a button: building a
  * deck is one continuous act of adding cards, and a picker that has to be opened
@@ -129,6 +138,8 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
 
       <div className='grid gap-6 lg:grid-cols-[2fr_1fr]'>
         <div className='@container flex flex-col gap-6'>
+          <EnergyZone deck={deck} />
+
           <CardSearch deck={deck} onAdd={add} />
 
           {gaps.length > 0 && (
@@ -190,6 +201,47 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
 }
 
 /**
+ * The energy zone. Toggling a symbol is what turns the guess into a fact —
+ * one press, and this deck stops being inferred forever, the same moment
+ * ownership stops being unknown the first time a card gets marked.
+ */
+function EnergyZone ({ deck }: { deck: Deck }) {
+  const t = useTranslations('editor')
+  const names = useTranslations('energies')
+  const { energy, inferred } = resolvedEnergy(deck)
+
+  const toggle = (element: string): void => {
+    const next = energy.includes(element)
+      ? energy.filter((current) => current !== element)
+      : [...energy, element]
+    actions.setEnergy(deck.id, next)
+  }
+
+  return (
+    <section>
+      <Heading level='eyebrow' as='h3' className='flex items-center gap-2'>
+        {t('energyZone')}
+        {inferred && <Badge tone='neutral'>{t('energyInferred')}</Badge>}
+      </Heading>
+      <div className='mt-2 flex flex-wrap gap-1'>
+        {ELEMENTS.filter(isEnergy).map((element) => (
+          <Chip
+            key={element}
+            pressed={energy.includes(element)}
+            onClick={() => toggle(element)}
+            title={names(element)}
+            aria-label={names(element)}
+            className='p-1'
+          >
+            <EnergyIcon energy={element} size={22} />
+          </Chip>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+/**
  * Permanent search. Enter adds the first result and the field keeps its text, so
  * the next card is one correction away rather than a fresh start. Pasting more
  * than one line is treated as a decklist.
@@ -208,6 +260,10 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
     const parsed = parseDecklist(text)
     if (parsed.entries.length === 0) return false
     actions.addEntries(deck.id, parsed.entries)
+    // A pasted list that names its own energy zone is a stronger signal than
+    // the inference: someone is describing a specific, finished deck, not
+    // adding one card to something in progress.
+    if (parsed.energy !== undefined) actions.setEnergy(deck.id, parsed.energy)
     setPasted(parsed.entries.length)
     setTimeout(() => setPasted(null), 4000)
     return true

@@ -71,3 +71,24 @@ test('resuelve un set con sufijo en minúscula sin importar cómo lo tipeen', ()
     assert.equal(entries[0]!.cardId, 'B1a-026', `"${raw}" resolvió a la impresión equivocada`)
   }
 })
+
+test('extrae la zona de energía de una lista real, en vez de tirarla', () => {
+  const { energy } = parseDecklist('2 Bulbasaur\n\nEnergy: Lightning')
+  assert.deepEqual(energy, ['lightning'])
+})
+
+test('reconoce más de un tipo de energía en la misma línea', () => {
+  const { energy } = parseDecklist('Energy: Water, Lightning')
+  assert.deepEqual(energy, ['water', 'lightning'])
+})
+
+test('un encabezado de energía sin nombres reconocibles no inventa nada', () => {
+  const { energy, entries } = parseDecklist('2 Bulbasaur\nEnergy: 8')
+  assert.equal(energy, undefined)
+  assert.equal(entries.length, 1)
+})
+
+test('una lista sin línea de energía no la reporta', () => {
+  const { energy } = parseDecklist('2 Bulbasaur')
+  assert.equal(energy, undefined)
+})

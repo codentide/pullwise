@@ -33,16 +33,20 @@ logic but its Python port is AGPL-3.0, which for a web app is viral: it would
 force all of Pullwise open under AGPL. The upstream Nirostar logic is MIT. Same
 code, very different obligation.
 
-**Two gaps to close before it works here**
+**One gap left to close before it works here**
 
 1. **We do not store `deckBuilderNr`.** `sync-data.mjs` drops the upstream
    `image` field, which is where the internal asset id appears
    (`cPK_10_000960_00_PIKACHUex_RR.webp`). Either keep that field or let the
    library load its own copy of the database.
-2. **We do not model the energy zone.** A TCG Pocket deck picks its energy types
-   separately from its 20 cards, and the encoder needs them. Today Pullwise has
-   no concept of it. That is a real (small) product addition, not just plumbing —
-   and it should probably be inferred from the deck's Pokémon by default.
+
+~~2. We do not model the energy zone.~~ Closed. `src/lib/energy.ts` infers it
+from the deck's own Pokémon, `Deck.energy` holds an explicit override once the
+player taps a symbol or pastes a decklist that names one (`Energy: Lightning`,
+which the parser used to discard outright — found by testing a real export for
+the first time, which also turned up a real bug: 13 of the 23 sets have a
+lowercase-suffixed code, and `decklist.ts` was force-uppercasing it, silently
+resolving to the wrong printing).
 
 ### 2. Shareable deck URLs with an OG image
 

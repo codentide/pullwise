@@ -7,6 +7,7 @@
  * reports whatever it could not resolve instead of failing.
  */
 import { cardsById, cardsByName, normalizeName, sets } from './gameData.ts'
+import { ELEMENTS } from './filters.ts'
 import type { Card, DeckEntry } from './types.ts'
 
 /** Lists and the CDN use different promo codes than the dataset. */
@@ -31,6 +32,8 @@ export interface ParsedDeck {
   entries: DeckEntry[]
   /** Lines that looked like a card but could not be resolved. */
   unresolved: string[]
+  /** The energy zone, when the list named one — absent, never empty. */
+  energy?: string[]
 }
 
 /** `2 Pikachu ex A1 096` -> copies, name, set, number. Set and number optional. */
@@ -38,6 +41,25 @@ const CARD_LINE = /^(\d+)\s*x?\s+(.+?)(?:\s+([A-Za-z]+[\w-]*)\s+(\d+))?$/
 
 /** Section headers and totals that are not cards. */
 const SKIP_LINE = /^(pok[eé]mon|trainer|supporter|item|tool|energy|total)\b.*:?\s*\d*$/i
+
+/**
+ * The one line in a real export that is not noise: "Energy: Lightning" names
+ * the deck's own energy zone. It used to fall into SKIP_LINE with everything
+ * else and get discarded — the only piece of a decklist this parser threw
+ * away rather than either resolving or reporting.
+ */
+const ENERGY_LINE = /^energy\s*:?\s*(.*)$/i
+
+/** Words on an energy line, matched against the elements the game actually has. */
+function parseEnergyWords (text: string): string[] {
+  const known = new Set(ELEMENTS)
+  const found: string[] = []
+  for (const word of text.split(/[,/+]|\band\b|\s+/i)) {
+    const token = normalizeName(word)
+    if (known.has(token) && !found.includes(token)) found.push(token)
+  }
+  return found
+}
 
 function findCard (name: string, setCode?: string, number?: string): Card | undefined {
   if (setCode && number) {
@@ -60,10 +82,22 @@ function findCard (name: string, setCode?: string, number?: string): Card | unde
 export function parseDecklist (text: string): ParsedDeck {
   const byCard = new Map<string, number>()
   const unresolved: string[] = []
+  let energy: string[] | undefined
 
   for (const raw of text.split('\n')) {
     const line = raw.trim()
-    if (!line || SKIP_LINE.test(line)) continue
+    if (!line) continue
+
+    // Checked before SKIP_LINE, which would otherwise swallow this line too —
+    // it also starts with "energy".
+    const energyMatch = ENERGY_LINE.exec(line)
+    if (energyMatch) {
+      const words = parseEnergyWords(energyMatch[1] ?? '')
+      if (words.length > 0) energy = words
+      continue
+    }
+
+    if (SKIP_LINE.test(line)) continue
 
     const match = CARD_LINE.exec(line)
     if (!match) {
@@ -83,5 +117,5 @@ export function parseDecklist (text: string): ParsedDeck {
   }
 
   const entries = [...byCard].map(([cardId, copies]) => ({ cardId, copies }))
-  return { entries, unresolved }
+  return { entries, unresolved, energy }
 }

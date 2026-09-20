@@ -57,7 +57,9 @@
     "pageTitle": "Mazo",
     "notFoundTitle": "Este mazo no está en este dispositivo.",
     "notFoundBody": "Pullwise guarda tus mazos en tu propio navegador, nunca en un servidor, así que el enlace de un mazo solo abre donde se armó.",
-    "notFoundAction": "Volver a tus mazos"
+    "notFoundAction": "Volver a tus mazos",
+    "energyZone": "Zona de energía",
+    "energyInferred": "Deducida de tus Pokémon"
   },
   "card": {
     "ownership": "{name}: tienes {have} de {needed}. Cambiar.",

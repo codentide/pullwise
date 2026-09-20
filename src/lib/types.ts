@@ -61,6 +61,13 @@ export interface Deck {
   id: string
   name: string
   entries: DeckEntry[]
+  /**
+   * The energy zone's types — what the game generates for you to attach, turn
+   * by turn. `undefined` means nobody has chosen: the same "explicit beats
+   * inferred" rule as `Knowledge` — a guess is shown, but nothing is written
+   * until the player actually picks it, or a pasted decklist names one.
+   */
+  energy?: string[]
   updatedAt: number
 }
 

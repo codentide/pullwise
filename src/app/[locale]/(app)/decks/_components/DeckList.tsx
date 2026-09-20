@@ -148,7 +148,7 @@ function ImportPanel ({ onDone, onClose }: { onDone: (id: string) => void, onClo
 
   const submit = (): void => {
     if (parsed == null || parsed.entries.length === 0) return
-    const id = actions.createDeck(name.trim() !== '' ? name.trim() : t('importTitle'), parsed.entries)
+    const id = actions.createDeck(name.trim() !== '' ? name.trim() : t('importTitle'), parsed.entries, parsed.energy)
     onClose()
     onDone(id)
   }
