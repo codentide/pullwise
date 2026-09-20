@@ -7,6 +7,7 @@ import { SiteChrome } from '../../_components/SiteChrome.tsx'
 import { CardGridLinks } from '../../_components/CardGridLinks.tsx'
 import { cards, sets, setsByCode } from '@/lib/gameData.ts'
 import { Heading } from '@/components/Heading.tsx'
+import { PackImage } from '@/components/PackImage.tsx'
 
 export const dynamicParams = false
 
@@ -60,14 +61,15 @@ export default async function SetPage ({ params }: Props) {
       {set.packs.length > 0 && (
         <section className='mt-6'>
           <Heading level='sub'>{t('packs')}</Heading>
-          <ul className='mt-2 flex flex-wrap gap-2'>
+          <ul className='mt-2 flex flex-wrap gap-3'>
             {set.packs.map((pack) => (
               <li key={pack}>
                 <Link
                   href={`/pack/${set.code}/${encodeURIComponent(pack)}`}
-                  className='block rounded-control border border-line-control px-3 py-2 text-meta text-ink-high transition-colors duration-150 hover:border-accent hover:text-accent'
+                  className='flex flex-col items-center gap-2 rounded-control border border-line-control p-2 transition-colors duration-150 hover:border-accent'
                 >
-                  {pack}
+                  <PackImage set={set.code} pack={pack} radius='control' className='w-16' />
+                  <span className='text-meta text-ink-high'>{pack}</span>
                 </Link>
               </li>
             ))}

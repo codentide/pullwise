@@ -7,6 +7,7 @@ import { SiteChrome } from '../../../_components/SiteChrome.tsx'
 import { CardGridLinks } from '../../../_components/CardGridLinks.tsx'
 import { allPacks, cardsInPack, packMath, rarityBreakdown, setName } from '@/lib/gameData.ts'
 import { Heading } from '@/components/Heading.tsx'
+import { PackImage } from '@/components/PackImage.tsx'
 
 export const dynamicParams = false
 
@@ -55,16 +56,23 @@ export default async function PackPage ({ params }: Props) {
 
   return (
     <SiteChrome>
-      <header>
-        <Heading level='page'>
-          {t('title', { pack: pack.pack })}
-        </Heading>
-        <p className='mt-1 text-meta text-ink-mid'>
-          <Link href={`/set/${pack.set}`} className='text-accent hover:underline'>
-            {setName(pack.set)}
-          </Link>
-          {' · '}{t('cardCount', { count: cards.length })}
-        </p>
+      <header className='flex gap-6'>
+        <PackImage
+          set={pack.set}
+          pack={pack.pack}
+          className='w-24 shrink-0 self-start sm:w-32'
+        />
+        <div>
+          <Heading level='page'>
+            {t('title', { pack: pack.pack })}
+          </Heading>
+          <p className='mt-1 text-meta text-ink-mid'>
+            <Link href={`/set/${pack.set}`} className='text-accent hover:underline'>
+              {setName(pack.set)}
+            </Link>
+            {' · '}{t('cardCount', { count: cards.length })}
+          </p>
+        </div>
       </header>
 
       <section className='mt-6'>

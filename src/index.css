@@ -107,6 +107,8 @@
 
   /* Real proportion of the card images from the CDN. */
   --aspect-card: 367 / 512;
+  /* Real proportion of the booster artwork in public/packs/. */
+  --aspect-pack: 320 / 618;
 }
 
 /* Light is a translation, not an inversion: warm paper, never pure white.

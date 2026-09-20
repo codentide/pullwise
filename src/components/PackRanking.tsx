@@ -4,7 +4,8 @@ import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
 import { Link } from '@/i18n/navigation.ts'
-import { packArt, packHref, packMath, setName } from '@/lib/gameData.ts'
+import { PackImage } from './PackImage.tsx'
+import { packHref, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 
 /**
@@ -65,12 +66,11 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
           href={packHref(winner.pack.set, winner.pack.pack)}
           className='flex gap-4 p-4 transition-colors duration-150 hover:bg-overlay'
         >
-          <img
-            src={packArt(winner.pack.set, winner.pack.pack)}
-            alt=''
-            width={320}
-            height={618}
-            className='w-16 shrink-0 self-start rounded-control @xs:w-20 @sm:w-24'
+          <PackImage
+            set={winner.pack.set}
+            pack={winner.pack.pack}
+            radius='control'
+            className='w-16 shrink-0 self-start @xs:w-20 @sm:w-24'
           />
 
           <div className='min-w-0 flex-1'>
