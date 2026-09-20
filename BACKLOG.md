@@ -7,8 +7,7 @@ are — one repo, one live list, no duplicate that drifts out of sync with itsel
 
 | # | What | Why it's labelled that way |
 | --- | --- | --- |
-| [#1](https://github.com/codentide/pullwise/issues/1) | Generate the in-game deck code (QR) | `priority:high` — closes the entire loop this app exists for |
-| [#2](https://github.com/codentide/pullwise/issues/2) | Shareable deck URLs with an OG image | Pairs with #1: the link people actually post |
+| [#2](https://github.com/codentide/pullwise/issues/2) | Shareable deck URLs with an OG image | Pairs with the closed #1: the link people actually post |
 | [#3](https://github.com/codentide/pullwise/issues/3) | Deploy Pullwise | `priority:high` — nobody but the developer can open the app today |
 | [#4](https://github.com/codentide/pullwise/issues/4) | Use the app by hand at least once | Every check so far has gone through Playwright, never a person |
 | [#5](https://github.com/codentide/pullwise/issues/5) | Rewrite the README in English | It still describes the pre-Next structure, in Spanish |
@@ -32,3 +31,12 @@ isn't lost:
   Pokémon; `Deck.energy` holds an explicit override once the player touches a
   symbol or pastes a decklist that names one.
 - **No git.** Pushed: https://github.com/codentide/pullwise
+
+## Closed
+
+- [#1](https://github.com/codentide/pullwise/issues/1) — Generate the in-game
+  deck code (QR). `deckBuilderNr` is real data (`sync-data.mjs`, verified
+  3,879/3,879 resolve); `src/lib/deckCode.ts` builds and round-trip-tests the
+  code; generation works on an incomplete deck (the 20-card gate was ours, not
+  the format's); the dialog shows the deck's size and the energy actually
+  encoded, filtered to the 8 the game's Energy Zone really offers.
