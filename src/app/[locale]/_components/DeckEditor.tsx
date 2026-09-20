@@ -114,19 +114,12 @@ export function DeckEditor ({ deck, onBack }: { deck: Deck, onBack: () => void }
         <div className='@container flex flex-col gap-6'>
           <CardSearch deck={deck} onAdd={add} />
 
-          {/*
-            Two up once there is room. Each broken line is a short heading and a
-            chain of three thumbnails, so at full width three of them were 540px
-            of mostly empty panel sitting between the search field and the deck.
-          */}
           {gaps.length > 0 && (
-            <ul className='grid gap-2 @2xl:grid-cols-2'>
+            <NoticeList>
               {gaps.map((gap) => (
-                <li key={gap.missingName}>
-                  <EvolutionLine gap={gap} onAdd={add} />
-                </li>
+                <EvolutionLine key={gap.missingName} gap={gap} onAdd={add} />
               ))}
-            </ul>
+            </NoticeList>
           )}
 
           {groups.map((group) => (

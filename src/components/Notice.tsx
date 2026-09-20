@@ -23,10 +23,18 @@ const TONES: Record<NoticeTone, { box: string, icon: string, glyph: 'warn' | 'ch
 
 export function Notice ({
   tone = 'info',
+  pad = 'sm',
   children,
   action
 }: {
   tone?: NoticeTone
+  /**
+   * `sm` is a line or two of text, where tight vertical padding keeps the notice
+   * from reading as a panel. `md` is for a notice with something in it — card
+   * art, a control — where the same padding leaves the content touching the
+   * bottom edge.
+   */
+  pad?: 'sm' | 'md'
   children: ReactNode
   /** Optional trailing control — the fix, when there is one. */
   action?: ReactNode
@@ -35,7 +43,7 @@ export function Notice ({
 
   return (
     <div
-      className={`flex items-start gap-3 rounded-control px-3 py-2 text-meta leading-relaxed ${style.box}`}
+      className={`flex items-start gap-3 rounded-control text-meta leading-relaxed ${pad === 'md' ? 'p-3' : 'px-3 py-2'} ${style.box}`}
       role={tone === 'error' ? 'alert' : undefined}
     >
       <Icon name={style.glyph} size={14} className={`mt-1 shrink-0 ${style.icon}`} />
