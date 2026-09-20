@@ -16,6 +16,13 @@ export interface Card {
   weakness?: string
   /** Metadata was copied from another card with the same name, not sourced. */
   inferred?: boolean
+  /**
+   * The internal id the game itself uses for this card, needed to build an
+   * in-game deck-share code. Optional even though today's sync covers every
+   * card: it is derived from a filename field upstream could reshape without
+   * warning, same posture as `stage`/`element`.
+   */
+  deckBuilderNr?: number
 }
 
 export interface CardSet {

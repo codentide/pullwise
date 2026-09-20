@@ -59,7 +59,11 @@
     "notFoundBody": "Pullwise keeps your decks in your own browser, never on a server, so a deck link only opens where the deck was built.",
     "notFoundAction": "Back to your decks",
     "energyZone": "Energy",
-    "energyInferred": "Guessed from your Pokémon"
+    "energyInferred": "Guessed from your Pokémon",
+    "getCode": "Get deck code",
+    "getCodeHint": "Scan it in-game to import this deck. Cards you have not marked show up there as a shopping list — you do not need to own them first.",
+    "getCodeErrorWrongSize": "This code needs exactly 20 cards. This deck has {size}.",
+    "getCodeErrorNoEnergy": "Pick an energy type to include it in the code — none is set, and this deck’s Pokémon do not suggest one either."
   },
   "card": {
     "ownership": "{name}: you have {have} of {needed}. Change.",

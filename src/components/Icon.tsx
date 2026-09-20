@@ -9,6 +9,7 @@ import {
   Moon,
   Package,
   Plus,
+  QrCode,
   Search,
   Sun,
   Trash2,
@@ -31,7 +32,7 @@ import {
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
-  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon'
+  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode'
 
 const ICONS: Record<Name, LucideIcon> = {
   deck: Layers,
@@ -47,6 +48,7 @@ const ICONS: Record<Name, LucideIcon> = {
   back: ArrowLeft,
   // The link between two cards in an evolution chain, not a direction on screen.
   evolvesTo: ArrowRight,
+  getCode: QrCode,
   chevron: ChevronDown,
   sun: Sun,
   moon: Moon
