@@ -62,7 +62,7 @@ export function ExportButton ({ deck }: { deck: Deck }) {
       {menuOpen && (
         <div
           role='menu'
-          className='absolute right-0 top-full z-10 mt-2 w-48 overflow-hidden rounded-control border border-line-strong bg-raised py-1'
+          className='absolute right-0 top-full z-10 mt-2 w-48 overflow-hidden rounded-control border border-line-strong bg-raised'
         >
           <Pressable
             role='menuitem'
