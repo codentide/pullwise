@@ -63,6 +63,7 @@ have drifted:
 | `marketing` | Acquisition, branding, distribution |
 | `priority:high` / `:medium` / `:low` | Exactly one, always |
 | `blocked` | Can't proceed until a real dependency resolves |
-| `needs clarification` | Missing definitions before it's buildable |
+| `needs clarification` | Missing a product decision before it's buildable |
+| `needs research` | A technical/external unknown to investigate before it's scoped — not a missing decision, a missing fact (does the data exist, what does an API actually return) |
 | `on-demand` | Ready to go, waiting on an external trigger named in the issue |
 | `external` | Human-only action outside the code (paperwork, purchases, third parties) |
