@@ -171,8 +171,7 @@
   },
   "footer": {
     "disclaimer": "Pullwise is a fan project with no connection to Nintendo, The Pokémon Company or DeNA. Card names and images belong to their owners.",
-    "by": "by {name}",
-    "sourceCode": "Source code"
+    "by": "by {name}"
   },
   "energies": {
     "grass": "Grass",

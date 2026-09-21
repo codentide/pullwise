@@ -39,11 +39,10 @@ export async function AppFooter () {
               href={REPO_URL}
               target='_blank'
               rel='noopener noreferrer'
-              aria-label={t('sourceCode')}
-              title={t('sourceCode')}
-              className='text-ink-low transition-colors duration-150 hover:text-ink-mid'
+              className='flex items-center gap-1 text-ink-low transition-colors duration-150 hover:text-ink-mid'
             >
               <Icon name='sourceCode' size={14} />
+              GitHub
             </a>
           </div>
         </div>
