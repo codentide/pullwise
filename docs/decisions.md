@@ -312,3 +312,22 @@ ask, not an occasional risk. `tackle-issue` is built around the same
 discipline this session kept re-learning the hard way: read the issue, but
 verify the codebase still matches what it assumes, ask what's genuinely
 unclear before implementing, and check by hand once something is visual.
+
+**`vercel link`'s GitHub integration was deploying every push to `main` to
+production, silently, since the moment it was connected.** The plan had been
+"preview now, decide on the domain, then promote to production deliberately"
+— but connecting the repo enables auto-deploy by default, and Vercel's
+Production Branch defaults to whatever the GitHub default branch is (`main`
+here). Every commit pushed after `vercel link` — the export feature, the
+versioning policy, the README rewrite, PWS-011 — went live on
+`https://pullwise-deck.vercel.app` the moment it landed, confirmed by
+`vercel ls` showing `Production` on all but one deployment (the one manual
+preview run). Caught only because the user asked for a `develop` branch "for
+the peace of mind that a push doesn't auto-deploy" — a request that,
+investigated, turned out to already be a real gap, not a hypothetical one.
+
+Fixed by splitting the branches rather than touching Vercel's project
+settings: `main` stays wired as Production (GitHub's default branch, so no
+Vercel reconfiguration needed), `develop` is where routine work happens and
+only ever gets a Preview URL, and `main` is merged into deliberately. See
+`CLAUDE.md`'s Branches section.

@@ -49,6 +49,21 @@ the rare case that's genuinely wrong.
 
 `CHANGELOG.md` gets one entry per bump, [Keep a Changelog](https://keepachangelog.com/) shaped.
 
+## Branches
+
+`main` is wired to Vercel as the **production** branch — every push to it
+auto-deploys to the live, public URL. Day-to-day work happens on `develop`
+instead, which only ever gets a Preview deployment. Merge `develop` into
+`main` deliberately, when something is actually meant to go live, not as a
+side effect of routine commits.
+
+This split exists because it wasn't there at first: connecting the GitHub
+repo to Vercel made every push to `main` deploy to production immediately,
+silently, before a real "first deploy" decision had been made — see
+`docs/decisions.md`. No PR is required to merge `develop` into `main` (this
+is still a solo-maintained repo, and that ceremony isn't earning its cost
+yet); a plain merge and push is enough.
+
 ## Structure
 
 Each route owns its files. A component lives in the `_components/` folder of its
