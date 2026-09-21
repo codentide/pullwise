@@ -170,7 +170,9 @@
     "allCards": "Todas las cartas"
   },
   "footer": {
-    "disclaimer": "Pullwise es un proyecto de fans sin relación con Nintendo, The Pokémon Company ni DeNA. Los nombres y las imágenes de las cartas pertenecen a sus dueños."
+    "disclaimer": "Pullwise es un proyecto de fans sin relación con Nintendo, The Pokémon Company ni DeNA. Los nombres y las imágenes de las cartas pertenecen a sus dueños.",
+    "by": "por {name}",
+    "sourceCode": "Código fuente"
   },
   "energies": {
     "grass": "Planta",

@@ -1,5 +1,5 @@
-import { getTranslations } from 'next-intl/server'
 import { AppHeader } from '@/components/AppHeader.tsx'
+import { AppFooter } from '@/components/AppFooter.tsx'
 
 /**
  * Shell for the public pages: they are the front door from a search engine.
@@ -11,15 +11,11 @@ import { AppHeader } from '@/components/AppHeader.tsx'
  * place, and two accents on one screen is one too many.
  */
 export async function SiteChrome ({ children }: { children: React.ReactNode }) {
-  const t = await getTranslations()
-
   return (
-    <div className='min-h-dvh'>
+    <div className='flex min-h-dvh flex-col'>
       <AppHeader />
-      <main className='mx-auto max-w-[1180px] px-4 py-6'>{children}</main>
-      <footer className='mx-auto max-w-[1180px] px-4 py-6 text-label leading-relaxed text-ink-low'>
-        {t('footer.disclaimer')}
-      </footer>
+      <main className='mx-auto w-full max-w-[1180px] flex-1 px-4 py-6'>{children}</main>
+      <AppFooter />
     </div>
   )
 }

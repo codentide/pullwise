@@ -8,6 +8,7 @@ import {
   Minus,
   Moon,
   Package,
+  Code2,
   Copy,
   Info,
   Plus,
@@ -34,7 +35,7 @@ import {
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
-  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy' | 'hint'
+  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy' | 'hint' | 'sourceCode'
 
 const ICONS: Record<Name, LucideIcon> = {
   deck: Layers,
@@ -53,6 +54,9 @@ const ICONS: Record<Name, LucideIcon> = {
   getCode: QrCode,
   copy: Copy,
   hint: Info,
+  // No brand logos ship in this icon set anymore — this names the role
+  // (a link to the code), not a specific platform's mark.
+  sourceCode: Code2,
   chevron: ChevronDown,
   sun: Sun,
   moon: Moon

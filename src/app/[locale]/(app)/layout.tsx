@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { AppHeader } from '@/components/AppHeader.tsx'
+import { AppFooter } from '@/components/AppFooter.tsx'
 
 /**
  * The tool's shell.
@@ -13,9 +14,10 @@ export const metadata: Metadata = { robots: { index: false, follow: true } }
 
 export default function AppLayout ({ children }: { children: React.ReactNode }) {
   return (
-    <div className='min-h-dvh'>
+    <div className='flex min-h-dvh flex-col'>
       <AppHeader />
-      <main className='mx-auto max-w-[1180px] px-4 py-6'>{children}</main>
+      <main className='mx-auto w-full max-w-[1180px] flex-1 px-4 py-6'>{children}</main>
+      <AppFooter />
     </div>
   )
 }
