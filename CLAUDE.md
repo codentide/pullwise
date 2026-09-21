@@ -7,6 +7,13 @@ Most of this codebase is written by agents. That shapes every convention below:
 So the rules split in two — the ones a machine can check are checked, and only
 what genuinely needs judgement lives here as prose.
 
+Tracked work lives in GitHub Issues, each coded `PWS-0NN` (that number is
+always the issue's own, zero-padded — never a separate counter). Use the
+`create-issue` and `tackle-issue` skills for both ends of that: filing a new
+one and picking one up. Don't hand-roll either process — they encode how an
+issue should be shaped and how it should be investigated before anything
+gets implemented.
+
 ## Enforced (do not restate these in review — the build catches them)
 
 `pnpm build` runs `pnpm verify` first: lint, typecheck and tests. If it is green,

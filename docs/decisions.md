@@ -291,3 +291,24 @@ Everything else is still Playwright. `CardTile.tsx` had 7 commits of visual
 iteration; the deck-code dialog added 7 more on top. Issue #4 tracks finishing
 the job by hand. Issue #3, deploying it, has a working preview; only the
 production promotion and the domain decision remain.
+
+**Issue numbers got a stable, human-speakable code (`PWS-0NN`) instead of a
+bare `#N`.** Chose "the issue's own number, zero-padded" over a separate
+sequential counter for one reason: a second counter is one more piece of
+state that can drift from GitHub's own, and the failure mode (two issues
+claiming the same code) is worse than the problem it would solve. The number
+literally cannot be known before GitHub creates the issue, so `create-issue`
+creates first and renames as an immediate second step — not a design
+compromise, the only order that works.
+
+**`create-issue` and `tackle-issue` became skills, not something re-derived
+each session.** The issue template (`create-issue/ISSUE_TEMPLATE.md`) leans
+directly on the shape that already worked in this repo — the QR feature's own
+plan had a "Why", a scoped "What", an explicit "Out of scope", and a
+verification section, and every one of those turned out to matter. "Out of
+scope" specifically is the section an agent benefits from most: without it,
+scope creep is the default outcome of an AI implementing a loosely-bounded
+ask, not an occasional risk. `tackle-issue` is built around the same
+discipline this session kept re-learning the hard way: read the issue, but
+verify the codebase still matches what it assumes, ask what's genuinely
+unclear before implementing, and check by hand once something is visual.
