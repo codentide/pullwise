@@ -11,6 +11,9 @@
 import { deckCards } from './deckRules.ts'
 import type { Deck } from './types.ts'
 
+/** The game's Energy Zone never holds more than 3 types, full stop. */
+export const MAX_ENERGY_TYPES = 3
+
 /**
  * Elements present among the deck's own Pokémon, most common first.
  *
@@ -25,8 +28,12 @@ export function inferEnergy (deck: Deck): string[] {
     if (card.element === undefined) continue
     counts.set(card.element, (counts.get(card.element) ?? 0) + 1)
   }
+  // Most-represented elements first, capped at 3 — a real Energy Zone can
+  // never hold more, so a deck spanning four or more types infers only its
+  // three biggest instead of a guess the game could not actually hold.
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
+    .slice(0, MAX_ENERGY_TYPES)
     .map(([element]) => element)
 }
 

@@ -22,7 +22,7 @@ import { DECK_SIZE, deckSize, validateDeck, type DeckIssue } from '@/lib/deckRul
 import { groupDeck, lineGaps, quickSearch } from '@/lib/deckGroups.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
 import { analyzeDeck } from '@/lib/deckAnalysis.ts'
-import { resolvedEnergy } from '@/lib/energy.ts'
+import { MAX_ENERGY_TYPES, resolvedEnergy } from '@/lib/energy.ts'
 import { ELEMENTS } from '@/lib/filters.ts'
 import type { Card, Deck } from '@/lib/types.ts'
 
@@ -220,10 +220,15 @@ function EnergyZone ({ deck }: { deck: Deck }) {
   const { energy, inferred } = resolvedEnergy(deck)
 
   const toggle = (element: string): void => {
-    const next = energy.includes(element)
-      ? energy.filter((current) => current !== element)
-      : [...energy, element]
-    actions.setEnergy(deck.id, next)
+    if (energy.includes(element)) {
+      actions.setEnergy(deck.id, energy.filter((current) => current !== element))
+      return
+    }
+    // The Energy Zone never holds more than 3 types — a 4th press while 3 are
+    // already lit does nothing rather than silently going on to break the
+    // deck code the moment someone tries to generate one.
+    if (energy.length >= MAX_ENERGY_TYPES) return
+    actions.setEnergy(deck.id, [...energy, element])
   }
 
   return (

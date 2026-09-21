@@ -8,6 +8,7 @@
  */
 import { cardsById, cardsByName, normalizeName, sets } from './gameData.ts'
 import { ELEMENTS } from './filters.ts'
+import { MAX_ENERGY_TYPES } from './energy.ts'
 import type { Card, DeckEntry } from './types.ts'
 
 /** Lists and the CDN use different promo codes than the dataset. */
@@ -55,6 +56,7 @@ function parseEnergyWords (text: string): string[] {
   const known = new Set(ELEMENTS)
   const found: string[] = []
   for (const word of text.split(/[,/+]|\band\b|\s+/i)) {
+    if (found.length >= MAX_ENERGY_TYPES) break
     const token = normalizeName(word)
     if (known.has(token) && !found.includes(token)) found.push(token)
   }

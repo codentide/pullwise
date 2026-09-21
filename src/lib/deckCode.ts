@@ -18,7 +18,7 @@
  */
 import { ENERGY, createDeckCode } from 'ptcgp-deckcode'
 import { deckCards, deckSize } from './deckRules.ts'
-import { resolvedEnergy } from './energy.ts'
+import { MAX_ENERGY_TYPES, resolvedEnergy } from './energy.ts'
 import type { Deck } from './types.ts'
 
 export type DeckCodeResult =
@@ -36,7 +36,12 @@ export function buildDeckCode (deck: Deck): DeckCodeResult {
   // those two encodes as "no energy" rather than silently dropping it and
   // encoding whatever else happened to also be present.
   const { energy } = resolvedEnergy(deck)
-  const encodable = energy.filter((e): e is keyof typeof ENERGY => e in ENERGY)
+  // Capped again here, not just at the two places energy gets set: the game's
+  // encoder throws on a fourth type, and a thrown error inside a render path
+  // is a worse failure than silently keeping the three most useful ones.
+  const encodable = energy
+    .filter((e): e is keyof typeof ENERGY => e in ENERGY)
+    .slice(0, MAX_ENERGY_TYPES)
   if (encodable.length === 0) return { ok: false, reason: 'noEnergy' }
 
   // One entry per copy, not per card: the format has no separate count field.

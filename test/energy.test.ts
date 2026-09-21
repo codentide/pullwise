@@ -35,3 +35,18 @@ test('la energía explícita gana, incluso vacía', () => {
   assert.equal(inferred, false)
   assert.deepEqual(energy, [])
 })
+
+test('la inferencia nunca excede los 3 tipos que la Energy Zone realmente tiene', () => {
+  // Cuatro elementos distintos entre los Pokémon del mazo: lightning, metal,
+  // psychic, water. Sólo los tres más representados deben aparecer.
+  const result = inferEnergy(deck([
+    ['A1-096', 2], // Pikachu ex, lightning ×2
+    ['A1-104', 2], // Zapdos ex, lightning ×2 (lightning: 4 en total)
+    ['A3-122', 2], // Solgaleo ex, metal ×2
+    ['A2-119', 2], // Dialga ex, metal ×2 (metal: 4 en total)
+    ['A1-084', 2], // Articuno ex, water ×2
+    ['A3-085', 2], // Cosmog, psychic ×2
+  ]))
+  assert.equal(result.length, 3)
+  assert.deepEqual(result.slice(0, 2).sort(), ['lightning', 'metal'])
+})
