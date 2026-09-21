@@ -26,8 +26,10 @@ const VARIANTS: Record<Variant, string> = {
     'text-label text-accent underline-offset-4 hover:underline'
 }
 
+// appearance-none: see the comment on Pressable — same macOS native-chrome
+// bleed-through, just harder to notice on Button's smaller hit areas.
 const BASE =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-control transition-colors duration-150'
+  'inline-flex appearance-none cursor-pointer items-center justify-center gap-2 rounded-control transition-colors duration-150'
 
 export function Button ({
   variant = 'primary',
