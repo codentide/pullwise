@@ -59,7 +59,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
   return (
     <div className='flex flex-col gap-6'>
       <section className='@container overflow-hidden rounded-surface border border-line bg-raised'>
-        <div className='flex items-center gap-1 border-b border-line px-4 py-2'>
+        <div className='flex items-center justify-between border-b border-line px-4 py-2'>
           <p className='font-mono text-label uppercase tracking-[0.14em] text-accent'>
             {t('openThis')}
           </p>
