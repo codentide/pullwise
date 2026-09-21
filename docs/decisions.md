@@ -185,15 +185,56 @@ double-`requestAnimationFrame` whose own floor was 33ms; compared colour
 distinctness with WCAG contrast, which measures luminance, not hue. Both produced
 confident, wrong conclusions. Check what the instrument can actually resolve.
 
+**Every manual check happened to dodge the exact input that broke something.**
+Three separate times, closing out this session:
+
+- The locale redirect (`/` → `/en`) never ran. Next 16 renamed
+  `middleware.js` to `proxy.js` — a straight rename, read from this exact
+  version's own bundled docs, not assumed — and the file has to live beside
+  `app`, so a repo with `src/app` needs `src/proxy.ts`, not a root-level
+  `middleware.ts` or even a root-level `proxy.ts`. Every check all session used
+  an explicit `/en/...` path, so the one request that actually needed the
+  redirect was never made until a real browser hit `/`.
+- Every pack name with a space 404'd, since the route was created.
+  `generateStaticParams` registered `encodeURIComponent(pack.pack)` — for
+  "Pulsing Aura" the literal string `"Pulsing%20Aura"`, percent sign and all —
+  against `dynamicParams: false`, which matches the already-*decoded* segment.
+  Every single-word pack name (Pikachu, Charizard, Solgaleo...) encodes to
+  itself, so this was invisible through every screenshot this session, by pure
+  coincidence of which packs got clicked.
+- A deck spanning 4+ Pokémon elements crashed the editor outright:
+  `ptcgp-deckcode` throws on a 4th energy type, a real game rule nothing
+  enforced — inference had no cap, the manual toggle let all 10 light up, the
+  decklist parser would read a fourth token off an `Energy:` line.
+
+None of these were found by reasoning about the code — each one came from
+actually clicking through a real deck, in a real browser, after the fact. The
+lesson isn't "write more unit tests" (two of the three now have one); it's
+that manual passes need to deliberately hit the input nobody happened to try —
+a bare `/`, a pack with a space in its name, a deck that isn't mono-type.
+
 ## Where it stands
 
-42 commits · 55 tests · `pnpm verify` runs lint, typecheck and tests before
+50 commits · 56 tests · `pnpm verify` runs lint, typecheck and tests before
 every build. 3,879 cards through B4a, 511 still unclassified (B3 onwards,
-re-checked against both live sources before writing this, unchanged). Public
-on GitHub: `github.com/codentide/pullwise`, 9 open issues, 1 closed (#1, the
+re-checked against both live sources this session, unchanged). Public on
+GitHub: `github.com/codentide/pullwise`, 9 open issues, 1 closed (#1, the
 deck-code QR — the item this log used to list as "next up").
 
-**Nobody has used the app by hand.** Everything has been verified through
-Playwright. `CardTile.tsx` had 7 commits of visual iteration before this; the
-deck-code dialog just added 5 more — screenshots are driving this UI more than
-use is, which remains the main risk. Issue #4 tracks it.
+The whole product shares one footer now (`AppFooter`), the same way it shares
+one header — brand mark, version read from `package.json`, a link to the
+repo. Building it surfaced the same bug twice: a `border-t` (then the whole
+element) needs its own full-width layer, separate from the `mx-auto
+max-w-[1180px]` that centres its content — `mx-auto` on a flex item (this sits
+directly in the page's `flex flex-col` shell) shrinks the box to its content
+and centres it with auto margins instead of filling the row first.
+`AppHeader` never hit this because its `mx-auto` lives on a plain block
+*inside* the flex item, not on the flex item itself.
+
+**Nobody has used the app by hand** was still true when this line was first
+written, and stopped being fully true this session — the three bugs above
+were all found that way. Everything else is still Playwright. `CardTile.tsx`
+had 7 commits of visual iteration; the deck-code dialog added 7 more on top.
+Issue #4 tracks finishing the job. Issue #3, deploying it, is next — the proxy
+rename above matters there specifically: any platform's build has to find
+`src/proxy.ts`, not the `middleware.ts` most Next tutorials still show.
