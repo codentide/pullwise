@@ -44,19 +44,21 @@ caller's.
    cheap and reversible (editable, closeable), so don't hold up a
    well-scoped, unambiguous ask waiting for approval it doesn't need.
 
-5. **Create it**:
+5. **Create it, then rename it in the same breath** — not two steps with a
+   gap, one flow. There is no way to know or reserve the number beforehand:
+   GitHub only assigns it at creation, issues and PRs share one counter for
+   the repo, and anything else opened in between would make a guess wrong.
+   Reading the real number back after creating is the fastest path that's
+   also actually reliable, not a workaround for a limitation:
    ```
-   gh issue create --title "<draft title, no code yet>" --body "<body>" \
-     --label "<type>" --label "priority:<level>" [--label "<status>" ...]
+   url=$(gh issue create --title "<draft title, no code yet>" --body "<body>" \
+     --label "<type>" --label "priority:<level>" [--label "<status>" ...])
+   number=${url##*/}
+   code=$(printf 'PWS-%03d' "$number")
+   gh issue edit "$number" --title "$code: <original title>"
    ```
-   Note the issue number `gh` returns.
-
-6. **Assign the code immediately** — this is the step that makes the number
-   knowable at all:
-   ```
-   gh issue edit <number> --title "PWS-0NN: <original title>"
-   ```
-   where `NN` is that same number, zero-padded to 3 digits.
+   `gh issue create` prints the new issue's URL on success — `$number` comes
+   straight out of it, no extra lookup call needed.
 
 7. **Add a row to `BACKLOG.md`'s Open table**, matching the shape of the
    existing rows, then commit and push. `BACKLOG.md` is docs-only, so the
