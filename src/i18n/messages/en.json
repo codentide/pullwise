@@ -34,6 +34,7 @@
     "close": "Close"
   },
   "editor": {
+    "export": "Export",
     "back": "Decks",
     "deckName": "Deck name",
     "delete": "Delete deck",
@@ -67,7 +68,13 @@
     "getCodeSize": "{size}/{total} cards",
     "getCodeCopy": "Copy code",
     "getCodeCopied": "Copied!",
-    "getCodeTitle": "Export deck via QR"
+    "getCodeTitle": "Export deck via QR",
+    "exportList": "Copy as list",
+    "exportListTitle": "Export deck as list",
+    "exportListHint": "Paste this into Limitless or anywhere else that reads a decklist. Cards you have not marked are included the same as any other.",
+    "exportListErrorEmpty": "Add a card to this deck before exporting a list.",
+    "exportListCopy": "Copy list",
+    "exportListCopied": "Copied!"
   },
   "card": {
     "ownership": "{name}: you have {have} of {needed}. Change.",

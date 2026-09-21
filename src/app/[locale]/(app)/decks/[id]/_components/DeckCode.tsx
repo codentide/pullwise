@@ -12,50 +12,46 @@ import { DECK_SIZE, deckSize } from '@/lib/deckRules.ts'
 import type { Deck } from '@/lib/types.ts'
 
 /**
- * The button that turns a deck into the code the game scans.
+ * The dialog that turns a deck into the code the game scans. Its open state
+ * is controlled from outside — the `ExportButton` popover picks which of the
+ * two export dialogs to show — rather than owning its own trigger button.
  *
- * Always present rather than hidden until the deck qualifies: hiding the
- * whole feature until it is "ready" means nobody discovers it exists. The
- * dialog itself explains what is blocking generation, same as the rest of
- * this app already does for a not-yet-ready state — and generation itself
- * asks for no minimum: a deck still being built is still a real, scannable
- * thing, it just imports fewer cards.
+ * Generation asks for no minimum: a deck still being built is still a real,
+ * scannable thing, it just imports fewer cards. The dialog itself explains
+ * what is blocking generation when something does.
  */
-export function DeckCodeButton ({ deck }: { deck: Deck }) {
+export function DeckCodeDialog ({ deck, open, onOpenChange }: {
+  deck: Deck
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
   const t = useTranslations('editor')
   const names = useTranslations('energies')
-  const [open, setOpen] = useState(false)
   const result = useMemo(() => buildDeckCode(deck), [deck])
 
   return (
-    <>
-      <Button variant='ghost' onClick={() => setOpen(true)} className='px-2 text-ink-mid'>
-        <Icon name='getCode' size={14} />
-        {t('getCode')}
-      </Button>
-      <Dialog
-        open={open}
-        onOpenChange={setOpen}
-        title={t('getCodeTitle')}
-        size='md'
-        headerExtra={result.ok
-          ? (
-            <div className='flex shrink-0 items-center gap-2 rounded-chip bg-overlay px-2 py-1'>
-              <span className='tnum font-mono text-label text-ink-mid'>
-                {t('getCodeSize', { size: deckSize(deck), total: DECK_SIZE })}
-              </span>
-              <div className='flex gap-1'>
-                {result.energy.filter(isEnergy).map((energy) => (
-                  <EnergyIcon key={energy} energy={energy} size={16} label={names(energy)} />
-                ))}
-              </div>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('getCodeTitle')}
+      size='md'
+      headerExtra={result.ok
+        ? (
+          <div className='flex shrink-0 items-center gap-2 rounded-chip bg-overlay px-2 py-1'>
+            <span className='tnum font-mono text-label text-ink-mid'>
+              {t('getCodeSize', { size: deckSize(deck), total: DECK_SIZE })}
+            </span>
+            <div className='flex gap-1'>
+              {result.energy.filter(isEnergy).map((energy) => (
+                <EnergyIcon key={energy} energy={energy} size={16} label={names(energy)} />
+              ))}
             </div>
-            )
-          : undefined}
-      >
-        <DeckCodeContent result={result} />
-      </Dialog>
-    </>
+          </div>
+          )
+        : undefined}
+    >
+      <DeckCodeContent result={result} />
+    </Dialog>
   )
 }
 

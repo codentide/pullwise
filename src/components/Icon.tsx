@@ -5,6 +5,7 @@ import {
   ChevronDown,
   Layers,
   LayoutGrid,
+  List,
   Minus,
   Moon,
   Package,
@@ -14,6 +15,7 @@ import {
   Plus,
   QrCode,
   Search,
+  Share2,
   Sun,
   Trash2,
   TriangleAlert,
@@ -35,7 +37,7 @@ import {
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
-  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy' | 'hint' | 'sourceCode'
+  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy' | 'hint' | 'sourceCode' | 'list' | 'export'
 
 const ICONS: Record<Name, LucideIcon> = {
   deck: Layers,
@@ -59,7 +61,9 @@ const ICONS: Record<Name, LucideIcon> = {
   sourceCode: Code2,
   chevron: ChevronDown,
   sun: Sun,
-  moon: Moon
+  moon: Moon,
+  list: List,
+  export: Share2
 }
 
 interface Props {

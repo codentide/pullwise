@@ -1,7 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { parseDecklist } from '../src/lib/decklist.ts'
+import { parseDecklist, toDecklist } from '../src/lib/decklist.ts'
 import { cardsById } from '../src/lib/gameData.ts'
+import type { Deck } from '../src/lib/types.ts'
 
 const nameOf = (id: string) => cardsById.get(id)?.name
 
@@ -91,4 +92,53 @@ test('un encabezado de energía sin nombres reconocibles no inventa nada', () =>
 test('una lista sin línea de energía no la reporta', () => {
   const { energy } = parseDecklist('2 Bulbasaur')
   assert.equal(energy, undefined)
+})
+
+test('exporta un mazo y vuelve a parsear las mismas entradas', () => {
+  const deck: Deck = {
+    id: 'd',
+    name: 'Test',
+    updatedAt: 0,
+    entries: [
+      { cardId: 'A1-096', copies: 2 }, // Pikachu ex
+      { cardId: 'A1-033', copies: 2 }, // Charmander
+      { cardId: 'A1-219', copies: 1 } // Erika (supporter)
+    ],
+    energy: ['lightning', 'fire']
+  }
+
+  const text = toDecklist(deck)
+  const { entries, unresolved, energy } = parseDecklist(text)
+
+  assert.equal(unresolved.length, 0)
+  assert.deepEqual(
+    [...entries].sort((a, b) => a.cardId.localeCompare(b.cardId)),
+    [...deck.entries].sort((a, b) => a.cardId.localeCompare(b.cardId))
+  )
+  assert.deepEqual(energy, ['lightning', 'fire'])
+})
+
+test('exporta trainers en su propia sección, separados de los Pokémon', () => {
+  const deck: Deck = {
+    id: 'd',
+    name: 'Test',
+    updatedAt: 0,
+    entries: [{ cardId: 'A1-096', copies: 2 }, { cardId: 'A1-219', copies: 1 }],
+    energy: ['lightning']
+  }
+
+  const text = toDecklist(deck)
+  assert.match(text, /^Pokémon: 2\n2 Pikachu ex A1 096\nTrainer: 1\n1 Erika A1 219\nEnergy: Lightning$/)
+})
+
+test('un mazo sin energía explícita ni inferible no imprime la sección Energy', () => {
+  const deck: Deck = {
+    id: 'd',
+    name: 'Test',
+    updatedAt: 0,
+    entries: [{ cardId: 'A1-219', copies: 1 }] // solo un trainer, no infiere elemento
+  }
+
+  const text = toDecklist(deck)
+  assert.doesNotMatch(text, /Energy/)
 })

@@ -34,6 +34,7 @@
     "close": "Cerrar"
   },
   "editor": {
+    "export": "Exportar",
     "back": "Mazos",
     "deckName": "Nombre del mazo",
     "delete": "Borrar mazo",
@@ -67,7 +68,13 @@
     "getCodeSize": "{size}/{total} cartas",
     "getCodeCopy": "Copiar código",
     "getCodeCopied": "¡Copiado!",
-    "getCodeTitle": "Exportar mazo por QR"
+    "getCodeTitle": "Exportar mazo por QR",
+    "exportList": "Copiar como lista",
+    "exportListTitle": "Exportar mazo como lista",
+    "exportListHint": "Pegá esto en Limitless o donde sea que lea una lista de mazo. Las cartas que no marcaste se incluyen igual que cualquier otra.",
+    "exportListErrorEmpty": "Agregá una carta a este mazo antes de exportar una lista.",
+    "exportListCopy": "Copiar lista",
+    "exportListCopied": "¡Copiado!"
   },
   "card": {
     "ownership": "{name}: tienes {have} de {needed}. Cambiar.",

@@ -15,7 +15,7 @@ import { DeckCardTile } from '@/components/CardTile.tsx'
 import { CardImage } from '@/components/CardImage.tsx'
 import { PackRanking } from '@/components/PackRanking.tsx'
 import { EvolutionLine } from './EvolutionLine.tsx'
-import { DeckCodeButton } from './DeckCode.tsx'
+import { ExportButton } from './Export.tsx'
 import { actions } from '@/lib/store.ts'
 import { useStore } from '@/hooks/useStore.ts'
 import { DECK_SIZE, deckSize, validateDeck, type DeckIssue } from '@/lib/deckRules.ts'
@@ -115,7 +115,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
             {size}/{DECK_SIZE}
           </Badge>
 
-          <DeckCodeButton deck={deck} />
+          <ExportButton deck={deck} />
 
           <Button
             variant='ghost'

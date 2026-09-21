@@ -8,8 +8,9 @@
  */
 import { cardsById, cardsByName, normalizeName, sets } from './gameData.ts'
 import { ELEMENTS } from './filters.ts'
-import { MAX_ENERGY_TYPES } from './energy.ts'
-import type { Card, DeckEntry } from './types.ts'
+import { MAX_ENERGY_TYPES, resolvedEnergy } from './energy.ts'
+import { deckCards } from './deckRules.ts'
+import type { Card, Deck, DeckEntry } from './types.ts'
 
 /** Lists and the CDN use different promo codes than the dataset. */
 const SET_ALIASES: Record<string, string> = { 'P-A': 'PROMO-A', 'P-B': 'PROMO-B' }
@@ -120,4 +121,34 @@ export function parseDecklist (text: string): ParsedDeck {
 
   const entries = [...byCard].map(([cardId, copies]) => ({ cardId, copies }))
   return { entries, unresolved, energy }
+}
+
+const isTrainerCard = (card: Card): boolean =>
+  card.type !== undefined && card.type !== 'pokemon'
+
+const capitalize = (word: string): string => word.charAt(0).toUpperCase() + word.slice(1)
+
+/**
+ * The inverse of `parseDecklist`: turns a deck back into the same plain-text
+ * shape, `2 Pikachu ex A1 096` and all, so it round-trips through Limitless or
+ * anywhere else that reads that format — not just the game's own QR import.
+ */
+export function toDecklist (deck: Deck): string {
+  const entries = deckCards(deck)
+  const pokemon = entries.filter(({ card }) => !isTrainerCard(card))
+  const trainers = entries.filter(({ card }) => isTrainerCard(card))
+
+  const line = ({ card, copies }: { card: Card, copies: number }): string =>
+    `${copies} ${card.name} ${card.set} ${String(card.number).padStart(3, '0')}`
+
+  const total = (group: typeof entries): number => group.reduce((sum, e) => sum + e.copies, 0)
+
+  const sections: string[] = []
+  if (pokemon.length > 0) sections.push(`Pokémon: ${total(pokemon)}`, ...pokemon.map(line))
+  if (trainers.length > 0) sections.push(`Trainer: ${total(trainers)}`, ...trainers.map(line))
+
+  const { energy } = resolvedEnergy(deck)
+  if (energy.length > 0) sections.push(`Energy: ${energy.map(capitalize).join(', ')}`)
+
+  return sections.join('\n')
 }
