@@ -9,6 +9,7 @@ import {
   Moon,
   Package,
   Copy,
+  Info,
   Plus,
   QrCode,
   Search,
@@ -33,7 +34,7 @@ import {
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
-  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy'
+  | 'back' | 'evolvesTo' | 'chevron' | 'sun' | 'moon' | 'getCode' | 'copy' | 'hint'
 
 const ICONS: Record<Name, LucideIcon> = {
   deck: Layers,
@@ -51,6 +52,7 @@ const ICONS: Record<Name, LucideIcon> = {
   evolvesTo: ArrowRight,
   getCode: QrCode,
   copy: Copy,
+  hint: Info,
   chevron: ChevronDown,
   sun: Sun,
   moon: Moon

@@ -110,7 +110,9 @@
     "coachAllHere": "{count, plural, one {You are missing # card and it comes from here} other {You are missing # cards and they all come from here}}.",
     "coachMostlyHere": "You are missing {count} cards; {here, plural, one {# of them comes} other {# of them come}} from here.",
     "coachOnlyOne": "It is the only pack that has what you are missing.",
-    "relativeToWinner": "How this pack compares to the recommended one above."
+    "relativeToWinner": "How this pack compares to the recommended one above.",
+    "recommendationHintLabel": "Why this pack?",
+    "recommendationHint": "The pack most likely to give you something you need right now, recalculated as your deck changes. Always opening the top choice is the strategy that finishes a deck in the fewest packs, on average — not a guess."
   },
   "advisor": {
     "title": "Which pack to open",

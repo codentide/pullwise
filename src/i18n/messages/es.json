@@ -110,7 +110,9 @@
     "coachAllHere": "{count, plural, one {Te falta # carta y sale de acá} other {Te faltan # cartas y todas salen de acá}}.",
     "coachMostlyHere": "Te faltan {count} cartas; {here, plural, one {# de ellas sale} other {# de ellas salen}} de acá.",
     "coachOnlyOne": "Es el único sobre que tiene lo que te falta.",
-    "relativeToWinner": "Cómo se compara este sobre con el recomendado arriba."
+    "relativeToWinner": "Cómo se compara este sobre con el recomendado arriba.",
+    "recommendationHintLabel": "¿Por qué este sobre?",
+    "recommendationHint": "El sobre con más probabilidad de darte algo que te falta ahora mismo, recalculado a medida que cambia tu mazo. Abrir siempre el primero de la lista es la estrategia que termina un mazo en la menor cantidad de sobres, en promedio — no es una intuición."
   },
   "advisor": {
     "title": "Qué sobre abrir",
