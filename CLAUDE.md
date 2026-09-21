@@ -21,6 +21,27 @@ these hold:
 | `src/data/` is only produced by `sync-data.mjs` | `test/architecture.test.ts` |
 | Style: neostandard (no semicolons, single quotes, 2 spaces) | `eslint.config.js` |
 
+## Versioning
+
+`package.json#version` is real, not decoration — the footer shows it live
+(`AppFooter.tsx`), so it's the one version number a user can actually see.
+Semver, applied loosely pre-1.0:
+
+- **patch** (`0.x.Y`) — a fix, a visual tweak, no new capability.
+- **minor** (`0.X.0`) — a new user-facing feature, or a change big enough that
+  "what changed" is worth a reader's attention.
+- **1.0.0** is reserved for the first real production deploy (issue #3) — the
+  milestone that means someone other than the developer can use this.
+
+Whoever ships a change to `src/`, `scripts/`, `public/`, or bumps a dependency
+decides the bump and applies it in the same push — an agent included. A
+`pre-push` hook (`.githooks/pre-push`, wired up by the `prepare` script)
+blocks a push that touches those paths without a version change; a push that
+only touches docs or CI config is exempt. `git push --no-verify` skips it for
+the rare case that's genuinely wrong.
+
+`CHANGELOG.md` gets one entry per bump, [Keep a Changelog](https://keepachangelog.com/) shaped.
+
 ## Structure
 
 Each route owns its files. A component lives in the `_components/` folder of its
@@ -114,6 +135,15 @@ against theory — the Monte Carlo median is verified against the geometric
 distribution's `⌈ln0.5 / ln(1−p)⌉`.
 
 **No login, no accounts.** State lives in `localStorage`. That is v1 on purpose.
+
+**A decision with real weight gets logged in `docs/decisions.md`, as part of
+the same change** — not a chore for later, and not for everything. A naming
+choice reverses easily and doesn't need it; a workaround for someone else's
+bug, or a measured tradeoff between two real alternatives, is expensive to
+reconstruct from git history alone once nobody remembers it. Unlike a version
+bump, "was this worth documenting" is a judgement call, not a fact a hook can
+check — a mechanical gate here would only produce hollow entries, so there
+isn't one.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

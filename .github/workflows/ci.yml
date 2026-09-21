@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Version comes from package.json's packageManager field — pnpm 11
+      # replaced onlyBuiltDependencies with allowBuilds (see
+      # pnpm-workspace.yaml), so an older pnpm here would silently ignore it.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Lint, typecheck and the domain tests.
+      - run: pnpm verify
+
+      # A real Next build, not just verify: three of this project's worst
+      # bugs (a route that 404'd on any pack name with a space, a deck-code
+      # crash past 3 energy types, the locale redirect never running) only
+      # showed up once real pages were generated or the app was clicked
+      # through by hand — never in lint, types or the unit tests.
+      - run: pnpm build:only

@@ -213,13 +213,58 @@ lesson isn't "write more unit tests" (two of the three now have one); it's
 that manual passes need to deliberately hit the input nobody happened to try —
 a bare `/`, a pack with a space in its name, a deck that isn't mono-type.
 
+**A `<button>` without `appearance-none` keeps its native chrome even with a
+custom background.** Tailwind's preflight leaves `appearance: button` on
+purpose — it's what lets iOS Safari style a button's radius at all — but on
+macOS the browser still paints its own pushable capsule underneath, smaller
+than the element's own box. A `hover:bg-*` meant to fill an element edge to
+edge instead left dark margins around a visibly inset shape. Invisible on
+`Button`'s small hit areas (an icon-sized button), obvious on the export
+menu's wide, full-row items — same bug, just easier to see at that size.
+Fixed by adding `appearance-none` to both `Pressable` and `Button`'s base
+classes, confirmed with `getComputedStyle(el).webkitAppearance === 'none'`,
+not just by eyeballing a screenshot at normal resolution.
+
+**The first deploy attempt failed generating static pages, and it wasn't the
+code.** Vercel's build machine reported "2 cores, 8 GB" but Next used a
+single worker for all 7,872 static pages (locally, 7 workers finish the same
+in 26s) — seven times slower, and it died with a generic `fetch failed`
+partway through. Reproduced locally with `next build` on the full page count
+to rule out a bug in the pages themselves — clean run, same page count, no
+error — before concluding this was Vercel's build infra having a transient
+network hiccup, not something to chase in the codebase. The retry succeeded
+outright, generating everything in 2.7 minutes. Preview deploy is live at
+`codentides-projects/pullwise`; promoting to production is still pending a
+decision on `NEXT_PUBLIC_SITE_URL` (`sitemap.ts` defaults to a domain,
+`pullwise.app`, that doesn't exist).
+
+**Versioning got a real policy instead of staying frozen at `0.1.0` for 54
+commits.** The footer already shows `package.json#version` live, so an unread
+version number was a lie sitting in the UI, not just internal bookkeeping.
+Chose a `pre-push` git hook over a `pre-commit` one deliberately: gating every
+local commit punishes the normal back-and-forth of getting something working,
+where gating the push — the moment something actually reaches the shared
+branch — is the point that should carry a real version number. The hook
+distinguishes "touches shippable code" from "docs and CI only" by an
+allow-list of paths (`src/`, `scripts/`, `public/`, `package.json`,
+config files) rather than trying to enumerate every non-code extension, since
+missing one silently defeats the check. Not hooked: `docs/decisions.md`
+itself — "was this worth documenting" is a judgement call a script can't make,
+and a mechanical gate over it would only produce hollow entries. See
+`CLAUDE.md`'s Versioning and Judgement calls sections.
+
 ## Where it stands
 
-50 commits · 56 tests · `pnpm verify` runs lint, typecheck and tests before
-every build. 3,879 cards through B4a, 511 still unclassified (B3 onwards,
-re-checked against both live sources this session, unchanged). Public on
-GitHub: `github.com/codentide/pullwise`, 9 open issues, 1 closed (#1, the
-deck-code QR — the item this log used to list as "next up").
+55 commits · 59 tests · `pnpm verify` runs lint, typecheck and tests before
+every build, and CI (`.github/workflows/ci.yml`) now runs that plus a real
+`pnpm build:only` on every push and PR — the three bugs logged above only
+ever showed up in an actual build or a real click-through, never in lint,
+types or the unit tests. 3,879 cards through B4a, 511 still unclassified (B3
+onwards, unchanged). Public on GitHub: `github.com/codentide/pullwise`, MIT
+licensed, README rewritten in English, CONTRIBUTING.md added. 8 open issues,
+2 closed (#1 the deck-code QR, #5 the README rewrite) — the export-menu work
+above also covers much of #2's spirit (a way to get a deck out of the app),
+though #2 itself is specifically about shareable URLs and stays open.
 
 The whole product shares one footer now (`AppFooter`), the same way it shares
 one header — brand mark, version read from `package.json`, a link to the
@@ -231,10 +276,18 @@ and centres it with auto margins instead of filling the row first.
 `AppHeader` never hit this because its `mx-auto` lives on a plain block
 *inside* the flex item, not on the flex item itself.
 
+Deck export now has two shapes behind one "Export" popover instead of two
+buttons competing for the same header row: the in-game QR code (issue #1),
+and `toDecklist` — the inverse of the existing decklist parser, plain text a
+player can paste into Limitless. The popover itself is hand-rolled, not
+Radix, matching the brand rule that reserves Radix for Select/Dialog/
+Checkbox.
+
 **Nobody has used the app by hand** was still true when this line was first
-written, and stopped being fully true this session — the three bugs above
-were all found that way. Everything else is still Playwright. `CardTile.tsx`
-had 7 commits of visual iteration; the deck-code dialog added 7 more on top.
-Issue #4 tracks finishing the job. Issue #3, deploying it, is next — the proxy
-rename above matters there specifically: any platform's build has to find
-`src/proxy.ts`, not the `middleware.ts` most Next tutorials still show.
+written, and stopped being fully true two sessions ago — three real bugs were
+found that way, and this session's Vercel build failure adds a fourth kind of
+gap manual Playwright checks can't catch (build infra, not app code).
+Everything else is still Playwright. `CardTile.tsx` had 7 commits of visual
+iteration; the deck-code dialog added 7 more on top. Issue #4 tracks finishing
+the job by hand. Issue #3, deploying it, has a working preview; only the
+production promotion and the domain decision remain.

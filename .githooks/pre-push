@@ -1,0 +1,36 @@
+#!/bin/sh
+# Blocks a push that ships real code without bumping package.json#version.
+# See CLAUDE.md's "Versioning" section for the policy this enforces.
+#
+# Wired up by `pnpm install` via the "prepare" script (git config
+# core.hooksPath .githooks) — not copied into .git/hooks, so it travels with
+# the repo instead of being local-only. Skip once, if a push genuinely
+# doesn't warrant a bump, with `git push --no-verify`.
+
+ZERO_SHA='0000000000000000000000000000000000000000'
+
+# Paths whose change actually ships something a version number should track.
+# Docs, CI config and the like are exempt on purpose.
+CODE_PATTERN='^(src/|scripts/|public/|package\.json$|pnpm-lock\.yaml$|next\.config\.ts$|tsconfig\.json$|postcss\.config\.mjs$|eslint\.config\.js$)'
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # Deleting a ref — nothing to check.
+  [ "$local_sha" = "$ZERO_SHA" ] && continue
+
+  # Pushing a brand-new ref — no prior state on the remote to diff against.
+  [ "$remote_sha" = "$ZERO_SHA" ] && continue
+
+  changed=$(git diff --name-only "$remote_sha" "$local_sha")
+  echo "$changed" | grep -qE "$CODE_PATTERN" || continue
+
+  old_version=$(git show "$remote_sha:package.json" 2>/dev/null | grep '"version"')
+  new_version=$(git show "$local_sha:package.json" 2>/dev/null | grep '"version"')
+
+  if [ "$old_version" = "$new_version" ]; then
+    echo "pre-push: this push touches shippable code but package.json#version didn't change." >&2
+    echo "Bump it (see CLAUDE.md's Versioning section), or skip once with --no-verify." >&2
+    exit 1
+  fi
+done
+
+exit 0
