@@ -331,3 +331,53 @@ settings: `main` stays wired as Production (GitHub's default branch, so no
 Vercel reconfiguration needed), `develop` is where routine work happens and
 only ever gets a Preview URL, and `main` is merged into deliberately. See
 `CLAUDE.md`'s Branches section.
+
+## Post-audit hardening (PWS-012)
+
+An Opus architecture audit against Next 16/React 19 best practices, run
+because the goal is real public reach and the foundations hadn't been
+checked since the Vite→Next migration. It found 2 critical and 10 important
+gaps, plus 9 nice-to-have items, all with file/line evidence verified
+against a real build. Fixed in one batch, 10 self-contained packages built
+in parallel by Sonnet subagents in isolated worktrees, merged sequentially.
+
+**`AppHeader` stopped shipping the full card catalogue to every public
+page's client bundle, and `DataMenu` no longer renders on `(site)` pages.**
+`AppHeader` imported `meta` (just a card count and a set name) from
+`gameData.ts`, whose module-level side effects build lookup tables from the
+entire 717KB `cards.json` — so every one of the ~7,860 statically-generated
+card/set/pack pages shipped that whole dataset to the browser just to
+render two numbers in the header. Split into a Server Component `AppHeader`
+plus a small client `NavTabs` (the only part that actually needs
+`usePathname`), reading the count from a new slim `src/lib/meta.ts`
+instead. Measured drop: ~1.25MB → ~530KB raw first-load JS on the public
+routes. `DataMenu` (Export/Import, which mutates the whole app's
+`localStorage` state) also stopped rendering on `(site)` pages in the same
+change — it never made sense on a page reached from a search engine, only
+inside the deck-building tool, so `AppHeader` gained a `tools` prop the two
+route groups set differently.
+
+**The 3 detail pages switched `dynamicParams` from `false` to `true`,
+without reducing `generateStaticParams`'s coverage.** Previously an
+unmatched card/set/pack id 404'd until the next full rebuild, and a single
+bad param during static generation could fail the *entire* build — the
+same all-or-nothing risk that caused a real deploy failure earlier in this
+project's history. `generateStaticParams` still prerenders every currently
+known id exactly as before; the only change is that a param which becomes
+valid between builds (a card from a set that ships later) now renders
+on-demand instead of 404ing, and each page's own `notFound()` still
+rejects genuinely invalid ids. Pure risk reduction, no change in what's
+indexed today.
+
+**Adopted `next/image` for card and pack art, with `images.unoptimized:
+true` — deliberately not a full fix.** All three image components moved
+off raw `<img>` tags for CLS prevention and a single consistent
+loading/priority API, which the `next.config.ts` `images.remotePatterns`
+entry had been configured for but nothing ever used. The optimizer itself
+stays off on purpose: at 3,879 cards × 2 locales, routing every thumbnail
+through Vercel's on-demand image optimization would exhaust the Hobby
+plan's quota almost immediately. That means the real byte-size problem this
+was meant to also address — an 88px-displayed grid thumbnail still
+downloading its full 367×512 original — is **not** fixed by this change;
+real thumbnail-size reduction (pre-generated variants, or a different CDN
+strategy) stays open for later.
