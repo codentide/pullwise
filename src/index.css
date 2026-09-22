@@ -148,9 +148,13 @@
     --color-grass: #519a4a;
     --color-fire: #c37840;
     --color-water: #4890c7;
-    --color-lightning: #9f8927;
+    /* Lightning and dragon share a hue (49°/46°) and told apart by lightness
+       in dark mode; darkening both toward the same luminance for 3:1 nearly
+       erased that gap (ΔE 5.7). Lightning stays saturated and dragon goes
+       muted instead, restoring separation without shifting either hue. */
+    --color-lightning: #a78a06;
     --color-psychic: #dc6468;
-    --color-dragon: #a78620;
+    --color-dragon: #776322;
     --color-colorless: #848a93;
   }
 }

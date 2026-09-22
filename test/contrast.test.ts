@@ -156,6 +156,14 @@ test('energy icons clear 3:1, in both themes', () => {
   }
 })
 
+test('lightning and dragon stay perceptually distinct in light mode', () => {
+  // Darkening both toward the same 3:1-clearing luminance nearly erased their
+  // only real separation (hue was already just 3° apart) — a visual QA pass
+  // caught them reading as the same muddy gold at a glance, ΔE 5.7.
+  const distance = deltaE(light.get('lightning')!, light.get('dragon')!)
+  assert.ok(distance >= 20, `lightning and dragon are only ${distance.toFixed(0)} apart in Lab; too close to tell apart`)
+})
+
 test('semantic colours clear 4.5:1 in both themes — they carry validation text', () => {
   // Checking only the dark theme is what let the light amber ship at 1.84:1.
   for (const [themeName, theme] of [['dark', dark], ['light', light]] as const) {
