@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Image from 'next/image'
 import { imageUrl } from '@/lib/gameData.ts'
 import type { Card } from '@/lib/types.ts'
 
@@ -47,14 +48,15 @@ export function CardImage ({
           {state === 'failed' ? card.name : null}
         </div>
       )}
-      <img
+      <Image
         src={imageUrl(card)}
         alt={card.name}
+        fill
         loading='lazy'
         decoding='async'
         onLoad={() => setState('ready')}
         onError={() => setState('failed')}
-        className={`h-full w-full object-cover transition-opacity duration-200 ${
+        className={`object-cover transition-opacity duration-200 ${
           trim ? 'scale-[1.18]' : ''
         } ${state === 'ready' ? 'opacity-100' : 'opacity-0'}`}
       />

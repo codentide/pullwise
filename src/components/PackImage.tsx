@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { packArt } from '@/lib/gameData.ts'
 
 const RADIUS = {
@@ -25,13 +26,18 @@ export function PackImage ({
   className?: string
 }) {
   return (
-    <img
-      src={packArt(set, pack)}
-      alt=''
-      loading='lazy'
-      decoding='async'
-      className={`bg-overlay object-cover ${RADIUS[radius]} ${className}`}
+    <div
+      className={`relative overflow-hidden bg-overlay ${RADIUS[radius]} ${className}`}
       style={{ aspectRatio: 'var(--aspect-pack)' }}
-    />
+    >
+      <Image
+        src={packArt(set, pack)}
+        alt=''
+        fill
+        loading='lazy'
+        decoding='async'
+        className='object-cover'
+      />
+    </div>
   )
 }

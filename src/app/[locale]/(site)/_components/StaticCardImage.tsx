@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { imageUrl } from '@/lib/gameData.ts'
 import type { Card } from '@/lib/types.ts'
 
@@ -12,13 +13,14 @@ export function StaticCardImage ({
   priority?: boolean
 }) {
   return (
-    <img
+    <Image
       src={imageUrl(card)}
       alt={card.name}
       width={367}
       height={512}
       loading={priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : undefined}
+      preload={priority}
       decoding='async'
       className={`h-auto w-full rounded-surface bg-overlay ${className}`}
     />
