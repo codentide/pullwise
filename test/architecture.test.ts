@@ -22,12 +22,20 @@ function walk (dir: string): string[] {
 
 const files = walk(SRC)
 
+// Static `from '...'` imports and dynamic `import('...')` calls alike: a
+// deliberate code-split (see DeckCode.tsx) is still an import as far as these
+// rules are concerned.
+const IMPORT_REGEXES = [/from '([^']+)'/g, /import\(['"]([^'"]+)['"]\)/g]
+
+function specifiersOf (source: string): string[] {
+  return IMPORT_REGEXES.flatMap((regex) => [...source.matchAll(regex)].map((m) => m[1]!))
+}
+
 /** Every relative or aliased import in a file, as a path relative to src/. */
 function importsOf (file: string): string[] {
   const source = readFileSync(file, 'utf8')
   const found: string[] = []
-  for (const match of source.matchAll(/from '([^']+)'/g)) {
-    const spec = match[1]!
+  for (const spec of specifiersOf(source)) {
     if (spec.startsWith('@/')) found.push(spec.slice(2))
     else if (spec.startsWith('.')) found.push(relative(SRC, resolve(dirname(file), spec)))
   }
@@ -38,10 +46,10 @@ test('the domain does not depend on React, Next or i18n', () => {
   const forbidden = /^(react|react-dom|next|next-intl)(\/|$)/
   for (const file of files.filter((f) => f.includes('/lib/'))) {
     const source = readFileSync(file, 'utf8')
-    for (const match of source.matchAll(/from '([^']+)'/g)) {
+    for (const spec of specifiersOf(source)) {
       assert.ok(
-        !forbidden.test(match[1]!),
-        `${relative(SRC, file)} imports ${match[1]!}; src/lib must stay framework-free`
+        !forbidden.test(spec),
+        `${relative(SRC, file)} imports ${spec}; src/lib must stay framework-free`
       )
     }
   }
@@ -63,6 +71,26 @@ test('colocated components are not imported from another route', () => {
       )
     }
   }
+})
+
+test('every src/lib module carries its own test — types.ts excepted', () => {
+  // Tests are mandatory in src/lib: the one part of the app that can be wrong
+  // without anyone noticing on screen. A module nobody imports from test/ is a
+  // module nobody is actually exercising.
+  const TEST_DIR = resolve(import.meta.dirname)
+  const testFiles = walk(TEST_DIR)
+
+  const importedFromTests = new Set<string>()
+  for (const file of testFiles) {
+    for (const target of importsOf(file)) importedFromTests.add(target)
+  }
+
+  const libModules = readdirSync(join(SRC, 'lib'))
+    .filter((entry) => /\.ts$/.test(entry) && entry !== 'types.ts')
+    .map((entry) => join('lib', entry))
+
+  const uncovered = libModules.filter((mod) => !importedFromTests.has(mod))
+  assert.deepEqual(uncovered, [], `these src/lib modules have no test importing them: ${uncovered.join(', ')}`)
 })
 
 test('generated data is never edited by hand', () => {
