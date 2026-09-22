@@ -79,7 +79,7 @@ const replaceDeck = (decks: Deck[], id: string, update: (deck: Deck) => Deck) =>
   decks.map((deck) => (deck.id === id ? touch(update(deck)) : deck))
 
 export const actions = {
-  createDeck (name = 'Mazo nuevo', entries: DeckEntry[] = [], energy?: string[]): string {
+  createDeck (name: string, entries: DeckEntry[] = [], energy?: string[]): string {
     const deck: Deck = { id: newId(), name, entries, energy, updatedAt: Date.now() }
     commit({ ...state, decks: [deck, ...state.decks] })
     return deck.id

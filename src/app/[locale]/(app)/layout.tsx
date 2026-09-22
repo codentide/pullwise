@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { setRequestLocale } from 'next-intl/server'
 import { AppHeader } from '@/components/AppHeader.tsx'
 import { AppFooter } from '@/components/AppFooter.tsx'
 
@@ -12,7 +13,20 @@ import { AppFooter } from '@/components/AppFooter.tsx'
  */
 export const metadata: Metadata = { robots: { index: false, follow: true } }
 
-export default function AppLayout ({ children }: { children: React.ReactNode }) {
+export default async function AppLayout ({
+  children,
+  params
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+
+  // Required for every statically rendered page under this segment — without
+  // it, AppFooter's getTranslations falls back to reading the request headers,
+  // which forces the whole route to render dynamically.
+  setRequestLocale(locale)
+
   return (
     <div className='flex min-h-dvh flex-col'>
       <AppHeader />
