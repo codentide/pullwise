@@ -19,7 +19,7 @@ assumption that turns out to be wrong.
 
 ## House rules
 
-**[`CLAUDE.md`](CLAUDE.md) is the real style guide.** Most of this codebase
+**[`CLAUDE.md`](../.claude/CLAUDE.md) is the real style guide.** Most of this codebase
 was written by AI agents rather than typed by hand, and that changes what's
 worth writing down: a rule a linter or a test can't catch tends to drift, so
 `CLAUDE.md` splits rules into what's enforced by `eslint.config.js` /

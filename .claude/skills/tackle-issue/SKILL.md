@@ -24,7 +24,7 @@ GitHub issue number: `PWS-011` → `11`.
    so before doing anything else — the number might be right but this might
    not be the intended issue, or it was never renamed by `create-issue`.
 
-2. **Read `CLAUDE.md` and `docs/decisions.md`.** The issue says *what*;
+2. **Read `.claude/CLAUDE.md` and `docs/decisions.md`.** The issue says *what*;
    these say the constraints and the reasoning already settled, that the
    implementation isn't free to quietly contradict.
 

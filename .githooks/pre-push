@@ -1,6 +1,6 @@
 #!/bin/sh
 # Blocks a push that ships real code without bumping package.json#version.
-# See CLAUDE.md's "Versioning" section for the policy this enforces.
+# See .claude/CLAUDE.md's "Versioning" section for the policy this enforces.
 #
 # Wired up by `pnpm install` via the "prepare" script (git config
 # core.hooksPath .githooks) — not copied into .git/hooks, so it travels with
@@ -28,7 +28,7 @@ while read -r local_ref local_sha remote_ref remote_sha; do
 
   if [ "$old_version" = "$new_version" ]; then
     echo "pre-push: this push touches shippable code but package.json#version didn't change." >&2
-    echo "Bump it (see CLAUDE.md's Versioning section), or skip once with --no-verify." >&2
+    echo "Bump it (see .claude/CLAUDE.md's Versioning section), or skip once with --no-verify." >&2
     exit 1
   fi
 done

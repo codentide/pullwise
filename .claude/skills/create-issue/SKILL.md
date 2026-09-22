@@ -21,7 +21,7 @@ caller's.
 
 ## Steps
 
-1. **Read `CLAUDE.md` and `docs/decisions.md`** if you haven't already this
+1. **Read `.claude/CLAUDE.md` and `docs/decisions.md`** if you haven't already this
    session. An issue that contradicts a documented decision, or restates one
    that already has a settled answer, is worse than no issue.
 
@@ -60,8 +60,8 @@ caller's.
    `gh issue create` prints the new issue's URL on success — `$number` comes
    straight out of it, no extra lookup call needed.
 
-7. **Add a row to `BACKLOG.md`'s Open table**, matching the shape of the
-   existing rows, then commit and push. `BACKLOG.md` is docs-only, so the
+7. **Add a row to `docs/backlog.md`'s Open table**, matching the shape of the
+   existing rows, then commit and push. `docs/backlog.md` is docs-only, so the
    version-bump pre-push hook doesn't apply to this commit.
 
 8. **Report back** the code, the title, and the URL. That code (`PWS-0NN`)

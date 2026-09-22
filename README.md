@@ -108,8 +108,8 @@ knowing if you ever touch it:
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). The short version: `pnpm verify` has
-to be green, and [`CLAUDE.md`](CLAUDE.md) is the actual house style guide —
+See [CONTRIBUTING.md](docs/contributing.md). The short version: `pnpm verify` has
+to be green, and [`CLAUDE.md`](.claude/CLAUDE.md) is the actual house style guide —
 most of this codebase was written by AI agents, so the rules that matter are
 written down rather than assumed.
 
