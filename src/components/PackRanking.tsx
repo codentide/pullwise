@@ -1,13 +1,21 @@
+import { useState } from 'react'
 import { useFormatter, useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
 import { Hint } from '@/components/Hint.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { Notice } from '@/components/Notice.tsx'
+import { Pressable } from '@/components/Pressable.tsx'
+import { RarityPips } from '@/components/Rarity.tsx'
 import { Link } from '@/i18n/navigation.ts'
 import { PackImage } from './PackImage.tsx'
 import { packHref, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
+import type { MissingCard, PackRef } from '@/lib/types.ts'
+
+/** The predicate `coveredHere` already used to count what a pack covers, reused here to name the cards instead. */
+const missingIn = (missing: MissingCard[], pack: PackRef): MissingCard[] =>
+  missing.filter((entry) => packMath.isInPack(entry.card, pack))
 
 /** PT—01 Pack ranking · PT—03 The figure that resolves. The winner shows its artwork (a pack is recognised by sight before its name; the panel had been hiding the image below 28rem, every width the deck editor's aside has ever been) as a headline, everything else as a league table, with probability and estimated packs always paired — one without the other misleads — and every estimate carrying a "~". */
 export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
@@ -15,6 +23,16 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
   const format = useFormatter()
   const { ranking, simulation, missing, unobtainable } = analysis
   const [winner, ...rest] = ranking.slice(0, 6)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+
+  const toggle = (key: string): void => {
+    setExpanded((current) => {
+      const next = new Set(current)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   // Precision follows magnitude: most packs sit under 10%, and rounding 3.3% to 3% throws away the difference between two packs the ranking is there to compare.
   const percent = (value: number): string =>
@@ -36,7 +54,9 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
   if (winner == null) return null
 
   // How much of what is missing this one pack actually covers — the coach line is only honest if it knows.
-  const coveredHere = missing.filter((entry) => packMath.isInPack(entry.card, winner.pack)).length
+  const winnerKey = `${winner.pack.set}/${winner.pack.pack}`
+  const winnerMissing = missingIn(missing, winner.pack)
+  const coveredHere = winnerMissing.length
   const missingCount = missing.length
 
   return (
@@ -97,47 +117,90 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
             </p>
           </div>
         </Link>
+
+        <div className='border-t border-line px-4 py-3'>
+          <Pressable
+            aria-expanded={expanded.has(winnerKey)}
+            onClick={() => toggle(winnerKey)}
+            className='flex items-center gap-1 font-mono text-label uppercase tracking-[0.1em] text-ink-mid transition-colors duration-150 hover:text-ink-high'
+          >
+            {expanded.has(winnerKey) ? t('hideCards') : t('showCards')}
+            <Icon
+              name='chevron'
+              size={12}
+              className={`transition-transform duration-150 ${expanded.has(winnerKey) ? 'rotate-180' : ''}`}
+            />
+          </Pressable>
+          {expanded.has(winnerKey) && (
+            <div className='mt-3'>
+              <MissingCardChips cards={winnerMissing} />
+            </div>
+          )}
+        </div>
       </section>
 
       {rest.length > 0 && (
         <section>
           <Heading level='eyebrow' as='h4' className='px-3'>{t('otherPacks')}</Heading>
-          <ol className='mt-2'>
-            {rest.map((entry, index) => (
-              <li key={`${entry.pack.set}/${entry.pack.pack}`} className='border-b border-line'>
-                <Link
-                  href={packHref(entry.pack.set, entry.pack.pack)}
-                  className='flex items-center gap-4 px-3 py-3 transition-colors duration-150 hover:bg-overlay'
-                >
-                  <span className='tnum font-mono text-label text-ink-low'>
-                    {String(index + 2).padStart(2, '0')}
-                  </span>
-                  <div className='min-w-0 flex-1'>
-                    <p className='game-name truncate text-meta text-ink-high'>
-                      {entry.pack.pack}
-                      <span className='text-ink-low'> — {setName(entry.pack.set)}</span>
-                    </p>
-                    {/* The bar reads relative to the winner's own chance (the big number above), not to 100% or this row's own percentage; `aria-hidden` since the text beside it already says the number. */}
-                    <div
-                      aria-hidden
-                      className='mt-2 h-px bg-line'
-                      title={t('relativeToWinner')}
+          <ol className='mt-2 divide-y divide-line'>
+            {rest.map((entry, index) => {
+              const key = `${entry.pack.set}/${entry.pack.pack}`
+              const rowMissing = missingIn(missing, entry.pack)
+              return (
+                <li key={key}>
+                  <div className='flex items-center gap-1'>
+                    <Link
+                      href={packHref(entry.pack.set, entry.pack.pack)}
+                      className='flex min-w-0 flex-1 items-center gap-4 px-3 py-3 transition-colors duration-150 hover:bg-overlay'
                     >
-                      <div
-                        className='pw-fill h-px bg-line-control'
-                        style={{
-                          width: `${Math.max(2, (entry.chanceOfUseful / winner.chanceOfUseful) * 100)}%`
-                        }}
+                      <span className='tnum font-mono text-label text-ink-low'>
+                        {String(index + 2).padStart(2, '0')}
+                      </span>
+                      <div className='min-w-0 flex-1'>
+                        <p className='game-name truncate text-meta text-ink-high'>
+                          {entry.pack.pack}
+                          <span className='text-ink-low'> — {setName(entry.pack.set)}</span>
+                        </p>
+                        {/* The bar reads relative to the winner's own chance (the big number above), not to 100% or this row's own percentage; `aria-hidden` since the text beside it already says the number. */}
+                        <div
+                          aria-hidden
+                          className='mt-2 h-px bg-line'
+                          title={t('relativeToWinner')}
+                        >
+                          <div
+                            className='pw-fill h-px bg-line-control'
+                            style={{
+                              width: `${Math.max(2, (entry.chanceOfUseful / winner.chanceOfUseful) * 100)}%`
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {/* text-body, sized to the row not the word "meta", so this doesn't read as an afterthought squeezed against the taller name-plus-bar block beside it. */}
+                      <span className='tnum shrink-0 font-mono text-body text-ink-mid'>
+                        {percent(entry.chanceOfUseful)}
+                      </span>
+                    </Link>
+                    <Pressable
+                      aria-expanded={expanded.has(key)}
+                      aria-label={expanded.has(key) ? t('hideCards') : t('showCards')}
+                      onClick={() => toggle(key)}
+                      className='shrink-0 p-3 text-ink-low transition-colors duration-150 hover:text-ink-high'
+                    >
+                      <Icon
+                        name='chevron'
+                        size={12}
+                        className={`transition-transform duration-150 ${expanded.has(key) ? 'rotate-180' : ''}`}
                       />
-                    </div>
+                    </Pressable>
                   </div>
-                  {/* text-body, sized to the row not the word "meta", so this doesn't read as an afterthought squeezed against the taller name-plus-bar block beside it. */}
-                  <span className='tnum shrink-0 font-mono text-body text-ink-mid'>
-                    {percent(entry.chanceOfUseful)}
-                  </span>
-                </Link>
-              </li>
-            ))}
+                  {expanded.has(key) && (
+                    <div className='px-3 pb-3'>
+                      <MissingCardChips cards={rowMissing} />
+                    </div>
+                  )}
+                </li>
+              )
+            })}
           </ol>
         </section>
       )}
@@ -162,6 +225,23 @@ function Figure ({ value, label, accent = false }: { value: string, label: strin
         {value}
       </p>
       <p className='mt-1 font-mono text-label uppercase tracking-[0.12em] text-ink-low'>{label}</p>
+    </div>
+  )
+}
+
+/** The specific missing cards a pack covers, named — not just the count `coveredHere` already gave. Capped height so a pack covering many cards scrolls inside its own box instead of stretching the card around it. */
+function MissingCardChips ({ cards }: { cards: MissingCard[] }) {
+  return (
+    <div className='flex max-h-40 flex-wrap gap-1 overflow-y-auto'>
+      {cards.map(({ card }) => (
+        <span
+          key={card.id}
+          className='inline-flex items-center gap-1 rounded-control border border-line bg-overlay px-2 py-1 text-label text-ink-mid'
+        >
+          {card.name}
+          <RarityPips rarity={card.rarity} />
+        </span>
+      ))}
     </div>
   )
 }

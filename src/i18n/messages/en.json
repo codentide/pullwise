@@ -119,7 +119,9 @@
     "coachOnlyOne": "It is the only pack that has what you are missing.",
     "relativeToWinner": "How this pack compares to the recommended one above.",
     "recommendationHintLabel": "Why this pack?",
-    "recommendationHint": "The pack most likely to give you something you need right now, recalculated as your deck changes. Always opening the top choice is the strategy that finishes a deck in the fewest packs, on average — not a guess."
+    "recommendationHint": "The pack most likely to give you something you need right now, recalculated as your deck changes. Always opening the top choice is the strategy that finishes a deck in the fewest packs, on average — not a guess.",
+    "showCards": "Show cards",
+    "hideCards": "Hide cards"
   },
   "advisor": {
     "title": "Which pack to open",

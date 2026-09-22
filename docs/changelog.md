@@ -5,6 +5,16 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.4.0] - 2026-09-22
+
+### Added
+
+- The pack recommendation (`/packs` and the deck editor's aside) now names
+  the specific missing cards a pack can yield, not just how many. Hidden
+  behind a collapsed-by-default "Show cards" toggle on the winner and every
+  "other pack" row — nothing new is visible until asked for, matching the
+  app's rule against pushing information at the user unprompted (`PWS-013`).
+
 ## [0.3.1] - 2026-09-21
 
 ### Fixed

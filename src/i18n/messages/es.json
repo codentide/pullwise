@@ -119,7 +119,9 @@
     "coachOnlyOne": "Es el único sobre que tiene lo que te falta.",
     "relativeToWinner": "Cómo se compara este sobre con el recomendado arriba.",
     "recommendationHintLabel": "¿Por qué este sobre?",
-    "recommendationHint": "El sobre con más probabilidad de darte algo que te falta ahora mismo, recalculado a medida que cambia tu mazo. Abrir siempre el primero de la lista es la estrategia que termina un mazo en la menor cantidad de sobres, en promedio — no es una intuición."
+    "recommendationHint": "El sobre con más probabilidad de darte algo que te falta ahora mismo, recalculado a medida que cambia tu mazo. Abrir siempre el primero de la lista es la estrategia que termina un mazo en la menor cantidad de sobres, en promedio — no es una intuición.",
+    "showCards": "Ver cartas",
+    "hideCards": "Ocultar cartas"
   },
   "advisor": {
     "title": "Qué sobre abrir",
