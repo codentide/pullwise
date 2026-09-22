@@ -4,6 +4,7 @@ import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/react
 import { useFormatter, useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
 import { CardImage } from '@/components/CardImage.tsx'
+import { EnergyIcon, isEnergy } from '@/components/EnergyIcon.tsx'
 import { Hint } from '@/components/Hint.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
@@ -278,34 +279,75 @@ function CardChip ({ card }: { card: Card }) {
   )
 }
 
-/** The floating panel's own content — positioning is entirely the caller's job (`ref`/`style` come straight from `useFloating`), this just lays out what goes inside it. Same shape as the card detail page's own header (`card/[id]/page.tsx`): art on the left in a fixed-width column, facts on the right — just smaller, since this is a hover glance, not the page itself. */
-/** Facts joined with " · " into one line rather than stacked, the same composition `card/[id]/page.tsx`'s own header already uses for the same fields — filters out whichever aren't present on this card instead of leaving a trailing separator. */
-function cardMeta (card: Card, t: ReturnType<typeof useTranslations>): string {
-  return [
-    setName(card.set),
-    card.element,
-    card.weakness != null ? t('weakTo', { type: card.weakness }) : null
-  ].filter((part): part is string => part != null).join(' · ')
+/** The secondary facts (element, weakness) joined with " · " — the set itself renders separately, as `SetLogo`, not as text in this line. Filters out whichever aren't present on this card instead of leaving a trailing separator. */
+/** `weakness` comes from the dataset capitalised and, for one energy, spelled differently from `Energy`'s own key ("Dark" vs. "darkness") — the same 10-symbol vocabulary `energy.ts`/`EnergyIcon` already use everywhere else, just needing that one name reconciled before `isEnergy` can recognise it. */
+const weaknessEnergy = (weakness: string) => {
+  const key = weakness.toLowerCase() === 'dark' ? 'darkness' : weakness.toLowerCase()
+  return isEnergy(key) ? key : null
+}
+
+/**
+ * PWS-014 preview, not the shipped answer: TCGdex has a real wordmark-only logo
+ * for some sets (`https://assets.tcgdex.net/en/tcgp/{set}/logo.png`, English
+ * only — confirmed zero coverage in Spanish) — hotlinked here directly, in
+ * plain `<img>` rather than `next/image` (its remote-pattern allowlist only
+ * trusts the Limitless CDN, and adding a second trusted host is exactly the
+ * kind of decision PWS-014 exists to make deliberately, not as a side effect
+ * of a preview). Falls back to the plain set name — a 404 is the normal case
+ * for most sets, not an error path to be nervous about.
+ */
+function SetLogo ({ set, name }: { set: string, name: string }) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed) return <span className='game-name text-label text-ink-mid'>{name}</span>
+
+  return (
+    <img
+      src={`https://assets.tcgdex.net/en/tcgp/${set}/logo.png`}
+      alt={name}
+      className='h-6 w-auto'
+      onError={() => setFailed(true)}
+    />
+  )
 }
 
 function CardPreview ({ card, ref, style }: { card: Card, ref: Ref<HTMLDivElement>, style: CSSProperties }) {
   const t = useTranslations('cardPage')
+  const weakness = card.weakness
+  const weakTo = weakness != null ? weaknessEnergy(weakness) : null
 
   return (
     <div
       ref={ref}
       style={style}
-      className='pw-roll pointer-events-none z-50 flex w-60 items-start gap-3 rounded-surface border border-line bg-raised p-3'
+      className='pw-roll pointer-events-none z-50 flex w-72 items-start gap-3 rounded-surface border border-line bg-raised p-3'
     >
       <CardImage card={card} radius='control' className='w-20 shrink-0' />
-      <div className='min-w-0'>
-        <p className='flex flex-wrap items-center gap-1 text-meta font-semibold text-ink-high'>
-          {card.name}
-          <RarityPips rarity={card.rarity} />
+      <div className='flex min-w-0 flex-1 flex-col self-stretch'>
+        <p className='flex items-center gap-2 text-meta font-semibold text-ink-high'>
+          {card.element != null && isEnergy(card.element) && (
+            <EnergyIcon energy={card.element} size={14} label={card.element} />
+          )}
+          <span className='truncate'>{card.name}</span>
+          <RarityPips rarity={card.rarity} className='ml-auto shrink-0' />
         </p>
-        <p className='mt-1 text-label leading-relaxed text-ink-mid'>{cardMeta(card, t)}</p>
+
+        <div className='mt-2'>
+          <SetLogo set={card.set} name={setName(card.set)} />
+        </div>
+
         {card.evolvesFrom != null && (
-          <p className='mt-1 text-label text-ink-low'>{t('evolvesFrom', { name: card.evolvesFrom })}</p>
+          <p className='mt-2 text-label text-ink-low'>{t('evolvesFrom', { name: card.evolvesFrom })}</p>
+        )}
+
+        {/* Type sits at the far left of the name row, weakness at the far right of its own line below — the two icons this panel shows never sit side by side with nothing telling them apart, which is what kept reading as clutter before. */}
+        {weakTo != null && weakness != null && (
+          <p className='mt-auto flex items-center justify-end gap-2 pt-2 text-label text-ink-low'>
+            <span className='font-mono'>{t('weakToLabel')}</span>
+            <EnergyIcon energy={weakTo} size={14} label={t('weakTo', { type: weakness })} />
+            {/* tnum + font-mono together, same as every other figure in this file (the row index, the percentages) — never tnum alone, tabular figures only mean something paired with a monospace face. The game's own weakness rule, printed on every card that has one: +20, not the mainline TCG's ×2 — Pocket has no Resistance either, so this is the whole story, not a partial one. */}
+            <span className='tnum font-mono'>+20</span>
+          </p>
         )}
       </div>
     </div>

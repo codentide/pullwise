@@ -151,6 +151,7 @@
     "cardNumber": "carta {number}",
     "rarity": "rareza {rarity}",
     "weakTo": "débil a {type}",
+    "weakToLabel": "Débil a",
     "evolvesFrom": "Evoluciona de {name}.",
     "whichPack": "De qué sobre sale",
     "notFromPacks": "Esta carta no sale de ningún sobre. Es promocional, o se obtiene cumpliendo misiones dentro del juego.",

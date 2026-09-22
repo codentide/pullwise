@@ -5,6 +5,25 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.6.0] - 2026-09-22
+
+### Changed
+
+- Energy-type icons across the whole app (the hover preview, the deck
+  editor's Energy Zone, the card filters, the QR dialog) are now the real
+  printed TCG symbols — full colour, pulled once into `public/energy/` —
+  instead of hand-drawn glyphs. Three redrawn passes never read as more
+  than an approximation once seen next to the real thing.
+- The Energy Zone's unselected types are grayscale as well as dimmed now
+  that the disc is real, full-colour art; a dimmed colour icon still read
+  as "on" at a glance, which plain opacity never had to solve before.
+- The hover preview's layout: the type badge moved to the name row (left of
+  the name), weakness moved to its own line pinned to the bottom of the
+  panel (there's room above it for `PWS-011`'s HP/attacks later), and the
+  set logo's plain-text fallback — for the sets TCGdex has no logo for —
+  now matches the panel's actual type scale instead of inheriting a much
+  larger default.
+
 ## [0.5.1] - 2026-09-22
 
 ### Changed

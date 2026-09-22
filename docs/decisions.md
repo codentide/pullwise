@@ -430,3 +430,32 @@ Two things worth knowing for next time something like this comes up:
   settling, not a build error. Fixed by pulling `x`/`y`/`strategy` from
   `useFloating()` directly and building a plain `top`/`left` style instead,
   leaving `transform` free for `pw-roll` alone.
+
+## Real energy-type icons, not redrawn ones
+
+`EnergyIcon` drew the ten TCG energy symbols by hand from the start — the
+project's own stated reason was licensing (open icon sets cover the
+eighteen *video game* types, a different, wrong vocabulary anyway) and
+stroke-weight consistency with `Icon.tsx`. Three separate redraw passes
+happened in one sitting trying to make them read cleanly (fixing real
+asymmetry, then matching the real symbols' actual shapes — a fist, a hex
+ring, an eye, a claw — checked against the genuine printed artwork for
+reference only). None of it held up once actually compared side by side
+with the real thing; a flat, single-colour reinterpretation of a
+full-colour printed badge reads as a rough sketch no matter how correct
+the silhouette is.
+
+Replaced with the genuine artwork: pulled once from Bulbagarden Archives
+into `public/energy/` (10 PNGs, same "pull once, don't hotlink" posture as
+`sync-packs.mjs`'s booster art), not hand-drawn and not hotlinked. The
+licensing question this reopens isn't a new one for this project — Pullwise
+already ships the *entire* card catalogue as scanned official artwork
+(Limitless CDN, `sync-data.mjs`), with the same "fan project, no
+affiliation" footer disclaimer covering it. Ten small energy badges are the
+same risk category as the 3,879 cards already shipped, not a new one.
+`EnergyIcon` no longer draws its own coloured disc — the real artwork
+already carries its own colour and circular badge — and the deck editor's
+Energy Zone, which used to signal on/off with opacity alone against a flat
+hand-picked colour, now also desaturates the unselected types to grayscale:
+a dimmed *colour* icon on real art can still read as selected at a glance,
+which a single flat colour never had to worry about.

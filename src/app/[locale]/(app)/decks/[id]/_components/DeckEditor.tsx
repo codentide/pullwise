@@ -164,7 +164,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
   )
 }
 
-/** Toggling a symbol turns the guess into a fact for good, same moment ownership stops being unknown the first time a card gets marked; bare spheres, not chips in boxes, since EnergyIcon already draws its own disc and a square button around a circle reads as two containers fighting; on/off is opacity alone — a ring or glow read as too much on top of an already-saturated disc. */
+/** Toggling a symbol turns the guess into a fact for good, same moment ownership stops being unknown the first time a card gets marked; bare spheres, not chips in boxes, since EnergyIcon already draws its own disc and a square button around a circle reads as two containers fighting. On/off used to be opacity alone, back when the disc was a single flat colour — now that `EnergyIcon` is the real, full-colour printed symbol, a dimmed colour icon can still read as "on" at a glance, so an unselected type also desaturates to grayscale; hovering previews the real colour before committing, same as it already previewed a higher opacity. */
 function EnergyZone ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
   const names = useTranslations('energies')
@@ -194,8 +194,8 @@ function EnergyZone ({ deck }: { deck: Deck }) {
             aria-pressed={energy.includes(element)}
             title={names(element)}
             aria-label={names(element)}
-            className={`rounded-full transition-opacity duration-150 ${
-              energy.includes(element) ? '' : 'opacity-35 hover:opacity-70'
+            className={`rounded-full transition-[opacity,filter] duration-150 ${
+              energy.includes(element) ? '' : 'grayscale opacity-50 hover:opacity-100 hover:grayscale-0'
             }`}
           >
             <EnergyIcon energy={element} size={26} />

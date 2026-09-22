@@ -9,13 +9,13 @@ const TONE: Record<Grade, string> = {
   5: 'text-rarity-5'
 }
 
-export function RarityPips ({ rarity, showName = false }: { rarity: string, showName?: boolean }) {
+export function RarityPips ({ rarity, showName = false, className = '' }: { rarity: string, showName?: boolean, className?: string }) {
   const grade = gradeOf(rarity)
   const name = GRADE_NAMES[grade]
 
   return (
     <span
-      className={`inline-flex items-center gap-1 ${TONE[grade]}`}
+      className={`inline-flex items-center gap-1 ${TONE[grade]} ${className}`}
       title={`${name} · ${rarity}`}
     >
       <span className='flex items-center gap-px' aria-hidden>

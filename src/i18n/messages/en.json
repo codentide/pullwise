@@ -151,6 +151,7 @@
     "cardNumber": "card {number}",
     "rarity": "{rarity} rarity",
     "weakTo": "weak to {type}",
+    "weakToLabel": "Weak to",
     "evolvesFrom": "Evolves from {name}.",
     "whichPack": "Which pack it comes from",
     "notFromPacks": "This card does not come from any pack. It is a promo, or it is earned by completing in-game missions.",
