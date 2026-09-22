@@ -14,8 +14,9 @@ are — one repo, one live list, no duplicate that drifts out of sync with itsel
 | [#7](https://github.com/codentide/pullwise/issues/7) | Type data for B3 onwards | `on-demand` — no code to write, waiting on upstream |
 | [#8](https://github.com/codentide/pullwise/issues/8) | Spanish card art | `on-demand` — same shape of wait |
 | [#9](https://github.com/codentide/pullwise/issues/9) | Real pull rates for B4 and B4a | `on-demand` — the fallback already empties itself when this lands |
-| [#10](https://github.com/codentide/pullwise/issues/10) | Accounts and cross-device sync | `needs clarification` — v2, and genuinely undecided, not just unbuilt |
+| [#10](https://github.com/codentide/pullwise/issues/10) | Accounts and cross-device sync | `needs clarification` — a "when," not an "if," but the auth method, backend and deck-URL model interaction are still undecided |
 | [PWS-011](https://github.com/codentide/pullwise/issues/11) | Show full card details in a hover/tap popover | Feasibility checked before filing: TCGdex has real attacks/abilities/HP, `sync-data.mjs` just doesn't pull them yet |
+| [PWS-013](https://github.com/codentide/pullwise/issues/13) | Show which missing cards a recommended pack actually yields | `priority:high` — the recommendation screen already computes which missing cards a pack covers, but never names them |
 
 ## Resolved, not through an issue
 
