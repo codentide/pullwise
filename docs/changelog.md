@@ -5,6 +5,16 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.6.1] - 2026-09-22
+
+### Fixed
+
+- The deck editor's two-column layout (`grid-cols-[2fr_1fr]`) sized the
+  recommendation column with a flexible `1fr` track, so its width tracked
+  its own content — expanding "Show cards" or opening the hover preview
+  shifted the whole deck grid left. Fixed to a real `24rem`; only the deck
+  grid's own column stays flexible.
+
 ## [0.6.0] - 2026-09-22
 
 ### Changed

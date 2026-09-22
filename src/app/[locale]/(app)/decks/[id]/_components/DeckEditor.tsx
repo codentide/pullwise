@@ -105,7 +105,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
         />
       </header>
 
-      <div className='grid gap-6 lg:grid-cols-[2fr_1fr]'>
+      <div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]'>
         <div className='@container flex flex-col gap-6'>
           <EnergyZone deck={deck} />
 
