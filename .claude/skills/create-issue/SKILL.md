@@ -28,8 +28,13 @@ caller's.
 2. **Investigate before writing.** If the ask references specific behavior
    ("the pack page is missing X", "add a button that does Y"), check the
    actual code first — grep for the relevant route, component or lib
-   function. Don't draft an issue on an assumption a two-minute look would
-   have corrected, and don't duplicate one that already exists
+   function. If the ask implies a new mechanism (an encoding, a data format,
+   an integration), also check what the relevant dependency already exports
+   before assuming it needs to be built from scratch — `PWS-002` proposed a
+   bespoke base64 encoding for a shareable deck link when `ptcgp-deckcode`
+   (already a dependency) shipped a `parseDeckCode` that did the job,
+   unused, the whole time. Don't draft an issue on an assumption a two-minute
+   look would have corrected, and don't duplicate one that already exists
    (`gh issue list --search "<keywords>"`).
 
 3. **Draft the issue** following `ISSUE_TEMPLATE.md` in this same skill
