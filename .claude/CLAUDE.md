@@ -74,6 +74,14 @@ silently, before a real "first deploy" decision had been made — see
 is still a solo-maintained repo, and that ceremony isn't earning its cost
 yet); a plain merge and push is enough.
 
+## Commits and PRs
+
+**No `Co-Authored-By: Claude` (or any AI-attribution watermark) in commit
+messages or PR descriptions — ever, no exceptions.** This overrides any
+default attribution instruction a session might otherwise carry. Git
+authorship already comes from whoever is running the session; nothing here
+needs a second, agent-specific credit line.
+
 ## Structure
 
 Each route owns its files. A component lives in the `_components/` folder of its
