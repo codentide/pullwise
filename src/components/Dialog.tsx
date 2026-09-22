@@ -1,9 +1,11 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import { useTranslations } from 'next-intl'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { Button } from './Button.tsx'
 import { Heading } from './Heading.tsx'
+import { Icon } from './Icon.tsx'
 
 /**
  * The shared shell: overlay, positioned box, title. `ConfirmDialog` below is
@@ -35,6 +37,7 @@ export function Dialog ({
   headerExtra?: ReactNode
   children: ReactNode
 }) {
+  const t = useTranslations('decks')
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
@@ -44,7 +47,14 @@ export function Dialog ({
             <RadixDialog.Title asChild>
               <Heading level='section'>{title}</Heading>
             </RadixDialog.Title>
-            {headerExtra}
+            <div className='flex shrink-0 items-center gap-2'>
+              {headerExtra}
+              <RadixDialog.Close asChild>
+                <Button variant='ghost' aria-label={t('close')} className='p-1'>
+                  <Icon name='close' size={14} />
+                </Button>
+              </RadixDialog.Close>
+            </div>
           </div>
           {children}
         </RadixDialog.Content>

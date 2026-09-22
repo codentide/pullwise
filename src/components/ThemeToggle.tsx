@@ -34,6 +34,8 @@ export function ThemeToggle ({ label }: { label: string }) {
     }
   }
 
+  if (theme == null) return null
+
   return (
     <button
       onClick={toggle}

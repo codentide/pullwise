@@ -77,7 +77,7 @@ export function Chip ({
     <button
       {...props}
       aria-pressed={pressed}
-      className={`flex items-center gap-1 rounded-control px-2 py-1 text-label transition-colors duration-150 ${
+      className={`appearance-none flex items-center gap-1 rounded-control px-2 py-1 text-label transition-colors duration-150 ${
         pressed ? 'bg-overlay text-ink-high' : 'text-ink-low hover:bg-overlay'
       } ${className}`}
     />
