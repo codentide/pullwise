@@ -124,7 +124,11 @@
     --color-ink-high: #13161a;
     --color-ink-mid: #4a4f54;
     --color-ink-low: #6b7278;
-    --color-accent: #d93d0c;
+    /* Also darkened from #d93d0c: on --color-accent-wash it measured 4.02:1,
+       under the 4.5:1 AA threshold for the text it carries in active-nav-tab
+       styling and accent badges. Darkened just enough to clear it while
+       staying the same red-orange. */
+    --color-accent: #c8380b;
     --color-accent-hover: #c23508;
     --color-accent-wash: #fdeee8;
     --color-accent-ink: #ffffff;
@@ -135,6 +139,19 @@
     --color-valid: #17724d;
     --color-warn: #8a6512;
     --color-invalid: #c4372b;
+
+    /* Same dark-ground bug, for graphics instead of text: seven of the ten
+       energy colours measured under the 3:1 threshold icons need (lightning
+       as low as 1.42:1). These are the same hues, carried down until they
+       clear it. Fighting, darkness, metal, and all five rarity grades
+       already cleared 3:1 undarkened and are left alone. */
+    --color-grass: #519a4a;
+    --color-fire: #c37840;
+    --color-water: #4890c7;
+    --color-lightning: #9f8927;
+    --color-psychic: #dc6468;
+    --color-dragon: #a78620;
+    --color-colorless: #848a93;
   }
 }
 

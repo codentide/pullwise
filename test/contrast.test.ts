@@ -24,7 +24,11 @@ function tokensIn (source: string): Map<string, string> {
 
 const lightBlock = /\[data-theme='light'\]\s*\{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? ''
 const dark = tokensIn(css.replace(lightBlock, ''))
-const light = tokensIn(lightBlock)
+// A token the light block does not redefine falls through to the dark
+// default via the CSS cascade — merge, rather than leaving it undefined,
+// so a token that never needed a light-mode override (fighting, darkness,
+// metal, every rarity grade) is checked at the value it actually renders.
+const light = new Map([...dark, ...tokensIn(lightBlock)])
 
 function luminance (hex: string): number {
   const channels = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -83,12 +87,36 @@ test('text on the accent clears 4.5:1, in both themes', () => {
   }
 })
 
+test('the accent clears 4.5:1 on its wash, in both themes — active-nav-tab styling and accent badges set text there', () => {
+  for (const [themeName, theme] of [['dark', dark], ['light', light]] as const) {
+    const accent = theme.get('accent')
+    const wash = theme.get('accent-wash')
+    assert.ok(accent !== undefined, `${themeName}: --color-accent is not defined`)
+    assert.ok(wash !== undefined, `${themeName}: --color-accent-wash is not defined`)
+    const ratio = contrast(accent!, wash!)
+    assert.ok(
+      ratio >= 4.5,
+      `${themeName}: --color-accent (${accent}) on --color-accent-wash (${wash}) is ${ratio.toFixed(2)}:1`
+    )
+  }
+})
+
 test('the five rarity grades clear 3:1 — they are graphics', () => {
-  for (let grade = 1; grade <= 5; grade++) {
-    const colour = dark.get(`rarity-${grade}`)
-    assert.ok(colour !== undefined, `--color-rarity-${grade} is missing`)
-    const ratio = contrast(colour, dark.get('base')!)
-    assert.ok(ratio >= 3, `--color-rarity-${grade} (${colour}) is ${ratio.toFixed(2)}:1`)
+  // Checking only the dark theme is what let the light energy colours ship
+  // wrong (see the energy-icon test below) — same class of bug, checked here
+  // too so a future rarity change can't slip past the same gap.
+  for (const [themeName, theme] of [['dark', dark], ['light', light]] as const) {
+    for (let grade = 1; grade <= 5; grade++) {
+      const colour = theme.get(`rarity-${grade}`)
+      assert.ok(colour !== undefined, `${themeName}: --color-rarity-${grade} is missing`)
+      for (const [surfaceName, surface] of surfaces(theme)) {
+        const ratio = contrast(colour, surface)
+        assert.ok(
+          ratio >= 3,
+          `${themeName}: --color-rarity-${grade} (${colour}) is ${ratio.toFixed(2)}:1 on ${surfaceName}`
+        )
+      }
+    }
   }
 })
 
@@ -126,16 +154,25 @@ test('the five rarity grades are perceptually distinct from one another', () => 
   }
 })
 
-test('energy icons clear 3:1 on the base surface', () => {
+test('energy icons clear 3:1, in both themes', () => {
+  // Checking only the dark theme is what let six of the ten light-mode
+  // energies ship unreadable — lightning measured 1.42:1 on the light base.
   const energies = [
     'grass', 'fire', 'water', 'lightning', 'psychic',
     'fighting', 'darkness', 'metal', 'dragon', 'colorless',
   ]
-  for (const name of energies) {
-    const colour = dark.get(name)
-    assert.ok(colour !== undefined, `--color-${name} is missing`)
-    const ratio = contrast(colour, dark.get('base')!)
-    assert.ok(ratio >= 3, `--color-${name} (${colour}) is ${ratio.toFixed(2)}:1; invisible at that ratio`)
+  for (const [themeName, theme] of [['dark', dark], ['light', light]] as const) {
+    for (const name of energies) {
+      const colour = theme.get(name)
+      assert.ok(colour !== undefined, `${themeName}: --color-${name} is missing`)
+      for (const [surfaceName, surface] of surfaces(theme)) {
+        const ratio = contrast(colour, surface)
+        assert.ok(
+          ratio >= 3,
+          `${themeName}: --color-${name} (${colour}) is ${ratio.toFixed(2)}:1 on ${surfaceName}; invisible at that ratio`
+        )
+      }
+    }
   }
 })
 
