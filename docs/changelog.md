@@ -5,6 +5,16 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.5.1] - 2026-09-22
+
+### Changed
+
+- Softer visual treatment for the missing-card hover preview: `rounded-surface`
+  instead of `rounded-control` (it's a real panel, not a small control), a
+  lighter border, more padding, and its secondary facts (set, type, weakness)
+  joined into one line instead of stacked — the same composition
+  `card/[id]/page.tsx`'s own header already uses for the same fields.
+
 ## [0.5.0] - 2026-09-22
 
 ### Added

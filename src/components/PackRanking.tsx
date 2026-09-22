@@ -279,6 +279,15 @@ function CardChip ({ card }: { card: Card }) {
 }
 
 /** The floating panel's own content — positioning is entirely the caller's job (`ref`/`style` come straight from `useFloating`), this just lays out what goes inside it. Same shape as the card detail page's own header (`card/[id]/page.tsx`): art on the left in a fixed-width column, facts on the right — just smaller, since this is a hover glance, not the page itself. */
+/** Facts joined with " · " into one line rather than stacked, the same composition `card/[id]/page.tsx`'s own header already uses for the same fields — filters out whichever aren't present on this card instead of leaving a trailing separator. */
+function cardMeta (card: Card, t: ReturnType<typeof useTranslations>): string {
+  return [
+    setName(card.set),
+    card.element,
+    card.weakness != null ? t('weakTo', { type: card.weakness }) : null
+  ].filter((part): part is string => part != null).join(' · ')
+}
+
 function CardPreview ({ card, ref, style }: { card: Card, ref: Ref<HTMLDivElement>, style: CSSProperties }) {
   const t = useTranslations('cardPage')
 
@@ -286,7 +295,7 @@ function CardPreview ({ card, ref, style }: { card: Card, ref: Ref<HTMLDivElemen
     <div
       ref={ref}
       style={style}
-      className='pw-roll pointer-events-none z-50 flex w-60 items-start gap-2 rounded-control border border-line-strong bg-raised p-2'
+      className='pw-roll pointer-events-none z-50 flex w-60 items-start gap-3 rounded-surface border border-line bg-raised p-3'
     >
       <CardImage card={card} radius='control' className='w-20 shrink-0' />
       <div className='min-w-0'>
@@ -294,10 +303,10 @@ function CardPreview ({ card, ref, style }: { card: Card, ref: Ref<HTMLDivElemen
           {card.name}
           <RarityPips rarity={card.rarity} />
         </p>
-        <p className='game-name mt-1 text-label text-ink-mid'>{setName(card.set)}</p>
-        {card.element != null && <p className='mt-1 text-label text-ink-mid'>{card.element}</p>}
-        {card.weakness != null && <p className='text-label text-ink-mid'>{t('weakTo', { type: card.weakness })}</p>}
-        {card.evolvesFrom != null && <p className='text-label text-ink-mid'>{t('evolvesFrom', { name: card.evolvesFrom })}</p>}
+        <p className='mt-1 text-label leading-relaxed text-ink-mid'>{cardMeta(card, t)}</p>
+        {card.evolvesFrom != null && (
+          <p className='mt-1 text-label text-ink-low'>{t('evolvesFrom', { name: card.evolvesFrom })}</p>
+        )}
       </div>
     </div>
   )
