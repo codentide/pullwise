@@ -17,6 +17,7 @@ are — one repo, one live list, no duplicate that drifts out of sync with itsel
 | [#10](https://github.com/codentide/pullwise/issues/10) | Accounts and cross-device sync | `needs clarification` — a "when," not an "if," but the auth method, backend and deck-URL model interaction are still undecided |
 | [PWS-011](https://github.com/codentide/pullwise/issues/11) | Show full card details in a hover/tap popover | Feasibility checked before filing: TCGdex has real attacks/abilities/HP, `sync-data.mjs` just doesn't pull them yet |
 | [PWS-014](https://github.com/codentide/pullwise/issues/14) | Generate our own pack/set logo assets, English and Spanish | `priority:low` — no external source has usable coverage (checked live: TCGdex has zero logos in Spanish, and its English coverage doesn't reach B4a) |
+| [PWS-015](https://github.com/codentide/pullwise/issues/15) | Translate element, weakness and rarity-grade names on /es pages | An existing, working `energies` i18n namespace sits unused on the card detail page, and Pullwise's own rarity grades have no i18n at all |
 
 ## Resolved, not through an issue
 
