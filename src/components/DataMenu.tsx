@@ -1,7 +1,10 @@
+'use client'
+
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { actions } from '@/lib/store.ts'
 import { useStore } from '@/hooks/useStore.ts'
+import { useHydrated } from '@/hooks/useHydrated.ts'
 import { Button } from '@/components/Button.tsx'
 import { HiddenFileInput } from '@/components/Field.tsx'
 
@@ -13,6 +16,7 @@ import { HiddenFileInput } from '@/components/Field.tsx'
 export function DataMenu () {
   const t = useTranslations('nav')
   const state = useStore()
+  const hydrated = useHydrated()
   const fileInput = useRef<HTMLInputElement>(null)
   const [note, setNote] = useState<string | null>(null)
 
@@ -37,7 +41,13 @@ export function DataMenu () {
   return (
     <div className='flex items-center gap-2'>
       {note != null && <span className='text-label text-ink-mid'>{note}</span>}
-      <Button variant='quiet' onClick={download} disabled={state.decks.length === 0 && known === 0}>
+      {/*
+        Before hydration state.decks/state.knowledge are the empty snapshot on
+        purpose, so a returning visitor with real saved data would otherwise
+        see Export disabled for a flash. `hydrated &&` means the real
+        disabled check only ever runs once the store's true value has arrived.
+      */}
+      <Button variant='quiet' onClick={download} disabled={hydrated && state.decks.length === 0 && known === 0}>
         {t('export')}
       </Button>
       <Button variant='quiet' onClick={() => fileInput.current?.click()}>

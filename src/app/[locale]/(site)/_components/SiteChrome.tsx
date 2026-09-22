@@ -13,7 +13,7 @@ import { AppFooter } from '@/components/AppFooter.tsx'
 export async function SiteChrome ({ children }: { children: React.ReactNode }) {
   return (
     <div className='flex min-h-dvh flex-col'>
-      <AppHeader />
+      <AppHeader tools={false} />
       <main className='mx-auto w-full max-w-[1180px] flex-1 px-4 py-6'>{children}</main>
       <AppFooter />
     </div>

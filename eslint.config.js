@@ -31,7 +31,10 @@ export default [
       // Generated: sync-data.mjs writes these, Next writes next-env.d.ts.
       // Linting a generated file means fixing it on every build, forever.
       'src/data/**',
-      'next-env.d.ts'
+      'next-env.d.ts',
+      // Agent worktrees live under here while a subagent works in isolation —
+      // each one is a full checkout of its own branch, not this tree's code.
+      '.claude/worktrees/**'
     ]
   },
 
