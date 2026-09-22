@@ -16,6 +16,7 @@ are — one repo, one live list, no duplicate that drifts out of sync with itsel
 | [#9](https://github.com/codentide/pullwise/issues/9) | Real pull rates for B4 and B4a | `on-demand` — the fallback already empties itself when this lands |
 | [#10](https://github.com/codentide/pullwise/issues/10) | Accounts and cross-device sync | `needs clarification` — a "when," not an "if," but the auth method, backend and deck-URL model interaction are still undecided |
 | [PWS-011](https://github.com/codentide/pullwise/issues/11) | Show full card details in a hover/tap popover | Feasibility checked before filing: TCGdex has real attacks/abilities/HP, `sync-data.mjs` just doesn't pull them yet |
+| [PWS-014](https://github.com/codentide/pullwise/issues/14) | Generate our own pack/set logo assets, English and Spanish | `priority:low` — no external source has usable coverage (checked live: TCGdex has zero logos in Spanish, and its English coverage doesn't reach B4a) |
 
 ## Resolved, not through an issue
 
