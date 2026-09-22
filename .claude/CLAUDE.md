@@ -2,6 +2,16 @@
 
 Which pack to open in Pokémon TCG Pocket to finish the deck you are building.
 
+**The ambition is to be a serious, useful reference for the community** —
+not the biggest portal (PTCGPocket.gg, Pokémon Zone and PTCGP Tracker
+already fight that fight, with teams, accounts, trade hubs and news behind
+them; that isn't a fight a solo project wins by matching their breadth).
+The bet is depth on the one question none of them answer directly: which
+pack, given the deck you're actually building. Win that narrowly and
+seriously before widening scope. Accounts and cross-device sync (`#10`)
+are a "when," not an "if" — deliberately sequenced after the narrow tool is
+solid, not a permanent no.
+
 Most of this codebase is written by agents. That shapes every convention below:
 **a rule that does not break the build is a suggestion, and suggestions drift.**
 So the rules split in two — the ones a machine can check are checked, and only
@@ -156,7 +166,8 @@ testing against hand-checkable synthetic datasets, plus one consistency check
 against theory — the Monte Carlo median is verified against the geometric
 distribution's `⌈ln0.5 / ln(1−p)⌉`.
 
-**No login, no accounts.** State lives in `localStorage`. That is v1 on purpose.
+**No login, no accounts — yet.** State lives in `localStorage`. That is v1 on
+purpose, not a permanent stance — see the ambition note at the top and `#10`.
 
 **A decision with real weight gets logged in `docs/decisions.md`, as part of
 the same change** — not a chore for later, and not for everything. A naming
