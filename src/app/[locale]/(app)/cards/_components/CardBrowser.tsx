@@ -6,6 +6,7 @@ import { CardTile, cycleOwned } from '@/components/CardTile.tsx'
 import { CardFilters } from './CardFilters.tsx'
 import { actions } from '@/lib/store.ts'
 import { useStore } from '@/hooks/useStore.ts'
+import { useHydrated } from '@/hooks/useHydrated.ts'
 import { cards as allCards } from '@/lib/gameData.ts'
 import { emptyFilters, filterCards, type Filters } from '@/lib/filters.ts'
 import { Heading } from '@/components/Heading.tsx'
@@ -20,6 +21,7 @@ const PAGE = 80
 export function CardBrowser () {
   const t = useTranslations('browser')
   const state = useStore()
+  const hydrated = useHydrated()
   const [filters, setFilters] = useState<Filters>(emptyFilters)
   const [limit, setLimit] = useState(PAGE)
   const sentinel = useRef<HTMLDivElement>(null)
@@ -42,6 +44,12 @@ export function CardBrowser () {
   }, [])
 
   const known = Object.keys(state.knowledge).length
+
+  // Before hydration state.knowledge is deliberately empty (see useStore.ts),
+  // so "known" here would read 0 and the "marked" vs "unmarked" header line —
+  // as well as the known-toggle filter downstream — would misreport a
+  // returning visitor's real collection for a flash.
+  if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   return (
     <div className='flex flex-col gap-4'>

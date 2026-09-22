@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { PackRanking } from '@/components/PackRanking.tsx'
 import { useStore } from '@/hooks/useStore.ts'
+import { useHydrated } from '@/hooks/useHydrated.ts'
 import { analyzeMissing, missingAcrossDecks, missingFor } from '@/lib/deckAnalysis.ts'
 import { EmptyState } from '@/components/Panel.tsx'
 import { Select } from '@/components/Select.tsx'
@@ -17,6 +18,7 @@ import { Heading } from '@/components/Heading.tsx'
 export function PackAdvisor () {
   const t = useTranslations('advisor')
   const state = useStore()
+  const hydrated = useHydrated()
   const [scope, setScope] = useState<string>('all')
 
   const deck = state.decks.find((candidate) => candidate.id === scope)
@@ -26,6 +28,11 @@ export function PackAdvisor () {
       : missingAcrossDecks(state.decks, state.knowledge)
     return analyzeMissing(missing)
   }, [deck, state.decks, state.knowledge])
+
+  // Same reasoning as DeckScreen: before hydration state.decks is the empty
+  // snapshot on purpose, so "no decks yet" is indistinguishable from "not
+  // loaded yet" — showing the empty state here would flash it on every load.
+  if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   if (state.decks.length === 0) {
     return (

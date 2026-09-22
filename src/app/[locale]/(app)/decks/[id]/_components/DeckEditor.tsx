@@ -18,6 +18,7 @@ import { EvolutionLine } from './EvolutionLine.tsx'
 import { ExportButton } from './Export.tsx'
 import { actions } from '@/lib/store.ts'
 import { useStore } from '@/hooks/useStore.ts'
+import { useHydrated } from '@/hooks/useHydrated.ts'
 import { DECK_SIZE, deckSize, validateDeck, type DeckIssue } from '@/lib/deckRules.ts'
 import { groupDeck, lineGaps, quickSearch } from '@/lib/deckGroups.ts'
 import { parseDecklist } from '@/lib/decklist.ts'
@@ -61,6 +62,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
   const groupName = useTranslations('groups')
   const state = useStore()
+  const hydrated = useHydrated()
   const router = useRouter()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
@@ -77,6 +79,13 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
   const groups = groupDeck(deck)
   const gaps = lineGaps(deck)
   const analysis = useMemo(() => analyzeDeck(deck, state.knowledge), [deck, state.knowledge])
+
+  // DeckScreen already withholds this component until hydration finishes, so
+  // this branch is defensive rather than reachable today — it exists so this
+  // reads correctly (and stays correct) on its own, independent of whichever
+  // parent happens to mount it, the same way DeckScreen protects itself. It
+  // sits after the hooks above so it never changes their call order.
+  if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   const add = (card: Card): void => {
     const current = deck.entries.find((entry) => entry.cardId === card.id)?.copies ?? 0

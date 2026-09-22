@@ -6,6 +6,7 @@ import { Icon } from '@/components/Icon.tsx'
 import { CardImage } from '@/components/CardImage.tsx'
 import { actions } from '@/lib/store.ts'
 import { useStore } from '@/hooks/useStore.ts'
+import { useHydrated } from '@/hooks/useHydrated.ts'
 import { cardsById } from '@/lib/gameData.ts'
 import { deckSize } from '@/lib/deckRules.ts'
 import { missingFor } from '@/lib/deckAnalysis.ts'
@@ -32,11 +33,18 @@ const DECK_COLUMNS = '[grid-template-columns:repeat(auto-fill,minmax(18rem,1fr))
 export function DeckList () {
   const t = useTranslations('decks')
   const state = useStore()
+  const hydrated = useHydrated()
   const router = useRouter()
   const [importing, setImporting] = useState(false)
 
   /** A new deck is only useful open, so creating one goes straight into it. */
   const openNew = (): void => router.push(`/decks/${actions.createDeck(t('new'))}`)
+
+  // Before hydration `state.decks` is deliberately the empty snapshot (see
+  // useStore.ts), so it cannot yet be told apart from a returning visitor who
+  // really has no decks. Rendering DecksEmpty during that window would flash
+  // it on every load for someone with real saved decks.
+  if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   return (
     <div className='flex flex-col gap-4'>
