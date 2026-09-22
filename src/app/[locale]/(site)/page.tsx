@@ -5,13 +5,21 @@ import { SiteChrome } from './_components/SiteChrome.tsx'
 import { ButtonLink } from '@/components/Button.tsx'
 import { Heading } from '@/components/Heading.tsx'
 import { sets } from '@/lib/gameData.ts'
+import { localeAlternates } from '@/i18n/site.ts'
 
 interface Props { params: Promise<{ locale: string }> }
 
 export async function generateMetadata ({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'meta' })
-  return { title: { absolute: t('title') }, description: t('description') }
+  return {
+    title: { absolute: t('title') },
+    description: t('description'),
+    // '' as canonical would be falsy and Next silently drops it (resolveCanonicalUrl
+    // returns null for any falsy value) — '/' is the shortest truthy path that still
+    // resolves to the site root against metadataBase.
+    alternates: { canonical: '/', languages: localeAlternates('') }
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { BASE_URL } from './sitemap.ts'
+import { BASE_URL } from '@/i18n/site.ts'
 
 export default function robots (): MetadataRoute.Robots {
   return {

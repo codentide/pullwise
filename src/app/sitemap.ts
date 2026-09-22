@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { allPacks, cards, sets } from '@/lib/gameData.ts'
 import { routing } from '@/i18n/routing.ts'
-
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://pullwise.app'
+import { BASE_URL } from '@/i18n/site.ts'
 
 /**
  * The ~3,900 static pages per locale are the reason this file exists: every card

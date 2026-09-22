@@ -8,8 +8,9 @@ import { CardGridLinks } from '../../../_components/CardGridLinks.tsx'
 import { allPacks, cardsInPack, packMath, rarityBreakdown, setName } from '@/lib/gameData.ts'
 import { Heading } from '@/components/Heading.tsx'
 import { PackImage } from '@/components/PackImage.tsx'
+import { localeAlternates } from '@/i18n/site.ts'
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export function generateStaticParams (): Array<{ locale: string, set: string, name: string }> {
   // The raw name, not `encodeURIComponent(pack.pack)`: Next matches this list
@@ -45,7 +46,8 @@ export async function generateMetadata ({ params }: Props): Promise<Metadata> {
     title: t('metaTitle', { pack: pack.pack, set: setName(pack.set) }),
     description: t('metaDescription', { count, pack: pack.pack, set: setName(pack.set) }),
     alternates: {
-      languages: Object.fromEntries(routing.locales.map((other) => [other, `/${other}${path}`]))
+      canonical: path,
+      languages: localeAlternates(path)
     }
   }
 }
@@ -83,7 +85,7 @@ export default async function PackPage ({ params }: Props) {
       </header>
 
       <section className='mt-6'>
-        <Heading level='sub'>{t('contents')}</Heading>
+        <Heading level='sub' as='h2'>{t('contents')}</Heading>
         <ul className='mt-2 flex flex-wrap gap-2'>
           {breakdown.map(([rarity, count]) => (
             <li
@@ -100,9 +102,25 @@ export default async function PackPage ({ params }: Props) {
       </section>
 
       <section className='mt-6'>
-        <Heading level='sub'>{t('allCards')}</Heading>
+        <Heading level='sub' as='h2'>{t('allCards')}</Heading>
         <CardGridLinks cards={cards} />
       </section>
+
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: t('title', { pack: pack.pack }),
+            isPartOf: { '@type': 'CollectionPage', name: setName(pack.set) },
+            mainEntity: {
+              '@type': 'ItemList',
+              numberOfItems: cards.length
+            }
+          }).replace(/</g, '\\u003c')
+        }}
+      />
     </SiteChrome>
   )
 }

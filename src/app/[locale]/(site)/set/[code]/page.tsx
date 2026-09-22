@@ -8,8 +8,9 @@ import { CardGridLinks } from '../../_components/CardGridLinks.tsx'
 import { cards, sets, setsByCode } from '@/lib/gameData.ts'
 import { Heading } from '@/components/Heading.tsx'
 import { PackImage } from '@/components/PackImage.tsx'
+import { localeAlternates } from '@/i18n/site.ts'
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export function generateStaticParams (): Array<{ locale: string, code: string }> {
   return routing.locales.flatMap((locale) => sets.map((set) => ({ locale, code: set.code })))
@@ -24,14 +25,14 @@ export async function generateMetadata ({ params }: Props): Promise<Metadata> {
 
   const t = await getTranslations({ locale, namespace: 'setPage' })
   const count = cards.filter((card) => card.set === set.code).length
+  const path = `/set/${set.code}`
 
   return {
     title: t('metaTitle', { name: set.name, code: set.code, count }),
     description: t('metaDescription', { name: set.name }),
     alternates: {
-      languages: Object.fromEntries(
-        routing.locales.map((other) => [other, `/${other}/set/${set.code}`])
-      )
+      canonical: path,
+      languages: localeAlternates(path)
     }
   }
 }
@@ -60,7 +61,7 @@ export default async function SetPage ({ params }: Props) {
 
       {set.packs.length > 0 && (
         <section className='mt-6'>
-          <Heading level='sub'>{t('packs')}</Heading>
+          <Heading level='sub' as='h2'>{t('packs')}</Heading>
           <ul className='mt-2 flex flex-wrap gap-3'>
             {set.packs.map((pack) => (
               <li key={pack}>
@@ -78,9 +79,24 @@ export default async function SetPage ({ params }: Props) {
       )}
 
       <section className='mt-6'>
-        <Heading level='sub'>{t('allCards')}</Heading>
+        <Heading level='sub' as='h2'>{t('allCards')}</Heading>
         <CardGridLinks cards={setCards} />
       </section>
+
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: set.name,
+            mainEntity: {
+              '@type': 'ItemList',
+              numberOfItems: setCards.length
+            }
+          }).replace(/</g, '\\u003c')
+        }}
+      />
     </SiteChrome>
   )
 }

@@ -3,6 +3,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing.ts'
+import { BASE_URL } from '@/i18n/site.ts'
 import { fontVariables } from '../fonts.ts'
 import { ThemeScript } from '@/components/ThemeToggle.tsx'
 import '@/index.css'
@@ -18,6 +19,7 @@ export async function generateMetadata (
   const t = await getTranslations({ locale, namespace: 'meta' })
 
   return {
+    metadataBase: new URL(BASE_URL),
     title: { default: t('title'), template: '%s · Pullwise' },
     description: t('description'),
     icons: { icon: '/favicon.svg' }

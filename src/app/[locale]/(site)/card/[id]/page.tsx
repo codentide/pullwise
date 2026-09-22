@@ -6,11 +6,12 @@ import { routing } from '@/i18n/routing.ts'
 import { SiteChrome } from '../../_components/SiteChrome.tsx'
 import { StaticCardImage } from '../../_components/StaticCardImage.tsx'
 import { CardGridLinks } from '../../_components/CardGridLinks.tsx'
-import { cards, cardsById, setName } from '@/lib/gameData.ts'
+import { cards, cardsById, imageUrl, setName } from '@/lib/gameData.ts'
 import { cardOdds } from '@/lib/deckAnalysis.ts'
 import { Heading } from '@/components/Heading.tsx'
+import { localeAlternates } from '@/i18n/site.ts'
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export function generateStaticParams (): Array<{ locale: string, id: string }> {
   return routing.locales.flatMap((locale) => cards.map((card) => ({ locale, id: card.id })))
@@ -36,13 +37,14 @@ export async function generateMetadata ({ params }: Props): Promise<Metadata> {
     })
     : t('metaNotFound')
 
+  const path = `/card/${card.id}`
+
   return {
     title: t('metaTitle', { name: card.name, id: card.id }),
     description: t('metaDescription', { name: card.name, rarity: card.rarity, set: setName(card.set), where }),
     alternates: {
-      languages: Object.fromEntries(
-        routing.locales.map((other) => [other, `/${other}/card/${card.id}`])
-      )
+      canonical: path,
+      languages: localeAlternates(path)
     },
     openGraph: { title: `${card.name} — ${setName(card.set)}`, description: where, type: 'article' }
   }
@@ -73,7 +75,7 @@ export default async function CardPage ({ params }: Props) {
           <header>
             <Heading level='page'>{card.name}</Heading>
             <p className='mt-1 text-meta text-ink-mid'>
-              <Link href={`/set/${card.set}`} className='text-accent hover:underline'>
+              <Link href={`/set/${card.set}`} className='text-ink-mid hover:text-ink-high hover:underline'>
                 {setName(card.set)}
               </Link>
               {' · '}{t('cardNumber', { number: card.number })}
@@ -87,7 +89,7 @@ export default async function CardPage ({ params }: Props) {
           </header>
 
           <section>
-            <Heading level='sub'>{t('whichPack')}</Heading>
+            <Heading level='sub' as='h2'>{t('whichPack')}</Heading>
             {odds.length === 0
               ? <p className='mt-2 text-meta leading-relaxed text-ink-mid'>{t('notFromPacks')}</p>
               : (
@@ -106,7 +108,7 @@ export default async function CardPage ({ params }: Props) {
                           </p>
                         </div>
                         <div className='tnum shrink-0 text-right'>
-                          <p className='text-body font-semibold leading-tight text-accent'>
+                          <p className='text-section font-semibold leading-tight text-ink-high'>
                             {percent(entry.chance)}
                           </p>
                           <p className='text-label text-ink-low'>{t('perPack')}</p>
@@ -141,10 +143,24 @@ export default async function CardPage ({ params }: Props) {
 
       {sameSet.length > 0 && (
         <section className='mt-6'>
-          <Heading level='sub'>{t('moreFrom', { set: setName(card.set) })}</Heading>
+          <Heading level='sub' as='h2'>{t('moreFrom', { set: setName(card.set) })}</Heading>
           <CardGridLinks cards={sameSet} showRarity={false} />
         </section>
       )}
+
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: card.name,
+            image: imageUrl(card),
+            category: setName(card.set),
+            brand: { '@type': 'Brand', name: 'Pokémon Trading Card Game Pocket' }
+          }).replace(/</g, '\\u003c')
+        }}
+      />
     </SiteChrome>
   )
 }
