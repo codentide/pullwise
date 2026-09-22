@@ -1,14 +1,5 @@
 #!/usr/bin/env node
-/**
- * Downloads booster artwork for every pack.
- *
- * The game's booster art is not in any card API: Limitless serves cards only and
- * TCGdex's set logos stop at B2. Bulbagarden Archives has all of it, with
- * consistent filenames, so this pulls it once into public/packs/ rather than
- * hotlinking someone else's server on every page view — 28 files, not 3,879.
- *
- * Run by hand when a set ships (`pnpm sync:packs`), like sync-data.
- */
+/** Downloads booster artwork for every pack: no card API has it (Limitless has cards only, TCGdex's set logos stop at B2), but Bulbagarden Archives has all 28 with consistent filenames, so this pulls them once into public/packs/ rather than hotlinking; run by hand when a set ships (`pnpm sync:packs`), like sync-data. */
 import { writeFile, mkdir, readFile, unlink } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { execFile } from 'node:child_process'
@@ -76,8 +67,7 @@ const main = async () => {
     const png = `${target}.tmp.png`
     await writeFile(png, Buffer.from(await image.arrayBuffer()))
 
-    // The originals are ~160 KB of PNG for something rendered at 64-120px.
-    // cwebp comes from Homebrew, which this machine already has.
+    // The originals are ~160 KB of PNG for something rendered at 64-120px; cwebp comes from Homebrew, which this machine already has.
     await run('cwebp', ['-q', '82', '-resize', '320', '0', png, '-o', target, '-quiet'])
     await unlink(png)
     saved++

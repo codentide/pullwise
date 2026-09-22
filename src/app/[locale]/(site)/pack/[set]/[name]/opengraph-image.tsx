@@ -7,19 +7,13 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export function generateStaticParams (): Array<{ locale: string, set: string, name: string }> {
-  // Same reasoning as the page's generateStaticParams: the raw pack name, not
-  // encodeURIComponent(pack.pack) — Next matches this list against the
-  // decoded route segment.
+  // Same reasoning as the page's generateStaticParams: the raw pack name, not encodeURIComponent(pack.pack) — Next matches this list against the decoded route segment.
   return routing.locales.flatMap((locale) =>
     allPacks.map((pack) => ({ locale, set: pack.set, name: pack.pack }))
   )
 }
 
-/**
- * Deliberately not fetching remote art: see the card page's opengraph-image
- * for why (docs/decisions.md). A solid, text-only card matches the brand's
- * dark theme and costs nothing at build time.
- */
+/** Deliberately not fetching remote art: see the card page's opengraph-image for why (docs/decisions.md); a solid, text-only card matches the brand's dark theme and costs nothing at build time. */
 export default async function Image ({ params }: { params: Promise<{ set: string, name: string }> }) {
   const { set, name } = await params
   const packName = decodeURIComponent(name)
@@ -36,9 +30,7 @@ export default async function Image ({ params }: { params: Promise<{ set: string
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          // Matches viewport.themeColor in [locale]/layout.tsx — inlined
-          // because Satori cannot read the CSS custom properties in
-          // src/index.css.
+          // Matches viewport.themeColor in [locale]/layout.tsx — inlined because Satori cannot read the CSS custom properties in src/index.css.
           // eslint-disable-next-line no-restricted-syntax
           background: '#08090a'
         }}

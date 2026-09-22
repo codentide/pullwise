@@ -1,15 +1,4 @@
-/**
- * Persistent state: the decks and what you know about your collection.
- *
- * All of it lives in localStorage. `knowledge` is global rather than per deck on
- * purpose: mark a Pikachu ex as missing and every deck using it already knows.
- * That is what makes the collection grow on its own as decks get built, without
- * the app ever asking anyone to log 3,879 cards.
- *
- * A key absent from `knowledge` means UNKNOWN, which is not zero. That
- * distinction is the foundation of the product: never confuse "I do not have it"
- * with "I do not know".
- */
+/** Persistent state in localStorage; `knowledge` is global rather than per-deck on purpose (mark a card missing once and every deck using it knows), and a key absent from it means UNKNOWN, not zero — never confuse "I do not have it" with "I do not know". */
 import type { Deck, DeckEntry, Knowledge } from './types.ts'
 
 const STORAGE_KEY = 'pullwise:v1'
@@ -30,8 +19,7 @@ function load (): State {
     if (parsed.version !== 1 || !Array.isArray(parsed.decks)) return emptyState()
     return { version: 1, decks: parsed.decks, knowledge: parsed.knowledge ?? {} }
   } catch {
-    // localStorage may be disabled or the contents corrupt; starting empty
-    // beats breaking the app.
+    // localStorage may be disabled or the contents corrupt; starting empty beats breaking the app.
     return emptyState()
   }
 }
@@ -57,9 +45,7 @@ export const subscribe = (listener: () => void): (() => void) => {
 
 export const getState = (): State => state
 
-// Two tabs in the same browser share localStorage but not memory: without this,
-// marking a card in one leaves the other showing stale data, and the last writer
-// silently clobbers the other.
+// Two tabs share localStorage but not memory: without this, marking a card in one leaves the other stale, and the last writer silently clobbers it.
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (event) => {
     if (event.key !== STORAGE_KEY) return
@@ -98,11 +84,7 @@ export const actions = {
     commit({ ...state, decks: state.decks.filter((deck) => deck.id !== id) })
   },
 
-  /**
-   * Adds or removes copies of a card. On first add the card is assumed owned:
-   * you build with what you have, and what is missing is the exception you mark
-   * by hand.
-   */
+  /** Adds or removes copies of a card; on first add the card is assumed owned — you build with what you have, and what's missing is the exception you mark by hand. */
   setCopies (deckId: string, cardId: string, copies: number) {
     const clamped = Math.max(0, Math.min(2, copies))
     const isNew = !state.decks

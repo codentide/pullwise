@@ -1,15 +1,7 @@
 import { AppHeader } from '@/components/AppHeader.tsx'
 import { AppFooter } from '@/components/AppFooter.tsx'
 
-/**
- * Shell for the public pages: they are the front door from a search engine.
- *
- * It wears the same header as the tool. A person arriving on a card page from a
- * search is in the same product as a person building a deck, and giving them a
- * header with no navigation in it left them with one link out. The "build a
- * deck" button it used to carry is gone with it: the Decks tab goes to the same
- * place, and two accents on one screen is one too many.
- */
+/** Shell for the public pages, wearing the same header as the tool since a person landing on a card page from search is in the same product as one building a deck; the header's old "build a deck" button is gone since the Decks tab goes to the same place and two accents on one screen is one too many. */
 export async function SiteChrome ({ children }: { children: React.ReactNode }) {
   return (
     <div className='flex min-h-dvh flex-col'>

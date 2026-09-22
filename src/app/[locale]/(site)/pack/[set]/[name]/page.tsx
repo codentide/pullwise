@@ -13,13 +13,7 @@ import { localeAlternates } from '@/i18n/site.ts'
 export const dynamicParams = true
 
 export function generateStaticParams (): Array<{ locale: string, set: string, name: string }> {
-  // The raw name, not `encodeURIComponent(pack.pack)`: Next matches this list
-  // against the already-decoded route segment, not the encoded URL. Encoding
-  // it here registered "Pulsing%20Aura" — containing a literal percent sign —
-  // as the only valid param, which the real request ("Pulsing Aura", decoded)
-  // never matched. Every single-word pack name (Pikachu, Charizard) happened
-  // to encode to itself, so this was invisible until a name with a space in
-  // it was actually requested.
+  // The raw name, not `encodeURIComponent(pack.pack)`: Next matches this list against the already-decoded route segment, so encoding it registered "Pulsing%20Aura" as the valid param while the real decoded request never matched — invisible until a pack name with a space was requested (single-word names encode to themselves).
   return routing.locales.flatMap((locale) =>
     allPacks.map((pack) => ({ locale, set: pack.set, name: pack.pack }))
   )

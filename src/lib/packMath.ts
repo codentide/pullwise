@@ -1,20 +1,4 @@
-/**
- * Pack probabilities for Pokémon TCG Pocket.
- *
- * The model: a pack has 5 independent slots. Each slot first draws a rarity from
- * its own table (slot 5 is more generous than slot 4, and the first three are
- * always commons) and then a uniform card among those of that rarity the pack can
- * yield. Everything else follows from:
- *
- *     P(slot i yields card c) = rate(i, rarity(c)) / pool(set, pack, rarity(c))
- *
- * Every set also has two pack variants: the common one and the "rare pack" that
- * shows up 0.05% of the time carrying five high-rarity cards. All figures are
- * averaged across both, weighted by how often each appears.
- *
- * This module is pure: data arrives as a parameter instead of being imported, so
- * the maths can be tested against synthetic datasets that are checkable by hand.
- */
+/** Pack probabilities: each of a pack's 5 slots draws a rarity from its own table then a uniform card of that rarity — P(slot i yields c) = rate(i, rarity(c)) / pool(set, pack, rarity(c)) — averaged across a set's common and 0.05%-rare pack variants; this module is pure (data passed in, not imported) so the maths is testable against hand-checkable synthetic datasets. */
 import type { Card, MissingCard, PackRef, PoolCounts, PullRates } from './types.ts'
 
 export interface PackMathData {
@@ -74,8 +58,7 @@ export function createPackMath (data: PackMathData) {
     if (table) {
       resolved = Object.values(table).map((variant) => ({
         weight: variant.appearance_rate / 100,
-        // Slot keys are "1".."5": sort numerically so we do not depend on the
-        // JSON's insertion order.
+        // Slot keys are "1".."5": sort numerically so we do not depend on the JSON's insertion order.
         slots: Object.entries(variant.slots)
           .sort(([a], [b]) => Number(a) - Number(b))
           .map(([, rarities]) =>
@@ -114,10 +97,7 @@ export function createPackMath (data: PackMathData) {
     return expected
   }
 
-  /**
-   * Chance that a slot yields one of the wanted cards, grouped by rarity so the
-   * list is not walked once per card.
-   */
+  /** Chance that a slot yields one of the wanted cards, grouped by rarity so the list is not walked once per card. */
   function slotHitProbability (
     slot: Record<string, number>,
     countByRarity: Map<string, number>,
@@ -143,14 +123,7 @@ export function createPackMath (data: PackMathData) {
     return counts
   }
 
-  /**
-   * Ranks packs by how much they close the gap on what is missing.
-   *
-   * `expectedUseful` marginally overcounts: it counts every copy drawn even if
-   * the same pack already covered that card. At per-card probabilities around 1%
-   * the difference is negligible and never reorders the ranking; `simulate`
-   * models it exactly.
-   */
+  /** Ranks packs by how much they close the gap on what is missing; `expectedUseful` marginally overcounts (double-counts a card already covered in the same pack), negligible at ~1% per-card probabilities and never reorders the ranking — `simulate` models it exactly. */
   function rankPacks (missing: MissingCard[], packs: PackRef[]): PackRanking[] {
     const ranked: PackRanking[] = []
 

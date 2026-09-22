@@ -3,22 +3,7 @@ import Image from 'next/image'
 import { imageUrl } from '@/lib/gameData.ts'
 import type { Card } from '@/lib/types.ts'
 
-/**
- * Card art with its space already reserved: each file is ~45 KB and the grid
- * shows hundreds, so without a fixed aspect ratio the page jumps around the
- * whole time they load.
- *
- * The corner scales with the tile. A 10px radius reads as a soft corner on a
- * 200px card in the catalogue and as a lozenge on a 48px thumbnail in a deck
- * preview, so the caller says how big the art is going to be.
- *
- * `trim` is for the smallest thumbnails. The artwork carries the physical card's
- * own rounded corner — a transparent arc about a tenth of the width — so below
- * roughly 60px the tile reads as heavily rounded no matter what radius the box
- * has, and 3px is already the bottom of the scale. Zooming past the frame clips
- * that arc off. It costs a sliver of white border, which is the one part of a
- * card nobody is looking at.
- */
+/** Reserves its aspect ratio so a grid of hundreds of ~45KB files doesn't jump around while loading; the corner radius is a caller-chosen prop since a fixed radius reads as soft on a 200px card but a lozenge on a 48px thumbnail; `trim` zooms past the artwork's own transparent rounded-corner arc, which below ~60px would read as heavily rounded regardless of box radius, at the cost of a sliver of border nobody looks at. */
 const RADIUS = {
   chip: 'rounded-chip',
   control: 'rounded-control',

@@ -14,11 +14,7 @@ export function Panel ({
   )
 }
 
-/**
- * A list whose rows are separated by hairlines. The trick is a 1px gap over a
- * line-coloured ground rather than borders per row, so the first and last rows
- * need no special casing.
- */
+/** A list whose rows are separated by hairlines via a 1px gap over a line-coloured ground rather than borders per row, so the first and last rows need no special casing. */
 export function HairlineList ({ className = '', ...props }: ComponentProps<'ul'>) {
   return (
     <ul

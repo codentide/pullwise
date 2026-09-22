@@ -6,11 +6,7 @@ import type { Card } from '@/lib/types.ts'
 import { Pressable } from '@/components/Pressable.tsx'
 import { Button } from '@/components/Button.tsx'
 
-/**
- * A card's state relative to your collection. `undefined` means UNKNOWN and is
- * shown differently from zero on purpose: the app never assumes you lack a card
- * just because you never marked it.
- */
+/** A card's state relative to your collection; `undefined` means UNKNOWN and is shown differently from zero on purpose — the app never assumes you lack a card just because you never marked it. */
 export type Owned = number | undefined
 
 /** Ownership cycle: complete -> partial -> none -> complete. */
@@ -20,20 +16,7 @@ export function cycleOwned (current: Owned, max: number): number {
   return current - 1
 }
 
-/**
- * Copies you own, as lights that switch on.
- *
- * One circle per copy the deck asks for. The whole pill is a single button:
- * pressing it turns on the next light, and once they are all lit the next press
- * starts over at none. One control, one gesture, no aiming at a specific dot.
- *
- * It only appears on hover, like the other overlaid controls — the card itself
- * already says something is missing by going dim, so the detail of how many is
- * what the hover reveals. Touch devices have no hover, so there it stays put.
- *
- * Rendered as a sibling of the card button rather than inside it: a button
- * nested in a button is invalid HTML and swallows its own clicks.
- */
+/** Copies you own, as lights that switch on: the whole pill is one button (press advances, wraps to none at full) so there's no aiming at a specific dot; hover-only like other overlays since the card itself already signals missing by going dim, and stays put on touch devices; rendered as a sibling of the card button, not nested inside it, since a button-in-a-button is invalid HTML that swallows its own clicks. */
 export function CopyLights ({
   owned,
   needed,

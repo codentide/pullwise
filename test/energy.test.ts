@@ -18,8 +18,7 @@ test('infiere el elemento más presente primero', () => {
 })
 
 test('ignora cartas sin elemento en vez de adivinar', () => {
-  // Una carta sin `element` (entrenador, o pokemon sin clasificar) no debe
-  // aparecer como si fuera un elemento vacío.
+  // Una carta sin `element` (entrenador, o pokemon sin clasificar) no debe aparecer como si fuera un elemento vacío.
   const result = inferEnergy(deck([['PROMO-A-001', 2]]))
   assert.deepEqual(result, [])
 })
@@ -37,8 +36,7 @@ test('la energía explícita gana, incluso vacía', () => {
 })
 
 test('la inferencia nunca excede los 3 tipos que la Energy Zone realmente tiene', () => {
-  // Cuatro elementos distintos entre los Pokémon del mazo: lightning, metal,
-  // psychic, water. Sólo los tres más representados deben aparecer.
+  // Cuatro elementos distintos entre los Pokémon del mazo: lightning, metal, psychic, water. Sólo los tres más representados deben aparecer.
   const result = inferEnergy(deck([
     ['A1-096', 2], // Pikachu ex, lightning ×2
     ['A1-104', 2], // Zapdos ex, lightning ×2 (lightning: 4 en total)

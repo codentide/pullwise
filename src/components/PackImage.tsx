@@ -6,14 +6,7 @@ const RADIUS = {
   surface: 'rounded-surface'
 } as const
 
-/**
- * Booster artwork, with its own aspect ratio reserved.
- *
- * Same shape as CardImage and for the same reason: the art is real and lands
- * asynchronously, so a fixed box stops the layout jumping while it loads. A
- * pack's proportions are taller and narrower than a card's, hence its own
- * token instead of reusing --aspect-card.
- */
+/** Same shape as CardImage and for the same reason (a fixed box stops layout jumping while async art loads), with its own `--aspect-pack` token since a pack is taller and narrower than a card. */
 export function PackImage ({
   set,
   pack,

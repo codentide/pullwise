@@ -15,24 +15,12 @@ export async function generateMetadata ({ params }: Props): Promise<Metadata> {
   return {
     title: { absolute: t('title') },
     description: t('description'),
-    // '' as canonical would be falsy and Next silently drops it (resolveCanonicalUrl
-    // returns null for any falsy value) — '/' is the shortest truthy path that still
-    // resolves to the site root against metadataBase.
+    // '' as canonical would be falsy and Next silently drops it (resolveCanonicalUrl returns null for any falsy value) — '/' is the shortest truthy path that still resolves to the site root.
     alternates: { canonical: '/', languages: localeAlternates('') }
   }
 }
 
-/**
- * The front door.
- *
- * It sits in the (site) group rather than the app because it is the one page a
- * search engine can actually read: the tool behind it is built from the reader's
- * own localStorage and renders empty to a crawler. That is also why the set list
- * is here — it is the link into the 3,879 static pages the sitemap promises.
- *
- * Deliberately plain. This is a stub standing in for a designed landing page,
- * not the finished article.
- */
+/** The front door: sits in (site), not the app, because it's the one page a crawler can actually read (the tool renders empty from localStorage) — hence the set list too, linking into the 3,879 static pages the sitemap promises. Deliberately plain: a stub standing in for a designed landing page, not the finished article. */
 export default async function HomePage ({ params }: Props) {
   const { locale } = await params
   setRequestLocale(locale)

@@ -1,7 +1,4 @@
-/**
- * Joins the deck, what you know about your collection, and the pack maths.
- * Used alike by the deck editor and the pack screen.
- */
+/** Joins the deck, what you know about your collection, and the pack maths — used alike by the deck editor and the pack screen. */
 import { allPacks, packMath, simulator } from './gameData.ts'
 import { mulberry32, seedFor } from './simulate.ts'
 import { deckCards } from './deckRules.ts'
@@ -46,10 +43,7 @@ export function analyzeMissing (all: MissingCard[]): DeckAnalysis {
     missing,
     unobtainable,
     ranking: packMath.rankPacks(missing, allPacks),
-    // The simulation is seeded with a hash of what is missing: without it the
-    // median drifted by several packs between reloads of the same deck, and a
-    // number that wobbles on its own cannot be trusted. Still an estimate, but a
-    // stable one. 400 runs take tens of milliseconds, so no worker is needed.
+    // Seeded with a hash of what is missing so the median doesn't drift between reloads of the same deck; 400 runs is cheap enough to skip a worker.
     simulation: simulator.simulatePacksToComplete(missing, allPacks, {
       trials: 400,
       random: mulberry32(seedFor(missing)),
@@ -69,13 +63,7 @@ export function missingAcrossDecks (decks: Deck[], knowledge: Knowledge): Missin
   return [...worst.values()]
 }
 
-/**
- * Where a card comes from and what it costs, pack by pack.
- *
- * A single card needs no simulation: the number of packs until the first hit is
- * geometric, so the mean is exactly 1/p. That is what makes this computable at
- * build time for all 3,879 cards.
- */
+/** A single card's odds need no simulation — mean packs-to-hit is exactly 1/p (geometric), so this is computable at build time for all 3,879 cards. */
 export function cardOdds (card: Card) {
   return allPacks
     .filter((pack) => packMath.isInPack(card, pack))

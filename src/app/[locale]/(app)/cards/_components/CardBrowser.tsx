@@ -13,11 +13,7 @@ import { Heading } from '@/components/Heading.tsx'
 
 const PAGE = 80
 
-/**
- * The full catalogue. Any card can be marked but none ever has to be: the "only
- * what I marked" filter turns this same view into your collection, which fills
- * itself in as you build decks.
- */
+/** The full catalogue: any card can be marked but none ever has to be — the "only what I marked" filter turns this same view into your collection, which fills itself in as you build decks. */
 export function CardBrowser () {
   const t = useTranslations('browser')
   const state = useStore()
@@ -31,8 +27,7 @@ export function CardBrowser () {
     [filters, state.knowledge]
   )
 
-  // Infinite scroll: 3,879 cards in the DOM at once is expensive even with lazy
-  // images.
+  // Infinite scroll: 3,879 cards in the DOM at once is expensive even with lazy images.
   useEffect(() => {
     const node = sentinel.current
     if (node == null) return
@@ -45,10 +40,7 @@ export function CardBrowser () {
 
   const known = Object.keys(state.knowledge).length
 
-  // Before hydration state.knowledge is deliberately empty (see useStore.ts),
-  // so "known" here would read 0 and the "marked" vs "unmarked" header line —
-  // as well as the known-toggle filter downstream — would misreport a
-  // returning visitor's real collection for a flash.
+  // Before hydration state.knowledge is deliberately empty (see useStore.ts), so "known" would read 0 and misreport a returning visitor's real collection for a flash.
   if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   return (

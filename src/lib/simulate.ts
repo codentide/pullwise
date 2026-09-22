@@ -1,19 +1,4 @@
-/**
- * How many packs it takes to complete what is missing, by Monte Carlo.
- *
- * This is the number expectation cannot give: `rankPacks` says which pack pays
- * best per opening, but not how many openings that is, and it does not model
- * needing two copies of one card. The simulation does both.
- *
- * The trick that makes it cheap: there is no need to pick a concrete card out of
- * a pool of hundreds. Drawing the slot's rarity and then asking whether it landed
- * among the wanted ones — with probability `wantedOfThatRarity / poolOfThatRarity`
- * — is the same distribution and costs O(rarities) instead of O(cards).
- *
- * The simulated strategy is what a sensible player would do: always open the
- * best-ranked pack for whatever is missing *at that moment*, which shifts as
- * cards get completed.
- */
+/** How many packs it takes to complete what is missing, by Monte Carlo — gives what `rankPacks`'s expectation can't (openings needed, needing two copies), staying cheap by drawing a slot's rarity and checking `wantedOfThatRarity / poolOfThatRarity` (O(rarities), not O(cards)), always opening whatever pack ranks best for what's still missing at that moment. */
 import type { PackMath } from './packMath.ts'
 import type { MissingCard, PackRef } from './types.ts'
 
@@ -64,11 +49,7 @@ export function seedFor (missing: MissingCard[]): number {
 }
 
 export function createSimulator (packMath: PackMath) {
-  /**
-   * Opens one pack and returns how many useful copies it yielded, deducting them
-   * from `pending`. Returns -1 if the pack has no odds table (should not happen:
-   * the ranking already filtered those out).
-   */
+  /** Opens one pack, deducts useful copies from `pending`, and returns the count — or -1 if the pack has no odds table (shouldn't happen: the ranking already filtered those out). */
   function openPack (
     pack: PackRef,
     pending: Pending[],
@@ -77,7 +58,6 @@ export function createSimulator (packMath: PackMath) {
     const variants = packMath.variantsFor(pack.set)
     if (!variants) return -1
 
-    // Draw the pack variant (common vs rare pack).
     let roll = random()
     let variant = variants[variants.length - 1]!
     for (const candidate of variants) {
@@ -88,7 +68,6 @@ export function createSimulator (packMath: PackMath) {
       roll -= candidate.weight
     }
 
-    // Pending cards this pack can yield, grouped by rarity.
     const byRarity = new Map<string, Pending[]>()
     for (const p of pending) {
       if (!packMath.isInPack(p.card, pack)) continue
@@ -100,7 +79,6 @@ export function createSimulator (packMath: PackMath) {
 
     let hits = 0
     for (const slot of variant.slots) {
-      // Draw the slot's rarity.
       let r = random()
       let rarity: string | undefined
       for (const [candidate, prob] of Object.entries(slot)) {
@@ -115,8 +93,7 @@ export function createSimulator (packMath: PackMath) {
       const wanted = byRarity.get(rarity)
       if (!wanted || wanted.length === 0) continue
 
-      // Is the drawn card one of the missing ones? The pool includes the ones
-      // already owned, so the chance is proportional.
+      // The pool includes cards already owned, so the chance the draw is one of the missing ones is only proportional, not certain.
       const pool = packMath.poolSize(pack, rarity)
       if (pool === 0) continue
       if (random() * pool >= wanted.length) continue
@@ -141,8 +118,7 @@ export function createSimulator (packMath: PackMath) {
   ): SimulationResult {
     const { trials = 600, maxPacks = 3000, random = Math.random } = options
 
-    // Only cards some pack can yield count: promos are earned elsewhere, and
-    // waiting for one out of a pack would never terminate.
+    // Only cards some pack can yield count: promos are earned elsewhere, and waiting for one out of a pack would never terminate.
     const obtainable = missing.filter((m) =>
       packs.some((pack) => packMath.isInPack(m.card, pack))
     )

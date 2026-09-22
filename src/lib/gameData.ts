@@ -1,7 +1,4 @@
-/**
- * The single place where the static dataset becomes queryable.
- * Everything here is computed once, when the module loads.
- */
+/** The single place where the static dataset becomes queryable — everything here is computed once, when the module loads. */
 import { createPackMath } from './packMath.ts'
 import { createSimulator } from './simulate.ts'
 import type { Card, CardSet, PackRef, PoolCounts, PullRates } from './types.ts'
@@ -37,10 +34,7 @@ export const allPacks: PackRef[] = [...sets]
   .sort((a, b) => b.releaseDate.localeCompare(a.releaseDate))
   .flatMap((set) => set.packs.map((pack) => ({ set: set.code, pack })))
 
-/**
- * Cards by normalised name, for the decklist parser. The whole list is kept
- * because the same Pokémon appears across sets and printings need disambiguating.
- */
+/** Cards by normalised name, for the decklist parser — the whole list is kept because the same Pokémon appears across sets and printings need disambiguating. */
 export const cardsByName = new Map<string, Card[]>()
 for (const card of cards) {
   const key = normalizeName(card.name)
@@ -60,15 +54,7 @@ export function normalizeName (name: string): string {
 /** The CDN names a few sets differently from the dataset. */
 const IMAGE_SET_CODES: Record<string, string> = { 'PROMO-A': 'P-A', 'PROMO-B': 'P-B' }
 
-/**
- * Card art. Only English exists today with full coverage.
- *
- * TCGdex does publish Spanish art, but only for 11 of the 23 sets — and the gaps
- * are every 2026 set (B1 onwards), which is exactly what people are playing. A
- * deck would come out half in each language, so the locale is accepted and
- * ignored until coverage catches up: then this becomes a data change, not a code
- * change.
- */
+/** Card art: TCGdex's Spanish art covers only 11 of 23 sets, and the gaps are every 2026 set people are actually playing, so `_locale` is accepted and ignored until coverage catches up — then it's a data change, not a code change. */
 export function imageUrl (card: Card, _locale?: string): string {
   const set = IMAGE_SET_CODES[card.set] ?? card.set
   const number = String(card.number).padStart(3, '0')
@@ -101,14 +87,7 @@ export function rarityBreakdown (set: string, pack: string): Array<[string, numb
   )
 }
 
-/**
- * The pack's own artwork, as the game prints it.
- *
- * No card API carries this — Limitless serves cards only and TCGdex's set logos
- * stop at B2 — but Bulbagarden Archives has every one of the 28, so
- * `pnpm sync:packs` pulls them into public/packs/ once rather than hotlinking
- * another server on every view.
- */
+/** The pack's own artwork: no card API carries it (Limitless has cards only, TCGdex's set logos stop at B2), so `pnpm sync:packs` pulls all 28 from Bulbagarden Archives into public/packs/ once, rather than hotlinking on every view. */
 export const packArt = (set: string, pack: string): string =>
   `/packs/${set}-${pack.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}.webp`
 

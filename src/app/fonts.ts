@@ -1,12 +1,6 @@
 import { Archivo, Bricolage_Grotesque as BricolageGrotesque, JetBrains_Mono as JetBrainsMono } from 'next/font/google'
 
-/**
- * The three families of the brand system, self-hosted by next/font.
- *
- * Self-hosting is what makes webfonts acceptable here: no external request, no
- * flash of unstyled text, and the fallback metrics are adjusted automatically so
- * the layout does not shift when the real face arrives.
- */
+/** The three families of the brand system, self-hosted by next/font — no external request, no flash of unstyled text, and fallback metrics adjust automatically so the layout doesn't shift when the real face arrives. */
 
 /** Display — headlines, hero figures, large pack names. Never below 20px. */
 export const display = BricolageGrotesque({

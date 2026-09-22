@@ -5,21 +5,7 @@ import pkg from '../../package.json' with { type: 'json' }
 
 const REPO_URL = 'https://github.com/codentide/pullwise'
 
-/**
- * The one footer for the whole product — the app and the public pages both
- * use it, same reasoning as the shared header: it is the same product, and a
- * crawler landing on a card page deserves the same "what is this, who made
- * it, where's the code" as someone deep in the deck editor.
- *
- * The border needs its own full-width layer, same split as `AppHeader`: the
- * outer `<footer>` carries the `border-t` edge to edge, and an inner `div`
- * holds the `mx-auto max-w-[1180px]` that lines its content up with the page.
- * Putting both on one element was the earlier bug — `mx-auto` on a flex item
- * (this element is a direct child of the page's `flex flex-col` shell)
- * shrinks it to its content and centers it with auto margins instead of
- * filling the row, so the border rode along with the shrunken box instead of
- * spanning the screen.
- */
+/** Shared by app and public pages, same reasoning as `AppHeader`; also shares its border split — outer `<footer>` carries `border-t` edge to edge, inner `div` carries `mx-auto max-w-[1180px]` — because putting both on one flex-item element (the earlier bug) shrinks it to content via auto margins, so the border rides along with the shrunken box instead of spanning the screen. */
 export async function AppFooter () {
   const t = await getTranslations('footer')
 

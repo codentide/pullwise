@@ -30,8 +30,7 @@ test('more than 20 cards trips tooManyCards with the exact excess', () => {
 })
 
 test('the copy cap is per card name, so two printings combine against it', () => {
-  // A1-001 and A1-227 are both "Bulbasaur", just different printings: 2 + 1 = 3,
-  // over the cap of 2 — even though neither entry alone breaks it.
+  // A1-001 and A1-227 are both "Bulbasaur", just different printings: 2 + 1 = 3, over the cap of 2, even though neither entry alone breaks it.
   const issues = validateDeck(deck([['A1-001', 2], ['A1-227', 1]]))
   const issue = issues.find((i) => i.code === 'tooManyCopies')
   assert.ok(issue)

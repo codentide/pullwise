@@ -10,13 +10,7 @@ import { toDecklist } from '@/lib/decklist.ts'
 import { deckSize } from '@/lib/deckRules.ts'
 import type { Deck } from '@/lib/types.ts'
 
-/**
- * The dialog for the inverse of pasting a list: turns the deck back into the
- * same plain-text shape `parseDecklist` reads. The QR code is for the game;
- * this is for Limitless or anywhere else that expects that format as text.
- *
- * Its open state is controlled from outside — see `DeckCodeDialog`.
- */
+/** The inverse of pasting a list: turns the deck back into the plain-text shape `parseDecklist` reads (the QR code is for the game, this is for Limitless and similar); its open state is controlled from outside — see `DeckCodeDialog`. */
 export function ExportListDialog ({ deck, open, onOpenChange }: {
   deck: Deck
   open: boolean
@@ -51,8 +45,7 @@ function ExportListContent ({ deck }: { deck: Deck }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Clipboard permission denied or unavailable — the text is still on
-      // screen to select by hand.
+      // Clipboard permission denied or unavailable — the text is still on screen to select by hand.
     }
   }
 

@@ -27,8 +27,7 @@ export async function generateMetadata (
 }
 
 export const viewport: Viewport = {
-  // The browser paints the chrome from this before any CSS exists, so it cannot
-  // read a token. It must stay in sync with --color-base in src/index.css.
+  // The browser paints the chrome from this before any CSS exists, so it cannot read a token — must stay in sync with --color-base in src/index.css.
   // eslint-disable-next-line no-restricted-syntax
   themeColor: '#08090a',
   colorScheme: 'dark'
@@ -48,13 +47,7 @@ export default async function LocaleLayout ({
   setRequestLocale(locale)
 
   return (
-    /*
-      ThemeScript stamps data-theme and color-scheme on this element before
-      React hydrates, which is the whole point of it — and which React then
-      reports as a mismatch on every light-theme page load. The warning is
-      correct and the divergence is deliberate, so it is declared here rather
-      than left as a permanent error in the console.
-    */
+    /* ThemeScript stamps data-theme/color-scheme on this element before React hydrates (the whole point of it), which React then correctly reports as a mismatch on every light-theme load — declared here since the divergence is deliberate. */
     <html lang={locale} className={fontVariables} suppressHydrationWarning>
       <head>
         <ThemeScript />

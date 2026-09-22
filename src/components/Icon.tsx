@@ -23,17 +23,7 @@ import {
   type LucideIcon
 } from 'lucide-react'
 
-/**
- * UI iconography, from Lucide.
- *
- * The name → icon mapping lives here rather than at the call sites, so swapping
- * the source is one file and not forty. The names are ours and describe the role
- * in this product ('pack', 'deck'), not the shape Lucide happens to give them —
- * which is what lets the shapes change without the meaning moving.
- *
- * Energy symbols are not here: those are in EnergyIcon, drawn by hand, because
- * no general icon set carries the ten TCG energies.
- */
+/** UI iconography from Lucide, mapped here rather than at call sites so swapping the source is one file, not forty; names describe the role ('pack', 'deck'), not the shape, so shapes can change without the meaning moving. Energy symbols live in EnergyIcon instead, drawn by hand, since no general icon set carries the ten TCG energies. */
 type Name =
   | 'deck' | 'pack' | 'cards' | 'plus' | 'minus'
   | 'close' | 'check' | 'search' | 'warn' | 'trash'
@@ -56,8 +46,7 @@ const ICONS: Record<Name, LucideIcon> = {
   getCode: QrCode,
   copy: Copy,
   hint: Info,
-  // No brand logos ship in this icon set anymore — this names the role
-  // (a link to the code), not a specific platform's mark.
+  // No brand logos ship in this icon set anymore — this names the role (a link to the code), not a specific platform's mark.
   sourceCode: Code2,
   chevron: ChevronDown,
   sun: Sun,

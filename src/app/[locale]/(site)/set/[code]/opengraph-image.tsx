@@ -10,11 +10,7 @@ export function generateStaticParams (): Array<{ locale: string, code: string }>
   return routing.locales.flatMap((locale) => sets.map((set) => ({ locale, code: set.code })))
 }
 
-/**
- * Deliberately not fetching remote art: see the card page's opengraph-image
- * for why (docs/decisions.md). A solid, text-only card matches the brand's
- * dark theme and costs nothing at build time.
- */
+/** Deliberately not fetching remote art: see the card page's opengraph-image for why (docs/decisions.md); a solid, text-only card matches the brand's dark theme and costs nothing at build time. */
 export default async function Image ({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params
   const set = setsByCode.get(code)
@@ -30,9 +26,7 @@ export default async function Image ({ params }: { params: Promise<{ code: strin
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          // Matches viewport.themeColor in [locale]/layout.tsx — inlined
-          // because Satori cannot read the CSS custom properties in
-          // src/index.css.
+          // Matches viewport.themeColor in [locale]/layout.tsx — inlined because Satori cannot read the CSS custom properties in src/index.css.
           // eslint-disable-next-line no-restricted-syntax
           background: '#08090a'
         }}

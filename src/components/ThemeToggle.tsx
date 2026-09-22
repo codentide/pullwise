@@ -6,14 +6,7 @@ import { Icon } from './Icon.tsx'
 export type Theme = 'dark' | 'light'
 const KEY = 'pullwise:theme'
 
-/**
- * Dark is native; light is a translation of it. The choice is stored per browser
- * and applied by an inline script before first paint (see ThemeScript), so the
- * page never flashes the wrong theme.
- *
- * The button renders nothing until mounted: the server cannot know the stored
- * choice, and rendering a guess is what produces a hydration mismatch.
- */
+/** Dark is native, light a translation; stored per browser and applied by an inline script before first paint (see ThemeScript) so it never flashes wrong; the button renders nothing until mounted since the server can't know the stored choice and rendering a guess would produce a hydration mismatch. */
 export function ThemeToggle ({ label }: { label: string }) {
   const [theme, setTheme] = useState<Theme | null>(null)
 
@@ -48,10 +41,7 @@ export function ThemeToggle ({ label }: { label: string }) {
   )
 }
 
-/**
- * Runs before the first paint, so the stored theme is applied with no flash.
- * It has to be inline and blocking — a React effect runs too late.
- */
+/** Runs before the first paint so the stored theme applies with no flash — has to be inline and blocking, since a React effect runs too late. */
 export function ThemeScript () {
   const script = `try{var t=localStorage.getItem('${KEY}');if(t==='light'){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light'}}catch(e){}`
   return <script dangerouslySetInnerHTML={{ __html: script }} />

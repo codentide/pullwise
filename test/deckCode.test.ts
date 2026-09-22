@@ -48,8 +48,7 @@ test('round-trips through the library\'s own decoder', () => {
 })
 
 test('genera código para un mazo incompleto: el formato no exige 20 cartas', () => {
-  // Un mazo a medio construir sigue siendo algo escaneable — solo importa
-  // menos cartas al juego, no deja de ser un mazo válido para compartir.
+  // Un mazo a medio construir sigue siendo algo escaneable — solo importa menos cartas al juego, no deja de ser un mazo válido para compartir.
   const result = buildDeckCode(deck([['a', 2]], ['fire']))
   assert.equal(result.ok, true)
   if (!result.ok) return
@@ -68,8 +67,7 @@ test('rechaza un mazo sin ningún tipo de energía, inferido o explícito', () =
 })
 
 test('un tipo de energía sin equivalente en la zona de energía cuenta como ninguno', () => {
-  // dragon y colorless existen como elemento de carta pero nunca como opción
-  // de la Energy Zone del juego.
+  // dragon y colorless existen como elemento de carta pero nunca como opción de la Energy Zone del juego.
   const result = buildDeckCode(deck([['a', 2]], ['dragon']))
   assert.deepEqual(result, { ok: false, reason: 'noEnergy' })
 })

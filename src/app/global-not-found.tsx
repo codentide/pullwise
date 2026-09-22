@@ -3,17 +3,7 @@ import type { Metadata } from 'next'
 import { Heading } from '@/components/Heading.tsx'
 import '@/index.css'
 
-/**
- * The global 404: what Next renders when a URL matches no route at all,
- * before any [locale] segment resolves. It replaces the root layout entirely
- * (see src/app/layout.tsx), so nothing from [locale]/layout.tsx — html lang,
- * fonts, theme, next-intl — reaches it. It has to declare its own <html> and
- * <body> and pull in its own styles, and it does so deliberately in English
- * only: no locale is known at this point to pick anything else.
- *
- * Requires experimental.globalNotFound in next.config.ts — without that flag
- * this file is inert and Next falls back to its bare default 404 fragment.
- */
+/** The global 404, rendered before any [locale] segment resolves — replaces the root layout entirely, so it declares its own <html>/<body>, styles and English-only text (no locale is known yet); requires `experimental.globalNotFound` in next.config.ts, without which this file is inert and Next falls back to its bare default 404. */
 
 export const metadata: Metadata = {
   title: 'Not found · Pullwise',

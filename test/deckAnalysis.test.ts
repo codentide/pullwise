@@ -71,8 +71,7 @@ test('cardOdds lists only the packs that actually carry the card', () => {
 })
 
 test('cardOdds sorts the best-odds pack first', () => {
-  // Cosmog is common to both Solgaleo's and Lunala's packs; whichever gives it
-  // more often should lead.
+  // Cosmog is common to both Solgaleo's and Lunala's packs; whichever gives it more often should lead.
   const card = cardsById.get('A3-085')!
   const odds = cardOdds(card)
   assert.ok(odds.length >= 2)

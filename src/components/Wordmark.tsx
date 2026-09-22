@@ -1,18 +1,4 @@
-/**
- * The identity, from the Pullwise Brand System §03.
- *
- * The mark is a square of the accent with a slot cut on the system's 14°
- * diagonal — a pack seen edge-on, the instant before it opens. The proportions
- * are the manual's: the slot is a third of the tile wide and just over half of
- * it tall, skewed 14°, centred.
- *
- * Its ground is `--color-mark` rather than the accent, because the manual bans
- * the accent as a large field on a light surface: on paper the square goes to
- * full ink and the slot stays the page.
- *
- * The wordmark is always lowercase and never has a second weight, an outline, a
- * gradient or a tilt.
- */
+/** The identity, from the Pullwise Brand System §03: an accent square with a slot cut on the system's 14° diagonal (a pack seen edge-on, the instant before it opens), sized to the manual's proportions; ground is `--color-mark`, not the accent, because the manual bans the accent as a large field on a light surface; the wordmark stays lowercase, never a second weight, outline, gradient or tilt. */
 export function Mark ({ size = 16, className = '' }: { size?: number, className?: string }) {
   return (
     <svg
@@ -28,10 +14,7 @@ export function Mark ({ size = 16, className = '' }: { size?: number, className?
   )
 }
 
-/**
- * The horizontal lockup. 16px is the manual's floor for the mark, which sets the
- * wordmark at 20px to hold the ratio it draws.
- */
+/** The horizontal lockup: 16px is the manual's floor for the mark, which sets the wordmark at 20px to hold the ratio it draws. */
 export function Wordmark ({ className = '' }: { className?: string }) {
   return (
     <span className={`flex items-center gap-2 ${className}`}>

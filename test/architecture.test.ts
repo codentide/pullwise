@@ -1,10 +1,4 @@
-/**
- * Architecture rules, enforced rather than documented.
- *
- * These exist because the project is largely written by agents: a convention
- * that does not break the build is a suggestion, and suggestions drift. Each of
- * these caught a real design decision worth keeping.
- */
+/** Architecture rules, enforced rather than documented — the project is largely written by agents, so a convention that doesn't break the build is a suggestion, and suggestions drift. */
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
@@ -22,9 +16,7 @@ function walk (dir: string): string[] {
 
 const files = walk(SRC)
 
-// Static `from '...'` imports and dynamic `import('...')` calls alike: a
-// deliberate code-split (see DeckCode.tsx) is still an import as far as these
-// rules are concerned.
+// Static `from '...'` imports and dynamic `import('...')` calls alike: a deliberate code-split (see DeckCode.tsx) is still an import as far as these rules are concerned.
 const IMPORT_REGEXES = [/from '([^']+)'/g, /import\(['"]([^'"]+)['"]\)/g]
 
 function specifiersOf (source: string): string[] {
@@ -56,8 +48,7 @@ test('the domain does not depend on React, Next or i18n', () => {
 })
 
 test('colocated components are not imported from another route', () => {
-  // A file under some/route/_components belongs to that route. If a second route
-  // needs it, it moves up to src/components — it does not get reached into.
+  // A file under some/route/_components belongs to that route; if a second route needs it, it moves up to src/components — it does not get reached into.
   for (const file of files) {
     const importer = relative(SRC, file)
     for (const target of importsOf(file)) {
@@ -74,9 +65,7 @@ test('colocated components are not imported from another route', () => {
 })
 
 test('every src/lib module carries its own test — types.ts excepted', () => {
-  // Tests are mandatory in src/lib: the one part of the app that can be wrong
-  // without anyone noticing on screen. A module nobody imports from test/ is a
-  // module nobody is actually exercising.
+  // Tests are mandatory in src/lib, the one part of the app that can be wrong without anyone noticing on screen: a module nobody imports from test/ is a module nobody is actually exercising.
   const TEST_DIR = resolve(import.meta.dirname)
   const testFiles = walk(TEST_DIR)
 
@@ -94,8 +83,7 @@ test('every src/lib module carries its own test — types.ts excepted', () => {
 })
 
 test('generated data is never edited by hand', () => {
-  // src/data/ is the output of `pnpm sync:data`. A hand edit there silently
-  // disagrees with the upstream source and survives until someone regenerates.
+  // src/data/ is the output of `pnpm sync:data`; a hand edit there silently disagrees with the upstream source and survives until someone regenerates.
   const script = readFileSync(join(SRC, '..', 'scripts', 'sync-data.mjs'), 'utf8')
   const generated = ['cards', 'sets', 'pullRates', 'poolCounts', 'rateFallbacks', 'meta']
   for (const name of generated) {

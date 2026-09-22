@@ -1,11 +1,4 @@
-/**
- * Contrast of the design tokens, checked rather than trusted.
- *
- * This has now caught two real bugs. The darkness energy token shipped at 2.6:1
- * and its icon was invisible. Then the brand document declared --ink-low at
- * 4.6:1 when the value it gave measured 4.08:1 — below AA for text. Nothing in
- * the type system or the linter can catch either; only arithmetic can.
- */
+/** Contrast of the design tokens, checked rather than trusted — this has caught two real bugs already (an invisible 2.6:1 darkness energy token, and a brand-document --ink-low claim of 4.6:1 that actually measured 4.08:1), neither catchable by the type system or the linter. */
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -24,10 +17,7 @@ function tokensIn (source: string): Map<string, string> {
 
 const lightBlock = /\[data-theme='light'\]\s*\{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? ''
 const dark = tokensIn(css.replace(lightBlock, ''))
-// A token the light block does not redefine falls through to the dark
-// default via the CSS cascade — merge, rather than leaving it undefined,
-// so a token that never needed a light-mode override (fighting, darkness,
-// metal, every rarity grade) is checked at the value it actually renders.
+// A token the light block does not redefine falls through to the dark default via the CSS cascade, so merging (rather than leaving it undefined) checks it at the value it actually renders.
 const light = new Map([...dark, ...tokensIn(lightBlock)])
 
 function luminance (hex: string): number {
@@ -102,9 +92,7 @@ test('the accent clears 4.5:1 on its wash, in both themes — active-nav-tab sty
 })
 
 test('the five rarity grades clear 3:1 — they are graphics', () => {
-  // Checking only the dark theme is what let the light energy colours ship
-  // wrong (see the energy-icon test below) — same class of bug, checked here
-  // too so a future rarity change can't slip past the same gap.
+  // Checking only the dark theme is what let the light energy colours ship wrong (see the energy-icon test below) — same class of bug, checked here too.
   for (const [themeName, theme] of [['dark', dark], ['light', light]] as const) {
     for (let grade = 1; grade <= 5; grade++) {
       const colour = theme.get(`rarity-${grade}`)
@@ -120,12 +108,7 @@ test('the five rarity grades clear 3:1 — they are graphics', () => {
   }
 })
 
-/**
- * Perceptual distance in CIE Lab. WCAG contrast measures luminance, which is the
- * wrong tool here: a grey and a teal can share a luminance and still be obviously
- * different colours. An earlier version of this test used contrast and wrongly
- * flagged Base against Steady.
- */
+/** Perceptual distance in CIE Lab: WCAG contrast measures luminance, the wrong tool here since a grey and a teal can share luminance yet look obviously different — an earlier version of this test used contrast and wrongly flagged Base against Steady. */
 function lab (hex: string): [number, number, number] {
   const srgb = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
   const [r, g, b] = srgb.map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
@@ -140,9 +123,7 @@ const deltaE = (a: string, b: string): number =>
   Math.hypot(...lab(a).map((v, i) => v - lab(b)[i]!))
 
 test('the five rarity grades are perceptually distinct from one another', () => {
-  // Colour never carries the grade alone — pips do too — but two grades that look
-  // alike make the scale useless at a glance. 20 is the threshold for "clearly
-  // a different colour".
+  // Colour never carries the grade alone — pips do too — but two grades that look alike make the scale useless at a glance; 20 is the threshold for "clearly a different colour".
   for (let a = 1; a <= 5; a++) {
     for (let b = a + 1; b <= 5; b++) {
       const distance = deltaE(dark.get(`rarity-${a}`)!, dark.get(`rarity-${b}`)!)
@@ -155,8 +136,7 @@ test('the five rarity grades are perceptually distinct from one another', () => 
 })
 
 test('energy icons clear 3:1, in both themes', () => {
-  // Checking only the dark theme is what let six of the ten light-mode
-  // energies ship unreadable — lightning measured 1.42:1 on the light base.
+  // Checking only the dark theme is what let six of the ten light-mode energies ship unreadable — lightning measured 1.42:1 on the light base.
   const energies = [
     'grass', 'fire', 'water', 'lightning', 'psychic',
     'fighting', 'darkness', 'metal', 'dragon', 'colorless',

@@ -1,11 +1,4 @@
-/**
- * Parser for decklists pasted as text.
- *
- * What Limitless exports is one line per card — `2 Pikachu ex A1 096` — with
- * section headers in between. It is not documented as a stable format, so the
- * parser is deliberately forgiving: it tries set+number, then exact name, and
- * reports whatever it could not resolve instead of failing.
- */
+/** Parser for decklists pasted as text (`2 Pikachu ex A1 096` per line, Limitless-style); the format isn't documented as stable, so it's deliberately forgiving — set+number, then exact name, then reports whatever it couldn't resolve instead of failing. */
 import { cardsById, cardsByName, normalizeName, sets } from './gameData.ts'
 import { ELEMENTS } from './filters.ts'
 import { MAX_ENERGY_TYPES, resolvedEnergy } from './energy.ts'
@@ -15,14 +8,7 @@ import type { Card, Deck, DeckEntry } from './types.ts'
 /** Lists and the CDN use different promo codes than the dataset. */
 const SET_ALIASES: Record<string, string> = { 'P-A': 'PROMO-A', 'P-B': 'PROMO-B' }
 
-/**
- * 13 of the 23 sets carry a lowercase suffix in their real code — `B1a`, `A2b` —
- * and a pasted list arrives in whatever case someone typed it. Blindly
- * uppercasing the input, as this used to do, turns `B1a` into `B1A`, which
- * matches nothing: the lookup silently fell through to the name-based fallback
- * and resolved to a different printing with different packs, which sent the
- * pack recommendation wrong without anyone seeing an error.
- */
+/** 13 of 23 sets have a lowercase suffix (`B1a`, `A2b`); blindly uppercasing the input, as this used to, turned `B1a` into `B1A`, which matched nothing and silently fell through to a wrong printing with a wrong pack recommendation. */
 const SET_CODES_BY_UPPER = new Map(sets.map((set) => [set.code.toUpperCase(), set.code]))
 
 function resolveSetCode (raw: string): string {
@@ -44,12 +30,7 @@ const CARD_LINE = /^(\d+)\s*x?\s+(.+?)(?:\s+([A-Za-z]+[\w-]*)\s+(\d+))?$/
 /** Section headers and totals that are not cards. */
 const SKIP_LINE = /^(pok[eé]mon|trainer|supporter|item|tool|energy|total)\b.*:?\s*\d*$/i
 
-/**
- * The one line in a real export that is not noise: "Energy: Lightning" names
- * the deck's own energy zone. It used to fall into SKIP_LINE with everything
- * else and get discarded — the only piece of a decklist this parser threw
- * away rather than either resolving or reporting.
- */
+/** "Energy: Lightning" names the deck's own energy zone; it used to fall into SKIP_LINE and get discarded — the only piece of a decklist this parser threw away instead of resolving or reporting. */
 const ENERGY_LINE = /^energy\s*:?\s*(.*)$/i
 
 /** Words on an energy line, matched against the elements the game actually has. */
@@ -74,8 +55,7 @@ function findCard (name: string, setCode?: string, number?: string): Card | unde
   const candidates = cardsByName.get(normalizeName(name))
   if (!candidates || candidates.length === 0) return undefined
 
-  // With no explicit set, the cheapest printing is the best guess: it is almost
-  // always the one the player owns or will go after.
+  // With no explicit set, the cheapest printing is the best guess: it is almost always the one the player owns or will go after.
   const rarityOrder = ['C', 'U', 'R', 'RR', 'AR', 'SR', 'SAR', 'IM', 'S', 'SSR', 'UR']
   return [...candidates].sort(
     (a, b) => rarityOrder.indexOf(a.rarity) - rarityOrder.indexOf(b.rarity)
@@ -91,8 +71,7 @@ export function parseDecklist (text: string): ParsedDeck {
     const line = raw.trim()
     if (!line) continue
 
-    // Checked before SKIP_LINE, which would otherwise swallow this line too —
-    // it also starts with "energy".
+    // Checked before SKIP_LINE, which would otherwise swallow this line too — it also starts with "energy".
     const energyMatch = ENERGY_LINE.exec(line)
     if (energyMatch) {
       const words = parseEnergyWords(energyMatch[1] ?? '')
@@ -128,11 +107,7 @@ const isTrainerCard = (card: Card): boolean =>
 
 const capitalize = (word: string): string => word.charAt(0).toUpperCase() + word.slice(1)
 
-/**
- * The inverse of `parseDecklist`: turns a deck back into the same plain-text
- * shape, `2 Pikachu ex A1 096` and all, so it round-trips through Limitless or
- * anywhere else that reads that format — not just the game's own QR import.
- */
+/** The inverse of `parseDecklist`, so a deck round-trips through Limitless or anywhere else that reads that plain-text format — not just the game's own QR import. */
 export function toDecklist (deck: Deck): string {
   const entries = deckCards(deck)
   const pokemon = entries.filter(({ card }) => !isTrainerCard(card))

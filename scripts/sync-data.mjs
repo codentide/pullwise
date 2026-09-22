@@ -1,11 +1,5 @@
 #!/usr/bin/env node
-/**
- * Baja el dataset de cartas de flibustier/pokemon-tcg-pocket-database y genera
- * el bundle que consume la app en src/data/.
- *
- * Se corre a mano cuando sale un set nuevo (`pnpm sync:data`), no en cada build:
- * los datos versionados en el repo hacen que la app arranque sin depender del CDN.
- */
+/** Baja el dataset de cartas de flibustier/pokemon-tcg-pocket-database y genera el bundle que consume la app en src/data/; se corre a mano cuando sale un set nuevo (`pnpm sync:data`), no en cada build, para que la app arranque sin depender del CDN. */
 import { writeFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
@@ -24,9 +18,7 @@ const get = async (file) => {
 
 const main = async () => {
   console.log('Bajando dataset…')
-  // cards.min.json es el catálogo completo; cards.extra.json trae la metadata de
-  // deckbuilding pero está incompleto (le faltan ~1300 cartas). Mergeamos: el
-  // catálogo manda, extra enriquece donde llega.
+  // cards.min.json es el catálogo completo; cards.extra.json trae metadata de deckbuilding pero incompleta (~1300 cartas faltantes). Mergeamos: el catálogo manda, extra enriquece donde llega.
   const [rawCards, rawExtra, rawSets, pullRates] = await Promise.all([
     get('cards.min.json'),
     get('cards.extra.json'),
@@ -34,8 +26,7 @@ const main = async () => {
     get('pullRates.json'),
   ])
 
-  // sets.json viene agrupado por serie y su lista de packs se contradice con la
-  // de las cartas en algún set (B4a). Las cartas son la fuente de verdad.
+  // sets.json viene agrupado por serie y su lista de packs se contradice con la de las cartas en algún set (B4a). Las cartas son la fuente de verdad.
   const sets = Object.entries(rawSets).flatMap(([series, list]) =>
     list.map((s) => ({
       code: s.code,
@@ -48,20 +39,13 @@ const main = async () => {
   )
   const setByCode = new Map(sets.map((s) => [s.code, s]))
 
-  // `stage` viene inconsistente: "basic" como string pero 1 y 2 como números.
-  // `element` viene a veces capitalizado ("Grass" y "grass" conviven).
+  // `stage` viene inconsistente ("basic" como string pero 1 y 2 como números); `element` viene a veces capitalizado ("Grass" y "grass" conviven).
   const normStage = (v) => (v === undefined ? undefined : String(v))
   const normElement = (v) => (v === undefined ? undefined : String(v).toLowerCase())
   const normWeakness = (v) =>
     v === undefined || v === null ? undefined : String(v)[0].toUpperCase() + String(v).slice(1).toLowerCase()
 
-  // The in-game deck-share code needs each card's internal id, which is not
-  // published as a field — it is embedded in the CDN filename
-  // (`cPK_10_000010_00_FUSHIGIDANE_C.webp`). Reimplemented rather than
-  // imported from `ptcgp-deckcode` (which computes the same number the same
-  // way) so this sync step does not depend on a runtime library just to read
-  // one string. Verified against the live dataset before writing this:
-  // resolves for all 3,879 cards, zero misses.
+  // The deck-share code needs each card's internal id, embedded in the CDN filename (`cPK_10_000010_00_FUSHIGIDANE_C.webp`) rather than published as a field; reimplemented instead of imported from `ptcgp-deckcode` so this sync step carries no runtime dependency — verified against the live dataset: resolves for all 3,879 cards, zero misses.
   const TRAINER_OFFSET = 1_000_000
   function deckBuilderNrFromImage (image) {
     const m = /^c([A-Z]+)_\d+_(\d{6})_/.exec(String(image ?? ''))
@@ -87,19 +71,13 @@ const main = async () => {
       element: normElement(x.element),
       stage: normStage(x.stage),
       evolvesFrom: x.evolvesFrom ?? undefined,
-      // `health` y `retreatCost` NO se importan: la fuente los publica como
-      // constantes (50 y 1 en las 2.211 cartas que los traen), así que son un
-      // placeholder disfrazado de dato. Mostrarlos sería peor que omitirlos.
+      // `health` y `retreatCost` NO se importan: la fuente los publica como constantes (50 y 1 en las 2.211 cartas que los traen), un placeholder disfrazado de dato — mostrarlos sería peor que omitirlos.
       weakness: normWeakness(x.weakness),
       deckBuilderNr: deckBuilderNrFromImage(c.image),
     }
   })
 
-  // A los sets de 2026 en adelante el dataset todavía no les publicó la metadata,
-  // y son justo los que más se juegan. La rellenamos por nombre: la línea evolutiva
-  // es una propiedad del Pokémon, no de la carta — un Ivysaur viene de un Bulbasaur
-  // salga en el set que salga. Queda marcado en `inferred` para poder atenuar la
-  // validación en la UI si hiciera falta.
+  // Los sets de 2026 en adelante (justo los más jugados) todavía no tienen metadata publicada; la rellenamos por nombre, ya que la línea evolutiva es propiedad del Pokémon, no de la carta, marcando `inferred` para poder atenuar la validación en la UI si hiciera falta.
   const byName = new Map()
   for (const c of cards) {
     if (c.type === undefined || byName.has(c.name)) continue
@@ -122,9 +100,7 @@ const main = async () => {
     inferredCount++
   }
 
-  // Lo que sigue sin clasificar se busca en TCGdex, que publica su metadata con
-  // otro calendario y cubre sets que el dataset primario todavía no trae. Va sólo
-  // sobre las que faltan, y en lotes.
+  // Lo que sigue sin clasificar se busca en TCGdex, que publica su metadata con otro calendario y cubre sets que el dataset primario todavía no trae; va sólo sobre las que faltan, y en lotes.
   const stillMissing = cards.filter((c) => c.type === undefined)
   let fromTcgdex = 0
 
@@ -179,8 +155,7 @@ const main = async () => {
     for (const pack of card.packs) if (!set.packs.includes(pack)) set.packs.push(pack)
   }
 
-  // poolCounts[set][pack][rarity] = cuántas cartas distintas de esa rareza puede
-  // dar ese sobre. Es el denominador de P(carta puntual | salió esa rareza).
+  // poolCounts[set][pack][rarity] = cuántas cartas distintas de esa rareza puede dar ese sobre; es el denominador de P(carta puntual | salió esa rareza).
   const poolCounts = {}
   for (const card of cards) {
     for (const pack of card.packs) {
@@ -189,9 +164,7 @@ const main = async () => {
     }
   }
 
-  // El dataset publica los pull rates con retraso: los sets más nuevos no los
-  // traen. Caemos al set anterior de la misma serie que sí los tenga y dejamos
-  // la marca para poder avisarlo en la UI.
+  // El dataset publica los pull rates con retraso, así que los sets más nuevos no los traen; caemos al set anterior de la misma serie que sí los tenga y dejamos la marca para poder avisarlo en la UI.
   const rateFallbacks = {}
   const chronological = [...sets]
     .filter((s) => s.obtainableFromPacks)
@@ -201,9 +174,7 @@ const main = async () => {
 
   for (const [i, set] of chronological.entries()) {
     if (pullRates[set.code]) continue
-    // El donante tiene que compartir formato: misma cantidad de sobres y un
-    // tamaño parecido. Un set grande y un mini-set no reparten igual las
-    // rarezas, así que copiar del set inmediatamente anterior no alcanza.
+    // El donante tiene que compartir formato (misma cantidad de sobres, tamaño parecido) porque un set grande y un mini-set no reparten igual las rarezas, así que copiar del set inmediatamente anterior no alcanza.
     const donor = chronological
       .slice(0, i)
       .filter((prev) => pullRates[prev.code] && prev.packs.length === set.packs.length)

@@ -4,18 +4,7 @@ import { useState, type ReactNode } from 'react'
 import { Icon } from './Icon.tsx'
 import { Pressable } from './Pressable.tsx'
 
-/**
- * A small "why" attached to a label, not a Radix primitive — the brand system
- * reserves Radix for Select, Dialog and Checkbox, and a hover panel this
- * simple does not need a fourth. Opens on hover for a mouse, and toggles on
- * click/tap so it also works with no hover at all.
- *
- * Opens downward and right-aligned to the icon. Its first home — the pack
- * ranking's "OPEN THIS" header — sits inside a section with `overflow-hidden`
- * and the icon sits at the header's right edge, so opening upward or centred
- * clips the panel against that edge. Revisit the alignment once a second
- * caller needs the icon somewhere other than a right edge.
- */
+/** Not a Radix primitive — the brand system reserves Radix for Select/Dialog/Checkbox and this hover panel doesn't need a fourth; opens on hover, toggles on click/tap for no-hover devices; opens downward and right-aligned because its first caller (pack ranking's "OPEN THIS" header) sits at a right edge inside `overflow-hidden` — revisit once a second caller needs otherwise. */
 export function Hint ({ label, children }: { label: string, children: ReactNode }) {
   const [open, setOpen] = useState(false)
 
