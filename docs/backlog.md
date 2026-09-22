@@ -16,7 +16,6 @@ are — one repo, one live list, no duplicate that drifts out of sync with itsel
 | [#9](https://github.com/codentide/pullwise/issues/9) | Real pull rates for B4 and B4a | `on-demand` — the fallback already empties itself when this lands |
 | [#10](https://github.com/codentide/pullwise/issues/10) | Accounts and cross-device sync | `needs clarification` — a "when," not an "if," but the auth method, backend and deck-URL model interaction are still undecided |
 | [PWS-011](https://github.com/codentide/pullwise/issues/11) | Show full card details in a hover/tap popover | Feasibility checked before filing: TCGdex has real attacks/abilities/HP, `sync-data.mjs` just doesn't pull them yet |
-| [PWS-013](https://github.com/codentide/pullwise/issues/13) | Show which missing cards a recommended pack actually yields | `priority:high` — the recommendation screen already computes which missing cards a pack covers, but never names them |
 
 ## Resolved, not through an issue
 
@@ -43,3 +42,7 @@ isn't lost:
   encoded, filtered to the 8 the game's Energy Zone really offers.
 - [#5](https://github.com/codentide/pullwise/issues/5) — Rewrite the README in
   English. Also added `CONTRIBUTING.md`, an MIT `LICENSE`, and CI.
+- [PWS-013](https://github.com/codentide/pullwise/issues/13) — Show which
+  missing cards a recommended pack actually yields. `PackRanking` already
+  computed `coveredHere`; now the winner pack and every "other pack" row have
+  a collapsed-by-default "Show cards" toggle naming them (name + rarity).
