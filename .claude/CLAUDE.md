@@ -42,13 +42,30 @@ these hold:
 
 `package.json#version` is real, not decoration — the footer shows it live
 (`AppFooter.tsx`), so it's the one version number a user can actually see.
-Semver, applied loosely pre-1.0:
+Semver, applied loosely pre-1.0 — but "loosely" doesn't mean "by eye." Strict
+SemVer is defined against a public API contract, which an app like this one
+doesn't have, and no real source solves that gap cleanly — checked several
+trying to adapt SemVer to end-user apps; each one either falls back to the
+literal API definition (useless without an API) or drops SemVer's meaning
+entirely. So the test below is this project's own, built on SemVer's actual
+underlying axis — compatibility, not "how big the diff looks":
 
-- **patch** (`0.x.Y`) — a fix, a visual tweak, no new capability.
-- **minor** (`0.X.0`) — a new user-facing feature, or a change big enough that
-  "what changed" is worth a reader's attention.
-- **1.0.0** is reserved for the first real production deploy (issue #3) — the
-  milestone that means someone other than the developer can use this.
+1. **Does it break previously-saved decks, exports, or shareable codes/links
+   so they stop working the way they used to?** Say so explicitly in the
+   changelog entry — pre-1.0 that's still just a patch or minor bump (major
+   isn't in use pre-1.0; `1.0.0` itself is reserved, below), but a reader has
+   to be able to tell from the entry alone, not have to guess.
+2. **Else: write the sentence "you can now ___, which you couldn't
+   before."** If you can write a true one — naming an actual new action or
+   a piece of information the user gets, not a rewording of what already
+   existed — that's a **minor** (`0.X.0`).
+3. **Else** — nothing broken, no new capability, no matter how many files
+   changed, how much the code was rewritten, or how different it looks —
+   it's a **patch** (`0.x.Y`). A full visual overhaul of an existing screen
+   is still a patch if nothing the user can *do* changed.
+
+`1.0.0` is reserved for the first real production deploy (issue #3) — the
+milestone that means someone other than the developer can use this.
 
 Whoever ships a change to `src/`, `scripts/`, `public/`, or bumps a dependency
 decides the bump and applies it in the same push — an agent included. A
