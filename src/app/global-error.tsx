@@ -4,17 +4,7 @@ import { Heading } from '@/components/Heading.tsx'
 import { Button } from '@/components/Button.tsx'
 import '@/index.css'
 
-/**
- * The last-resort error boundary: it catches an uncaught exception thrown
- * before or during the root layout itself, so — like global-not-found.tsx —
- * it replaces [locale]/layout.tsx entirely and must declare its own <html>
- * and <body>, hardcoded to English since no locale can be assumed to have
- * resolved. Error boundaries must be Client Components.
- *
- * The recovery prop is `retry` (Next 16; `reset` was the pre-16 name and is
- * still exported for backwards compatibility, but retry is what App Router
- * error boundaries receive here).
- */
+/** The last-resort error boundary: catches exceptions before/during the root layout, so like global-not-found.tsx it replaces [locale]/layout.tsx entirely, declares its own <html>/<body> hardcoded to English (no locale can be assumed resolved), and must be a Client Component; the recovery prop is `retry` in Next 16 (`reset` is the pre-16 name, kept only for backwards compatibility). */
 
 export default function GlobalError ({
   error,

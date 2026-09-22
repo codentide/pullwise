@@ -8,11 +8,7 @@ import { useHydrated } from '@/hooks/useHydrated.ts'
 import { Button } from '@/components/Button.tsx'
 import { HiddenFileInput } from '@/components/Field.tsx'
 
-/**
- * Export and import the whole state. Not a convenience: localStorage clears
- * itself (private mode, clearing site data, a different browser) and there is no
- * server backing any of this up.
- */
+/** Export and import the whole state — not a convenience: localStorage clears itself (private mode, clearing site data, a different browser) and nothing backs it up server-side. */
 export function DataMenu () {
   const t = useTranslations('nav')
   const state = useStore()
@@ -41,12 +37,7 @@ export function DataMenu () {
   return (
     <div className='flex items-center gap-2'>
       {note != null && <span className='text-label text-ink-mid'>{note}</span>}
-      {/*
-        Before hydration state.decks/state.knowledge are the empty snapshot on
-        purpose, so a returning visitor with real saved data would otherwise
-        see Export disabled for a flash. `hydrated &&` means the real
-        disabled check only ever runs once the store's true value has arrived.
-      */}
+      {/* `hydrated &&` gates the disabled check so a returning visitor with real saved data doesn't see Export disabled for a flash before the empty pre-hydration snapshot resolves. */}
       <Button variant='quiet' onClick={download} disabled={hydrated && state.decks.length === 0 && known === 0}>
         {t('export')}
       </Button>

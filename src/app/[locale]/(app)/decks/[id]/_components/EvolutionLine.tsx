@@ -6,21 +6,7 @@ import { CardImage } from '@/components/CardImage.tsx'
 import type { ChainLink, LineGap } from '@/lib/deckGroups.ts'
 import type { Card } from '@/lib/types.ts'
 
-/**
- * A broken evolution line, drawn as the line itself.
- *
- * "Ivysaur evolves from Bulbasaur, which is not in the deck" is a sentence the
- * reader has to turn back into a picture. The picture is the thing: three slots
- * in a row with one of them empty reads as a missing link before anyone finishes
- * the heading — and the empty slot is where you click to fill it.
- *
- * The hole uses the same dashed treatment as an unmarked card, because it is the
- * same idea: absence, not error.
- *
- * It reads across rather than down. Stacked, three of these put 540px between
- * the search field and the deck; side by side the chain sits in the width the
- * sentence was leaving empty anyway, and each one costs a row.
- */
+/** A broken evolution line, drawn as the line itself instead of a sentence like "Ivysaur evolves from Bulbasaur, which is not in the deck": a row of slots with one empty reads as a missing link at a glance, and that slot is where you click to fill it; the hole uses the same dashed treatment as an unmarked card (absence, not error), and reads across rather than down so three of these don't stack 540px between the search field and the deck. */
 export function EvolutionLine ({ gap, onAdd }: { gap: LineGap, onAdd: (card: Card) => void }) {
   const t = useTranslations('editor')
 
@@ -50,10 +36,7 @@ export function EvolutionLine ({ gap, onAdd }: { gap: LineGap, onAdd: (card: Car
                   </span>
                   )
                 : (
-              // One hole, one slot. Showing every printing here turns a chain
-              // of three links into a row of seven cards and stops reading as
-              // a chain at all. The cheapest printing is the one offered; any
-              // other version is a search away.
+              // One hole, one slot: showing every printing here turns a chain of three links into a row of seven cards; the cheapest printing is offered, any other version is a search away.
                   <Hole link={link} onAdd={onAdd} />
                   )}
             </li>

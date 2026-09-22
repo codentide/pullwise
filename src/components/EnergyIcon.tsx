@@ -1,13 +1,4 @@
-/**
- * The ten TCG energy symbols, drawn here rather than sourced.
- *
- * The open icon sets that exist cover the eighteen *video game* types, which are
- * a different list: no lightning, darkness, metal or colorless, and the glyphs
- * themselves differ from the card game's. Redrawing them keeps the stroke weight
- * consistent with Icon.tsx, owes nobody a licence, and costs no request.
- *
- * Colour comes from the energy tokens in src/index.css, never from the path.
- */
+/** The ten TCG energy symbols, drawn here rather than sourced: open icon sets cover the eighteen *video game* types instead (a different list, different glyphs), so redrawing them keeps the stroke weight consistent with Icon.tsx, owes no licence, costs no request; colour always comes from the energy tokens in src/index.css, never the path. */
 export type Energy =
   | 'grass' | 'fire' | 'water' | 'lightning' | 'psychic'
   | 'fighting' | 'darkness' | 'metal' | 'dragon' | 'colorless'
@@ -26,12 +17,7 @@ const GLYPHS: Record<Energy, string> = {
   colorless: 'M12 2l2.6 6.5L21 9.8l-4.7 4.4 1.3 6.6L12 17.6 6.4 20.8l1.3-6.6L3 9.8l6.4-1.3z'
 }
 
-/**
- * Glyph at full strength over a dimmed disc of the same colour. That is how the
- * printed symbol reads — a coloured disc carrying a mark — inverted for a dark
- * surface, where a solid disc would shout. The opacity suffix goes through the
- * token, so the contrast test still governs the colour.
- */
+/** Glyph at full strength over a dimmed disc of the same colour — matches how the printed symbol reads, inverted for a dark surface where a solid disc would shout; the opacity suffix goes through the token, so the contrast test still governs the colour. */
 const TONE: Record<Energy, string> = {
   grass: 'text-grass bg-grass/15',
   fire: 'text-fire bg-fire/15',

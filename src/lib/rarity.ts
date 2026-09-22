@@ -1,16 +1,4 @@
-/**
- * The game's eleven rarities, mapped onto the brand system's five grades.
- *
- * The grades are ours, not the game's. They are named for what a card means to a
- * deck, not for how the game prints it — and the mapping is drawn from the real
- * pull rates, so the boundaries fall where the difficulty actually changes:
- *
- *   C   100% in slots 1-3        R    5% in slot 4
- *   U    90% in slot 4           RR   1.67%      AR  2.57%
- *   SR   0.5%   IM 0.22%         UR   0.04%
- *
- * When the game adds a rarity, this table is remapped and nothing visual moves.
- */
+/** The game's eleven rarities mapped onto the brand system's own five grades — named for what a card means to a deck, not how the game prints it — with boundaries drawn from real pull rates (C/U ~100%/90% in slots 1-4, R 5%, RR/AR ~1.67%/2.57%, SR/IM ~0.5%/0.22%, UR 0.04%), so a new rarity remaps the table without moving anything visual. */
 export type Grade = 1 | 2 | 3 | 4 | 5
 
 export const GRADE_NAMES: Record<Grade, string> = {

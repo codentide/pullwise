@@ -1,10 +1,6 @@
 import type { ComponentProps, ReactNode } from 'react'
 
-/**
- * Read-only indicators. Three things in the app were doing the badge job with
- * three different class strings — the estimated marker, the rarity tag and the
- * copy counter — so the tones are named by meaning, not by colour.
- */
+/** Read-only indicators: three things (estimated marker, rarity tag, copy counter) were doing the badge job with three different class strings, so the tones are named by meaning, not by colour. */
 type Tone = 'neutral' | 'accent' | 'have' | 'miss' | 'warn'
 
 const TONES: Record<Tone, string> = {

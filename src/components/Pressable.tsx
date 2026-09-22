@@ -1,21 +1,6 @@
 import type { ComponentProps } from 'react'
 
-/**
- * A clickable area with no button styling of its own.
- *
- * Most of the interactive elements in this app are not buttons in the design
- * sense — they are a card, a deck tile, a thumbnail. Making them `Button` would
- * force an appearance they should not have; leaving them as raw `<button>`
- * scatters focus and cursor handling across the codebase. This carries the
- * behaviour and none of the look.
- *
- * `appearance-none` matters here specifically: Tailwind's preflight keeps
- * `appearance: button` on purpose (it is what lets iOS Safari style a
- * button's radius at all), but on macOS that leaves the OS's own pushable
- * capsule painted underneath ours — visibly smaller than the element's own
- * box, so a caller's full-width hover background shows dark margins around
- * it instead of filling the row.
- */
+/** A clickable area with a button's behaviour but none of its look (for cards, tiles, thumbnails); `appearance-none` is required because Tailwind's preflight keeps `appearance: button` for iOS Safari's radius styling, but on macOS that paints the OS's own smaller pushable capsule underneath, showing dark margins around a full-width hover background. */
 export function Pressable ({ className = '', ...props }: ComponentProps<'button'>) {
   return (
     <button

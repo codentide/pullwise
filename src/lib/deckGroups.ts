@@ -1,12 +1,4 @@
-/**
- * Grouping a deck by what each card does, which is how players think about one:
- * basics first (without them the deck cannot start), then the evolutions that
- * depend on them, then trainers.
- *
- * Cards the dataset has no metadata for — roughly 700, all from the 2026 sets —
- * land in their own group at the end rather than being guessed at. The group
- * empties itself when upstream catches up.
- */
+/** Groups a deck the way players think about one — basics first, then their evolutions, then trainers; the ~700 cards the dataset has no metadata for (all 2026 sets) land in their own group rather than being guessed at, and it empties itself when upstream catches up. */
 import { cards as allCards, cardsByName, normalizeName } from './gameData.ts'
 import { deckCards } from './deckRules.ts'
 import type { Card, Deck } from './types.ts'
@@ -72,11 +64,7 @@ export interface LineGap {
 
 const RARITY_COST = ['C', 'U', 'R', 'RR', 'AR', 'SR', 'SAR', 'IM', 'S', 'SSR', 'UR']
 
-/**
- * Evolutions in the deck whose pre-evolution is absent, with printings that would
- * fill the gap. The validator already knows this is wrong; this is what makes it
- * fixable in one click instead of a warning the player has to act on themselves.
- */
+/** Evolutions in the deck whose pre-evolution is absent, with printings that would fill the gap — turns what the validator already flags into a one-click fix instead of a warning to act on. */
 export function lineGaps (deck: Deck): LineGap[] {
   const entries = deckCards(deck)
   const present = new Set(entries.map(({ card }) => card.name))
@@ -99,20 +87,13 @@ export function lineGaps (deck: Deck): LineGap[] {
   return gaps
 }
 
-/**
- * The evolution chain behind a card, from the basic upward, marking which links
- * the deck has and which are holes.
- *
- * Drawing the chain says what a sentence has to explain: a gap in a row of cards
- * is read as a gap, not parsed as one.
- */
+/** The evolution chain behind a card, from the basic upward, marking which links the deck has and which are holes — a row of cards reads a gap at a glance, where a sentence would have to explain it. */
 function chainFor (card: Card, entries: Array<{ card: Card }>): ChainLink[] {
   const byName = new Map(entries.map((entry) => [entry.card.name, entry.card]))
   const chain: ChainLink[] = []
   const seen = new Set<string>()
 
-  // Walk down from the card towards the basic, one name at a time. Each name
-  // becomes exactly one link, whether the deck has it or not.
+  // Walks down from the card towards the basic; each name becomes exactly one link, whether the deck has it or not.
   let name: string | undefined = card.name
   while (name !== undefined && !seen.has(name)) {
     seen.add(name)
@@ -146,8 +127,7 @@ export function quickSearch (query: string, limit = 24): Card[] {
     if (starts.length >= limit * 2) break
   }
 
-  // An exact prefix beats a substring, and a cheaper printing beats a rare one:
-  // the player almost always means the version they can actually get.
+  // An exact prefix beats a substring, and a cheaper printing beats a rare one: the player almost always means the version they can actually get.
   const rank = (card: Card): number => RARITY_COST.indexOf(card.rarity)
   return [...starts.sort((a, b) => rank(a) - rank(b)), ...contains].slice(0, limit)
 }

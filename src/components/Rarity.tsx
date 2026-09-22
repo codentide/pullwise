@@ -1,9 +1,6 @@
 import { gradeOf, GRADE_NAMES, type Grade } from '@/lib/rarity.ts'
 
-/**
- * Rarity is always doubly encoded: colour **and** pips. Never colour alone —
- * neither for colour blindness nor for 24px thumbnails, where a hue is a guess.
- */
+/** Rarity is always doubly encoded: colour **and** pips, never colour alone — neither for colour blindness nor for 24px thumbnails, where a hue is a guess. */
 const TONE: Record<Grade, string> = {
   1: 'text-rarity-1',
   2: 'text-rarity-2',

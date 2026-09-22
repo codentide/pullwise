@@ -1,10 +1,4 @@
-/**
- * The two button shapes the app actually uses, extracted because the same class
- * strings appeared verbatim five times across the codebase.
- *
- * Visuals live here and nowhere else: a design system change should touch this
- * file, not every call site.
- */
+/** The two button shapes the app uses, extracted because the same class strings appeared verbatim five times — visuals live here and nowhere else, so a design system change touches this file, not every call site. */
 import type { ComponentProps } from 'react'
 import { Link } from '@/i18n/navigation.ts'
 
@@ -26,8 +20,7 @@ const VARIANTS: Record<Variant, string> = {
     'text-label text-accent underline-offset-4 hover:underline'
 }
 
-// appearance-none: see the comment on Pressable — same macOS native-chrome
-// bleed-through, just harder to notice on Button's smaller hit areas.
+// appearance-none: see the comment on Pressable — same macOS native-chrome bleed-through, just harder to notice on Button's smaller hit areas.
 const BASE =
   'inline-flex appearance-none cursor-pointer items-center justify-center gap-2 rounded-control transition-colors duration-150'
 
@@ -39,13 +32,7 @@ export function Button ({
   return <button {...props} className={`${BASE} ${VARIANTS[variant]} ${className}`} />
 }
 
-/**
- * The same shapes, as a link.
- *
- * A control that navigates has to be an anchor: middle-click, open-in-new-tab
- * and the status bar all come from the element, not from an onClick. It should
- * not have to restate the look to get them.
- */
+/** The same shapes, as a link — a control that navigates has to be an anchor (middle-click, open-in-new-tab, the status bar all come from the element, not an onClick) without restating the look to get them. */
 export function ButtonLink ({
   variant = 'primary',
   className = '',

@@ -23,11 +23,7 @@ import { Link, useRouter } from '@/i18n/navigation.ts'
 /** The preview always draws five slots, filled or not. */
 const PREVIEW_SLOTS = 5
 
-/**
- * Three across at most. At four the preview thumbnails fell to 48px, which is
- * under what it takes to recognise a card by its art — and recognising the deck
- * at a glance is the only job this card has.
- */
+/** Three across at most: at four the preview thumbnails fell to 48px, under what it takes to recognise a card by its art — and recognising the deck at a glance is the only job this card has. */
 const DECK_COLUMNS = '[grid-template-columns:repeat(auto-fill,minmax(18rem,1fr))]'
 
 export function DeckList () {
@@ -40,10 +36,7 @@ export function DeckList () {
   /** A new deck is only useful open, so creating one goes straight into it. */
   const openNew = (): void => router.push(`/decks/${actions.createDeck(t('new'))}`)
 
-  // Before hydration `state.decks` is deliberately the empty snapshot (see
-  // useStore.ts), so it cannot yet be told apart from a returning visitor who
-  // really has no decks. Rendering DecksEmpty during that window would flash
-  // it on every load for someone with real saved decks.
+  // Before hydration `state.decks` is deliberately the empty snapshot (see useStore.ts), indistinguishable from a returning visitor who really has none — rendering DecksEmpty here would flash it on every load.
   if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   return (
@@ -117,12 +110,7 @@ function DeckCard ({ deck }: { deck: Deck }) {
         ))}
       </div>
 
-      {/*
-        What you are short of is information, not a fault. Red here framed an
-        ordinary half-collected deck as a failure and pushed the user towards
-        the collection — which is the trap this app exists to avoid. Finishing
-        one still gets its green: an acknowledgement asks for nothing.
-      */}
+      {/* What you're short of is information, not a fault — red here used to frame an ordinary half-collected deck as a failure, the trap this app exists to avoid; finishing one still gets its green, an acknowledgement that asks for nothing. */}
       <span className={`mt-auto flex items-center gap-1 text-label ${missingCount > 0 ? 'text-ink-mid' : 'text-valid'}`}>
         {size === 0
           ? '\u00a0'

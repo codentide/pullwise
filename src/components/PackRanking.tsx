@@ -9,30 +9,14 @@ import { PackImage } from './PackImage.tsx'
 import { packHref, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 
-/**
- * PT—01 Pack ranking · PT—03 The figure that resolves.
- *
- * The winner shows its artwork. A pack is a thing a player recognises by sight
- * long before they read its name, and the panel had been hiding the image below
- * 28rem — which is every width the deck editor's aside has ever been.
- *
- * One winner treated as a headline; everything else as a league table. The big
- * number never repeats below. Probability and estimated packs always appear
- * together — one without the other misleads — and under them a line of why, in
- * a coach's voice.
- *
- * Every estimate carries a "~". An exact number where there is chance is a
- * design lie.
- */
+/** PT—01 Pack ranking · PT—03 The figure that resolves. The winner shows its artwork (a pack is recognised by sight before its name; the panel had been hiding the image below 28rem, every width the deck editor's aside has ever been) as a headline, everything else as a league table, with probability and estimated packs always paired — one without the other misleads — and every estimate carrying a "~". */
 export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
   const t = useTranslations('ranking')
   const format = useFormatter()
   const { ranking, simulation, missing, unobtainable } = analysis
   const [winner, ...rest] = ranking.slice(0, 6)
 
-  // Precision follows magnitude. The brand document shows 34%, where a decimal
-  // would be noise — but most packs sit under 10%, and rounding 3.3% to 3% throws
-  // away the difference between two packs the ranking is there to compare.
+  // Precision follows magnitude: most packs sit under 10%, and rounding 3.3% to 3% throws away the difference between two packs the ranking is there to compare.
   const percent = (value: number): string =>
     format.number(value, {
       style: 'percent',
@@ -51,8 +35,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
 
   if (winner == null) return null
 
-  // How much of what is missing this one pack actually covers — the coach line
-  // is only honest if it knows.
+  // How much of what is missing this one pack actually covers — the coach line is only honest if it knows.
   const coveredHere = missing.filter((entry) => packMath.isInPack(entry.card, winner.pack)).length
   const missingCount = missing.length
 
@@ -134,13 +117,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
                       {entry.pack.pack}
                       <span className='text-ink-low'> — {setName(entry.pack.set)}</span>
                     </p>
-                    {/*
-                      The bar reads relative to the winner's own chance, which is
-                      the big number above — not to 100%, and not to this row's own
-                      percentage, which sits right next to it. `aria-hidden`
-                      because the text beside it already says the number; the bar
-                      is only there to make six rows scannable at a glance.
-                    */}
+                    {/* The bar reads relative to the winner's own chance (the big number above), not to 100% or this row's own percentage; `aria-hidden` since the text beside it already says the number. */}
                     <div
                       aria-hidden
                       className='mt-2 h-px bg-line'
@@ -154,13 +131,7 @@ export function PackRanking ({ analysis }: { analysis: DeckAnalysis }) {
                       />
                     </div>
                   </div>
-                  {/*
-                    Sized to the row it sits in, not to the word "meta": a
-                    single-line label next to a name-plus-bar block read as an
-                    afterthought squeezed against something taller. text-body
-                    gives it the same visual weight as the two lines beside it
-                    without competing with the hero figure above.
-                  */}
+                  {/* text-body, sized to the row not the word "meta", so this doesn't read as an afterthought squeezed against the taller name-plus-bar block beside it. */}
                   <span className='tnum shrink-0 font-mono text-body text-ink-mid'>
                     {percent(entry.chanceOfUseful)}
                   </span>

@@ -27,37 +27,11 @@ import { MAX_ENERGY_TYPES, resolvedEnergy } from '@/lib/energy.ts'
 import { ELEMENTS } from '@/lib/filters.ts'
 import type { Card, Deck } from '@/lib/types.ts'
 
-/**
- * The deck reads as a deck, not as a catalogue: enough columns that all twenty
- * cards are on screen at once. The count comes from the column's own width, not
- * the viewport's — the same grid sits beside the ranking on a desktop and alone
- * on a tablet, and a viewport breakpoint cannot tell those apart. It kept the
- * tiles at 200px and a full deck at two screens tall.
- */
+/** The deck reads as a deck, not a catalogue: enough columns for all twenty cards on screen, sized by the column's own width rather than the viewport's — the same grid sits beside the ranking on desktop and alone on tablet, and a viewport breakpoint can't tell those apart. */
 const DECK_GRID =
   'grid gap-2 grid-cols-3 @xs:grid-cols-4 @md:grid-cols-5 @xl:grid-cols-6 @3xl:grid-cols-7 @4xl:grid-cols-8'
 
-/**
- * The deck editor.
- *
- * The energy zone sits right under the header, before the search field: it is
- * as much a part of "what this deck is" as its name, not a setting tucked
- * away. It is inferred from the deck's own Pokémon until the player actually
- * taps a symbol or pastes a list that names one — the same explicit-beats-
- * inferred rule the rest of the app already lives by for ownership.
- *
- * The search field is permanent rather than hidden behind a button: building a
- * deck is one continuous act of adding cards, and a picker that has to be opened
- * turns it into twelve separate ones. Results appear under the field as soon as
- * there is a query and take no room otherwise.
- *
- * Empty slots are drawn rather than counted. "Six placeholders" is read; "14/20"
- * has to be found and subtracted.
- *
- * Layout follows the brand system: 8/4, the deck leads and the recommendation
- * sits fixed on the right, recalculating on its own. There is never a save step
- * before seeing the number.
- */
+/** The energy zone sits under the header, before search, as much a part of "what this deck is" as its name — inferred until the player taps a symbol or pastes a list naming one, same explicit-beats-inferred rule as ownership; the search field stays permanent rather than behind a button since building a deck is one continuous act; empty slots are drawn, not counted ("six placeholders" reads, "14/20" has to be worked out); layout is the brand system's 8/4, deck leading, recommendation fixed on the right with no save step before seeing the number. */
 export function DeckEditor ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
   const groupName = useTranslations('groups')
@@ -67,24 +41,14 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const size = deckSize(deck)
-  // Two of the six issue codes are already on screen, and in a better form, so
-  // the aside would only be repeating itself:
-  //   · `tooFewCards` — the empty slots under the deck draw the same shortfall,
-  //     and a red error while you are still adding cards reads as a scolding.
-  //   · `evolutionWithoutBase` — EvolutionLine draws the broken chain above the
-  //     deck with a button that fixes it. `lineGaps` groups by the missing base,
-  //     so it covers every card this code would have flagged.
+  // Two of the six issue codes are already shown in a better form so the aside would repeat itself: `tooFewCards` (the empty slots below draw the same shortfall) and `evolutionWithoutBase` (EvolutionLine already draws the broken chain with a fix button).
   const SAID_ELSEWHERE = ['tooFewCards', 'evolutionWithoutBase']
   const issues = validateDeck(deck).filter((issue) => !SAID_ELSEWHERE.includes(issue.code))
   const groups = groupDeck(deck)
   const gaps = lineGaps(deck)
   const analysis = useMemo(() => analyzeDeck(deck, state.knowledge), [deck, state.knowledge])
 
-  // DeckScreen already withholds this component until hydration finishes, so
-  // this branch is defensive rather than reachable today — it exists so this
-  // reads correctly (and stays correct) on its own, independent of whichever
-  // parent happens to mount it, the same way DeckScreen protects itself. It
-  // sits after the hooks above so it never changes their call order.
+  // DeckScreen already withholds this until hydration finishes, so this branch is defensive rather than reachable today — kept so this stays correct on its own, and sits after the hooks so it never changes their call order.
   if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   const add = (card: Card): void => {
@@ -94,14 +58,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
 
   return (
     <div className='flex flex-col gap-6'>
-      {/*
-        A head, not a line. Back, name, count and delete were four things of the
-        same weight sharing one row, so the deck's own name — the only one of
-        them anyone reads — carried no more presence than the bin next to it.
-        The way back goes above as a step, the name becomes the page title it
-        already was, and the count stops floating: as a chip it reads as the
-        deck's state rather than as two loose numbers.
-      */}
+      {/* A head, not a line: back/name/count/delete used to share one row of equal weight, so the deck's own name carried no more presence than the bin next to it — back now sits above as a step, the name reads as the page title it already was, and the count is a chip instead of two loose numbers. */}
       <header className='flex flex-col gap-2 border-b border-line pb-4'>
         <ButtonLink variant='ghost' href='/decks' className='-ml-2 self-start px-2'>
           <Icon name='back' size={14} />
@@ -184,12 +141,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
             </section>
           ))}
 
-          {/*
-            An empty deck is not a deck with twenty holes in it. Twenty dashed
-            boxes and a green "you are not missing anything" is what the editor
-            used to greet a new deck with — a wall of nothing, and a reassurance
-            about a deck that does not exist yet. It gets a sentence instead.
-          */}
+          {/* An empty deck isn't a deck with twenty holes in it — the editor used to greet a new deck with twenty dashed boxes and a green "you are not missing anything", a wall of nothing reassuring about a deck that doesn't exist yet; it gets a sentence instead. */}
           {size === 0
             ? (
               <EmptyState>
@@ -212,17 +164,7 @@ export function DeckEditor ({ deck }: { deck: Deck }) {
   )
 }
 
-/**
- * The energy zone. Toggling a symbol is what turns the guess into a fact —
- * one press, and this deck stops being inferred forever, the same moment
- * ownership stops being unknown the first time a card gets marked.
- *
- * Bare spheres, not chips in boxes: EnergyIcon already draws its own disc, and
- * a square button around a circle read as two containers fighting each other.
- * On vs off is opacity alone — a ring sat outside the shape as a second
- * object, and a glow on top of an already-saturated disc was too much on top
- * of too much.
- */
+/** Toggling a symbol turns the guess into a fact for good, same moment ownership stops being unknown the first time a card gets marked; bare spheres, not chips in boxes, since EnergyIcon already draws its own disc and a square button around a circle reads as two containers fighting; on/off is opacity alone — a ring or glow read as too much on top of an already-saturated disc. */
 function EnergyZone ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
   const names = useTranslations('energies')
@@ -233,9 +175,7 @@ function EnergyZone ({ deck }: { deck: Deck }) {
       actions.setEnergy(deck.id, energy.filter((current) => current !== element))
       return
     }
-    // The Energy Zone never holds more than 3 types — a 4th press while 3 are
-    // already lit does nothing rather than silently going on to break the
-    // deck code the moment someone tries to generate one.
+    // The Energy Zone never holds more than 3 types — a 4th press while 3 are already lit does nothing rather than silently breaking the deck code the moment someone tries to generate one.
     if (energy.length >= MAX_ENERGY_TYPES) return
     actions.setEnergy(deck.id, [...energy, element])
   }
@@ -266,11 +206,7 @@ function EnergyZone ({ deck }: { deck: Deck }) {
   )
 }
 
-/**
- * Permanent search. Enter adds the first result and the field keeps its text, so
- * the next card is one correction away rather than a fresh start. Pasting more
- * than one line is treated as a decklist.
- */
+/** Permanent search: Enter adds the first result and the field keeps its text, so the next card is one correction away rather than a fresh start; pasting more than one line is treated as a decklist. */
 function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void }) {
   const t = useTranslations('editor')
   const [query, setQuery] = useState('')
@@ -285,9 +221,7 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
     const parsed = parseDecklist(text)
     if (parsed.entries.length === 0) return false
     actions.addEntries(deck.id, parsed.entries)
-    // A pasted list that names its own energy zone is a stronger signal than
-    // the inference: someone is describing a specific, finished deck, not
-    // adding one card to something in progress.
+    // A pasted list naming its own energy zone is a stronger signal than the inference: someone is describing a specific, finished deck, not adding one card to something in progress.
     if (parsed.energy !== undefined) actions.setEnergy(deck.id, parsed.energy)
     setPasted(parsed.entries.length)
     setTimeout(() => setPasted(null), 4000)
@@ -357,15 +291,7 @@ function CardSearch ({ deck, onAdd }: { deck: Deck, onAdd: (card: Card) => void 
   )
 }
 
-/**
- * The room that is left. Slots are drawn, not counted: six placeholders are
- * read, "14/20" has to be worked out.
- *
- * Drawn small, though. At card size, eight empty slots took up more of the page
- * than the twelve cards above them, so a half-built deck looked mostly absent —
- * the opposite of what this app is for. A tray keeps the reading and gives the
- * absence the weight it deserves.
- */
+/** The room left: slots are drawn small, not counted — six placeholders read, "14/20" has to be worked out, but at full card size eight empty slots took up more of the page than the twelve cards above them, making a half-built deck look mostly absent. */
 function EmptySlots ({ remaining }: { remaining: number }) {
   const t = useTranslations('editor')
   if (remaining <= 0) {
@@ -399,9 +325,7 @@ function IssueRow ({ issue }: { issue: DeckIssue }) {
   const tone: NoticeTone =
     issue.level === 'error' ? 'error' : issue.level === 'warning' ? 'warning' : 'info'
 
-  // Card and pack names render in mono in both locales — that is how the player
-  // sees them in the game. The message catalogue marks them with <n>, so the
-  // domain still knows nothing about typography.
+  // Card and pack names render in mono in both locales, how the player sees them in the game; the message catalogue marks them with <n>, so the domain still knows nothing about typography.
   const gameName = (chunks: ReactNode): ReactNode => (
     <span className='game-name'>{chunks}</span>
   )

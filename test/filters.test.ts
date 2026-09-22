@@ -4,8 +4,7 @@ import { filterCards, emptyFilters } from '../src/lib/filters.ts'
 import { cardsById } from '../src/lib/gameData.ts'
 import type { Card, Knowledge } from '../src/lib/types.ts'
 
-// Bulbasaur (A1, grass), Erika (A1, supporter), Pikachu ex (A1, lightning),
-// Cosmog (A3, psychic) — real cards, spread across sets/rarities/kinds.
+// Bulbasaur (A1, grass), Erika (A1, supporter), Pikachu ex (A1, lightning), Cosmog (A3, psychic) — real cards, spread across sets/rarities/kinds.
 const pool: Card[] = ['A1-001', 'A1-219', 'A1-096', 'A3-085'].map(
   (id) => cardsById.get(id)!
 )

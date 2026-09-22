@@ -1,21 +1,5 @@
 #!/usr/bin/env node
-/**
- * Gates the first-load JS of the public (site) routes — the SEO-critical pages
- * that ship to anonymous search traffic, as opposed to the (app) routes, which
- * are the interactive tool and can reasonably carry more JS.
- *
- * Next 16 dropped the `First Load JS` summary from `next build`'s terminal
- * output, but still writes the real per-route numbers to
- * .next/diagnostics/route-bundle-stats.json. Nobody was reading that file, so
- * a regression (e.g. a heavy import creeping back into a shared component)
- * would ship silently — which is exactly what happened once already: a 717KB
- * dataset accidentally bundled into AppHeader pushed every (site) route to
- * ~1.25MB raw before it was caught and fixed. This script is the mechanical
- * gate so next time it fails CI instead of a person noticing by chance.
- *
- * Run after `pnpm build:only` (see .github/workflows/ci.yml), not standalone —
- * it only reads what the build already wrote.
- */
+/** Gates the first-load JS of the public (site) routes (SEO-critical, unlike (app)'s interactive tool); Next 16 writes real per-route numbers to .next/diagnostics/route-bundle-stats.json but nobody was reading it, so a regression shipped silently once already — a 717KB dataset bundled into AppHeader pushed every (site) route to ~1.25MB before it was caught — hence this mechanical CI gate; run after `pnpm build:only` (see .github/workflows/ci.yml), not standalone, since it only reads what the build already wrote. */
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
@@ -23,9 +7,7 @@ import { dirname, join } from 'node:path'
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const STATS_PATH = join(ROOT, '.next', 'diagnostics', 'route-bundle-stats.json')
 
-// The public, indexable pages. (app)'s /cards, /decks, /decks/[id] and /packs
-// are deliberately not in this list — they're the interactive tool, gated by
-// nothing here.
+// The public, indexable pages. (app)'s /cards, /decks, /decks/[id] and /packs are deliberately not in this list — they're the interactive tool, gated by nothing here.
 const SITE_ROUTES = [
   '/[locale]',
   '/[locale]/card/[id]',
@@ -33,13 +15,7 @@ const SITE_ROUTES = [
   '/[locale]/pack/[set]/[name]'
 ]
 
-// Measured on 2026-09-21 (after P1-P9 of PWS-012 landed on develop): the
-// heaviest (site) route was /[locale]/card/[id] at 584,782 bytes (~571KB)
-// raw first-load JS, the others in the same batch a little lower. 700KB
-// (716,800 bytes) gives ~22% headroom over that — enough that normal
-// dependency churn doesn't trip the gate, while still catching anything
-// that adds real weight (a dataset, a heavy library) to a page that ships
-// to anonymous search traffic.
+// Measured on 2026-09-21 (after P1-P9 of PWS-012 landed on develop): the heaviest (site) route, /[locale]/card/[id], was 584,782 bytes (~571KB) raw first-load JS; 700KB gives ~22% headroom, enough for normal churn but still catching real added weight.
 const BUDGET_BYTES = 700 * 1024
 
 const formatKB = (bytes) => `${(bytes / 1024).toFixed(1)}KB`

@@ -80,10 +80,7 @@ export function CardFilters ({
   )
 }
 
-/**
- * Energies are chips rather than a dropdown: there are ten, they are recognised
- * by symbol far faster than by name, and they read as a single row.
- */
+/** Energies are chips rather than a dropdown: there are ten, they're recognised by symbol far faster than by name, and they read as a single row. */
 function EnergyFilter ({ value, onChange }: { value: string, onChange: (next: string) => void }) {
   const t = useTranslations('filters')
   const names = useTranslations('energies')

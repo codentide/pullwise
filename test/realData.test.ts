@@ -1,8 +1,4 @@
-/**
- * Tests contra el dataset real. No validan la matemática (eso es packMath.test)
- * sino que los datos sigan teniendo la forma que la matemática asume: si el
- * upstream cambia el formato o publica una tabla rota, acá salta.
- */
+/** Tests contra el dataset real: no validan la matemática (eso es packMath.test) sino que los datos sigan con la forma que la matemática asume — si el upstream cambia el formato o publica una tabla rota, acá salta. */
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createPackMath } from '../src/lib/packMath.ts'
@@ -97,16 +93,13 @@ test('el sobre recomendado es uno que realmente contiene la carta', () => {
 })
 
 test('ningún campo del dataset es una constante disfrazada de dato', () => {
-  // La fuente publicaba `health: 50` y `retreatCost: 1` en las 2.211 cartas que
-  // los traían. Un campo que nunca varía no es un dato: es un placeholder, y
-  // publicarlo en las páginas de carta es peor que omitirlo.
+  // La fuente publicaba `health: 50` y `retreatCost: 1` en las 2.211 cartas que los traían; un campo que nunca varía no es un dato, es un placeholder, y publicarlo es peor que omitirlo.
   const fields = new Map<string, Set<unknown>>()
   for (const card of cards) {
     for (const [key, value] of Object.entries(card)) {
       if (value === undefined || value === null) continue
       if (typeof value === 'object') continue
-      // Los flags booleanos que sólo existen cuando son true (como `inferred`)
-      // son un patrón válido, no un placeholder.
+      // Los flags booleanos que sólo existen cuando son true (como `inferred`) son un patrón válido, no un placeholder.
       if (typeof value === 'boolean') continue
       ;(fields.get(key) ?? fields.set(key, new Set()).get(key)!).add(value)
     }

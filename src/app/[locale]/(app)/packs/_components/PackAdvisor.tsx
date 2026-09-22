@@ -10,11 +10,7 @@ import { EmptyState } from '@/components/Panel.tsx'
 import { Select } from '@/components/Select.tsx'
 import { Heading } from '@/components/Heading.tsx'
 
-/**
- * The ranking, for one deck or all of them at once. With several decks in flight
- * the question stops being "what do I need for this one" and becomes "which pack
- * helps me most right now", which is what this answers.
- */
+/** The ranking, for one deck or all of them at once — with several decks in flight the question stops being "what do I need for this one" and becomes "which pack helps me most right now". */
 export function PackAdvisor () {
   const t = useTranslations('advisor')
   const state = useStore()
@@ -29,9 +25,7 @@ export function PackAdvisor () {
     return analyzeMissing(missing)
   }, [deck, state.decks, state.knowledge])
 
-  // Same reasoning as DeckScreen: before hydration state.decks is the empty
-  // snapshot on purpose, so "no decks yet" is indistinguishable from "not
-  // loaded yet" — showing the empty state here would flash it on every load.
+  // Same reasoning as DeckScreen: before hydration state.decks is the empty snapshot on purpose, so "no decks yet" is indistinguishable from "not loaded yet".
   if (!hydrated) return <div aria-busy className='min-h-dvh' />
 
   if (state.decks.length === 0) {

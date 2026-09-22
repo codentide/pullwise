@@ -10,12 +10,7 @@ export function generateStaticParams (): Array<{ locale: string, id: string }> {
   return routing.locales.flatMap((locale) => cards.map((card) => ({ locale, id: card.id })))
 }
 
-/**
- * Deliberately not fetching the card art here: a large concurrent-fetch batch
- * across ~3,900 cards is exactly what caused a real deploy failure once (see
- * docs/decisions.md). A solid, text-only card matches the brand's dark theme
- * and costs nothing to render at build time.
- */
+/** Deliberately not fetching the card art: a large concurrent-fetch batch across ~3,900 cards is exactly what caused a real deploy failure once (see docs/decisions.md); a solid, text-only card matches the brand's dark theme and costs nothing to render at build time. */
 export default async function Image ({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const card = cardsById.get(id)
@@ -31,9 +26,7 @@ export default async function Image ({ params }: { params: Promise<{ id: string 
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          // Matches viewport.themeColor in [locale]/layout.tsx. Satori cannot
-          // read the CSS custom properties in src/index.css, so the token
-          // value is inlined here rather than referenced.
+          // Matches viewport.themeColor in [locale]/layout.tsx; inlined because Satori cannot read the CSS custom properties in src/index.css.
           // eslint-disable-next-line no-restricted-syntax
           background: '#08090a'
         }}

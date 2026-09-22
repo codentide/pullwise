@@ -1,21 +1,4 @@
-/**
- * The in-game deck-share code: the thing a player scans to import a deck.
- *
- * The binary format and its encoder are `ptcgp-deckcode` (MIT), which derives
- * each card's internal id the same way `sync-data.mjs` now does — from the
- * CDN filename, `deckBuilderNr`. This module only decides *whether* a deck can
- * be encoded and assembles the flat, repeated-number list the library expects
- * (`[1, 1, 4, 4]` for two pairs) — the format itself is not reimplemented.
- *
- * Card ownership plays no part here on purpose: the code describes what the
- * deck *is*, not what you own. Scanning it into the game with cards missing
- * is confirmed to work — the game turns the gaps into an in-game shopping
- * list, which is the whole reason this exists.
- *
- * Nor does deck *size*: `createDeckCode` has no notion of 20, and neither does
- * this. A deck still being built is still a real, scannable thing — it just
- * imports fewer cards. The only floor is having something to encode at all.
- */
+/** The in-game deck-share code, built with `ptcgp-deckcode` (MIT) from each card's `deckBuilderNr`; ownership is irrelevant (the code is what the deck *is*, not what you own — missing cards just become an in-game shopping list on import) and so is deck size (no floor beyond having something to encode). */
 import { ENERGY, createDeckCode } from 'ptcgp-deckcode'
 import { deckCards, deckSize } from './deckRules.ts'
 import { MAX_ENERGY_TYPES, resolvedEnergy } from './energy.ts'
@@ -29,16 +12,9 @@ export type DeckCodeResult =
 export function buildDeckCode (deck: Deck): DeckCodeResult {
   if (deckSize(deck) === 0) return { ok: false, reason: 'empty' }
 
-  // The game's Energy Zone only ever offers 8 basic types — dragon and
-  // colorless are real card elements but never a zone option, because a
-  // Dragon-type attack's cost is paid in other basic energies and a
-  // Colorless cost accepts any of them. A deck inferred or set to one of
-  // those two encodes as "no energy" rather than silently dropping it and
-  // encoding whatever else happened to also be present.
+  // The Energy Zone never offers dragon or colorless, so a deck resolved to one of those encodes as "no energy" instead of silently keeping whatever else is present.
   const { energy } = resolvedEnergy(deck)
-  // Capped again here, not just at the two places energy gets set: the game's
-  // encoder throws on a fourth type, and a thrown error inside a render path
-  // is a worse failure than silently keeping the three most useful ones.
+  // Capped again here because the encoder throws on a fourth type, and throwing inside a render path is worse than silently keeping the three most useful ones.
   const encodable = energy
     .filter((e): e is keyof typeof ENERGY => e in ENERGY)
     .slice(0, MAX_ENERGY_TYPES)
@@ -46,12 +22,7 @@ export function buildDeckCode (deck: Deck): DeckCodeResult {
 
   // One entry per copy, not per card: the format has no separate count field.
   const nrs = deckCards(deck).flatMap(({ card, copies }) => {
-    // `deckBuilderNr` is optional in the type — derived from a field upstream
-    // could reshape without warning — but every card synced today resolves
-    // one (verified: 3,879/3,879). A card that somehow did not would produce
-    // a code that scans into the wrong deck, so this fails loudly instead of
-    // silently, rather than adding a whole error branch for something that
-    // cannot currently happen.
+    // `deckBuilderNr` is optional in the type, but every synced card has one today (verified 3,879/3,879); failing loudly here beats silently producing a code that scans into the wrong deck.
     if (card.deckBuilderNr === undefined) {
       throw new Error(`${card.name} (${card.id}) has no deckBuilderNr`)
     }

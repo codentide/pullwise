@@ -1,17 +1,7 @@
 import type { ReactNode } from 'react'
 import { Icon } from './Icon.tsx'
 
-/**
- * A hint or warning with actual body.
- *
- * Coloured text on its own reads as an afterthought — three of them stacked read
- * as one paragraph that happens to change colour. A tinted ground gives each one
- * an edge, and pulling the icon into its own column lets the text wrap under
- * itself instead of around the glyph.
- *
- * The tint is the state colour at low alpha over the surface, so it stays legible
- * in both themes without a second palette.
- */
+/** A hint or warning with actual body: a tinted ground gives each one an edge (coloured text alone reads as one paragraph that changes colour when stacked), the icon gets its own column so text wraps under itself not around the glyph, and the tint is the state colour at low alpha so it stays legible in both themes without a second palette. */
 export type NoticeTone = 'error' | 'warning' | 'info' | 'success'
 
 const TONES: Record<NoticeTone, { box: string, icon: string, glyph: 'warn' | 'check' }> = {
@@ -28,12 +18,7 @@ export function Notice ({
   action
 }: {
   tone?: NoticeTone
-  /**
-   * `sm` is a line or two of text, where tight vertical padding keeps the notice
-   * from reading as a panel. `md` is for a notice with something in it — card
-   * art, a control — where the same padding leaves the content touching the
-   * bottom edge.
-   */
+  /** `sm` keeps tight vertical padding so a line or two of text doesn't read as a panel; `md` is for a notice with something in it — card art, a control — where `sm`'s padding leaves the content touching the bottom edge. */
   pad?: 'sm' | 'md'
   children: ReactNode
   /** Optional trailing control — the fix, when there is one. */

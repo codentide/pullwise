@@ -7,15 +7,8 @@ import { Button } from './Button.tsx'
 import { Heading } from './Heading.tsx'
 import { Icon } from './Icon.tsx'
 
-/**
- * The shared shell: overlay, positioned box, title. `ConfirmDialog` below is
- * one shape built on it; anything that isn't a yes/no prompt — the deck-code
- * QR, say — takes this one directly instead of a shape that doesn't fit it.
- */
-/**
- * `sm` fits a short prompt; `md` is for content with its own internal layout
- * (a two-column row, say) that would otherwise fight the narrower box.
- */
+/** The shared shell: overlay, positioned box, title. `ConfirmDialog` below is one shape built on it; anything that isn't a yes/no prompt — the deck-code QR, say — takes this one directly instead of a shape that doesn't fit it. */
+/** `sm` fits a short prompt; `md` is for content with its own internal layout (a two-column row, say) that would otherwise fight the narrower box. */
 const WIDTH = {
   sm: 'w-[min(24rem,calc(100vw-2rem))]',
   md: 'w-[min(32rem,calc(100vw-2rem))]'
@@ -63,10 +56,7 @@ export function Dialog ({
   )
 }
 
-/**
- * Replaces window.confirm, which could not be styled and looked like a browser
- * error rather than part of the product.
- */
+/** Replaces window.confirm, which could not be styled and looked like a browser error rather than part of the product. */
 export function ConfirmDialog ({
   open,
   onOpenChange,

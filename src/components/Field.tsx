@@ -7,14 +7,7 @@ import { Icon } from './Icon.tsx'
 const SHELL =
   'rounded-control border border-line-control bg-raised text-ink-high placeholder:text-ink-low transition-colors duration-150 focus:border-accent'
 
-/**
- * Size and padding are a variant, not something a call site overrides.
- *
- * Tailwind resolves two utilities for the same property by their order in the
- * generated stylesheet, not by their order in the class attribute — so a base
- * class of `text-meta` silently beat a caller's `text-title`, and the deck's
- * name rendered at 13px while the source read as 32px.
- */
+/** Size and padding are a variant, not a call-site override — Tailwind resolves two utilities for the same property by stylesheet order, not class-attribute order, so a base `text-meta` used to silently beat a caller's `text-title`. */
 const TEXT = {
   field: 'px-2 py-2 text-meta',
   /** A field standing in for the page's title: it should read as the heading. */
@@ -29,15 +22,7 @@ export function TextInput ({
   return <input {...props} className={`${SHELL} ${TEXT[variant]} ${className}`} />
 }
 
-/**
- * A text field with a leading icon.
- *
- * Laid out, not nudged. The icon used to be absolutely positioned and the text
- * pushed clear of it with left padding, which left the two touching at one size
- * and the offset off the spacing scale at every size. A flex row makes the gap a
- * real gap, and the focus ring moves to the wrapper so the border still draws
- * around the whole control.
- */
+/** A text field with a leading icon, laid out not nudged — the icon used to be absolutely positioned with the text pushed clear by padding, which touched at one size and was off-scale at every other; a flex row makes the gap real, with the focus ring on the wrapper so the border draws around the whole control. */
 export function SearchField ({
   pad = 'md',
   className = '',
@@ -89,11 +74,7 @@ export function Checkbox ({
   )
 }
 
-/**
- * The invisible file input behind an "Import" button. It exists as a component
- * because every app grows one, and each hand-rolled copy forgets to reset
- * `value` — which silently breaks re-picking the same file twice.
- */
+/** The invisible file input behind an "Import" button, as a component because every hand-rolled copy forgets to reset `value` — which silently breaks re-picking the same file twice. */
 export function HiddenFileInput ({
   inputRef,
   accept,

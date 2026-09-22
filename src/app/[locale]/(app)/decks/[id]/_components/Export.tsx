@@ -11,13 +11,7 @@ import type { Deck } from '@/lib/types.ts'
 
 type ExportKind = 'qr' | 'list'
 
-/**
- * One export action, not two competing for the same row: a small popover
- * menu picks the shape (in-game QR, or plain-text list), and the picked one
- * opens its own dialog. Not a Radix primitive — the brand system reserves
- * Radix for Select, Dialog and Checkbox, and a two-item menu this simple
- * does not need a fourth.
- */
+/** One export action, not two competing for the same row: a small popover menu picks the shape (QR or plain-text list); not a Radix primitive, since the brand system reserves Radix for Select/Dialog/Checkbox and a two-item menu this simple doesn't need a fourth. */
 export function ExportButton ({ deck }: { deck: Deck }) {
   const t = useTranslations('editor')
   const [menuOpen, setMenuOpen] = useState(false)

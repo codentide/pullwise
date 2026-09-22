@@ -16,12 +16,7 @@ export interface Card {
   weakness?: string
   /** Metadata was copied from another card with the same name, not sourced. */
   inferred?: boolean
-  /**
-   * The internal id the game itself uses for this card, needed to build an
-   * in-game deck-share code. Optional even though today's sync covers every
-   * card: it is derived from a filename field upstream could reshape without
-   * warning, same posture as `stage`/`element`.
-   */
+  /** The game's own internal id, needed for a deck-share code; optional even though today's sync covers every card, since it's derived from a filename field upstream could reshape (same posture as `stage`/`element`). */
   deckBuilderNr?: number
 }
 
@@ -68,18 +63,10 @@ export interface Deck {
   id: string
   name: string
   entries: DeckEntry[]
-  /**
-   * The energy zone's types — what the game generates for you to attach, turn
-   * by turn. `undefined` means nobody has chosen: the same "explicit beats
-   * inferred" rule as `Knowledge` — a guess is shown, but nothing is written
-   * until the player actually picks it, or a pasted decklist names one.
-   */
+  /** The energy zone's types; `undefined` means nobody has chosen — same "explicit beats inferred" rule as `Knowledge`, a guess is shown but nothing is written until the player picks one or a decklist names one. */
   energy?: string[]
   updatedAt: number
 }
 
-/**
- * Copies you own of each card. Global, not per deck.
- * A missing key means UNKNOWN, which is not the same as zero.
- */
+/** Copies you own of each card, global not per deck — a missing key means UNKNOWN, not the same as zero. */
 export type Knowledge = Record<CardId, number>

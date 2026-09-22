@@ -1,15 +1,4 @@
-/**
- * Deck construction rules for Pokémon TCG Pocket.
- *
- * Exactly 20 cards, and at most 2 sharing a name — the cap is per name, not per
- * card, so two different printings of the same Pokémon compete for one slot.
- *
- * Issues are returned as codes with parameters rather than sentences: this module
- * is part of the domain and must not know which language the interface speaks.
- *
- * Evolution checking is deliberately best-effort. The dataset has no metadata for
- * ~700 cards from the newest sets, and staying quiet beats accusing a legal deck.
- */
+/** Deck construction rules: exactly 20 cards, at most 2 per name (printings of the same Pokémon compete for one slot); issues are codes with parameters, not sentences, since this module must not know the interface's language; evolution checking is best-effort because ~700 newest-set cards have no metadata, and staying quiet beats accusing a legal deck. */
 import { cardsById } from './gameData.ts'
 import type { Card, Deck } from './types.ts'
 

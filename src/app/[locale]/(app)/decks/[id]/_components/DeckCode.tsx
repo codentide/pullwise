@@ -11,15 +11,7 @@ import { buildDeckCode, type DeckCodeResult } from '@/lib/deckCode.ts'
 import { DECK_SIZE, deckSize } from '@/lib/deckRules.ts'
 import type { Deck } from '@/lib/types.ts'
 
-/**
- * The dialog that turns a deck into the code the game scans. Its open state
- * is controlled from outside — the `ExportButton` popover picks which of the
- * two export dialogs to show — rather than owning its own trigger button.
- *
- * Generation asks for no minimum: a deck still being built is still a real,
- * scannable thing, it just imports fewer cards. The dialog itself explains
- * what is blocking generation when something does.
- */
+/** Turns a deck into the code the game scans; open state is controlled from outside (the `ExportButton` popover picks which of the two export dialogs to show) rather than owning its own trigger; generation asks for no minimum, since a deck still being built is still a real, scannable thing. */
 export function DeckCodeDialog ({ deck, open, onOpenChange }: {
   deck: Deck
   open: boolean
@@ -60,8 +52,7 @@ function DeckCodeContent ({ result }: { result: DeckCodeResult }) {
   const [dataUrl, setDataUrl] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
-  // Dynamically imported: the QR renderer touches a canvas, and this dialog
-  // only ever opens client-side — no reason for the server bundle to carry it.
+  // Dynamically imported: the QR renderer touches a canvas, and this dialog only ever opens client-side — no reason for the server bundle to carry it.
   useEffect(() => {
     setDataUrl(null)
     if (!result.ok) return
@@ -88,15 +79,11 @@ function DeckCodeContent ({ result }: { result: DeckCodeResult }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Clipboard permission denied or unavailable — the code is still on
-      // screen via the QR itself, so there is nothing to recover here.
+      // Clipboard permission denied or unavailable — the code is still on screen via the QR itself, so there is nothing to recover here.
     }
   }
 
-  // PT-01's own pattern (the pack ranking's "OPEN THIS" panel): art on one
-  // side, everything to say about it on the other, in a row. Mirrored here at
-  // the caller's request — the QR is the thing a phone needs to find fast, so
-  // it takes the side a right-handed scan naturally lands on.
+  // PT-01's own pattern (the pack ranking's "OPEN THIS" panel), mirrored here at the caller's request — the QR takes the side a right-handed scan naturally lands on.
   return (
     <div className='mt-4 flex flex-wrap items-stretch gap-4'>
       <div className='flex min-w-[10rem] flex-1 flex-col justify-between'>

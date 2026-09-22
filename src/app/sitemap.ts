@@ -3,12 +3,7 @@ import { allPacks, cards, sets } from '@/lib/gameData.ts'
 import { routing } from '@/i18n/routing.ts'
 import { BASE_URL } from '@/i18n/site.ts'
 
-/**
- * The ~3,900 static pages per locale are the reason this file exists: every card
- * is a query someone types into a search engine ("pikachu ex which pack").
- * Each entry declares its alternate language so neither version competes with
- * the other.
- */
+/** The ~3,900 static pages per locale exist because every card is a query someone types into a search engine ("pikachu ex which pack"); each entry declares its alternate language so neither version competes with the other. */
 export default function sitemap (): MetadataRoute.Sitemap {
   const paths = [
     { path: '', priority: 1 },

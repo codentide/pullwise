@@ -3,14 +3,7 @@
 import * as RadixSelect from '@radix-ui/react-select'
 import { Icon } from './Icon.tsx'
 
-/**
- * Select built on Radix rather than the native element.
- *
- * The trade-off is deliberate and worth stating: a native `<select>` opens the
- * OS picker on mobile, which is better than anything custom. It is given up for
- * full visual control and for the ability to put an icon in an option — which
- * the native element cannot do, and which this app needs for energies.
- */
+/** Built on Radix rather than the native element: gives up the OS picker native `<select>` gets on mobile, in exchange for full visual control and icons in an option, which the native element can't do and this app needs for energies. */
 export interface Option {
   value: string
   label: string

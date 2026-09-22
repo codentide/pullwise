@@ -1,10 +1,6 @@
 import type { ComponentProps } from 'react'
 
-/**
- * The heading levels the system defines. Keeping them here stops the scale
- * drifting one size at a time — and the lint rule that bans raw <h1>-<h6> in
- * routes means extending this file is the only way to add one.
- */
+/** The heading levels the system defines — keeping them here stops the scale drifting one size at a time, and the lint rule banning raw <h1>-<h6> in routes means extending this file is the only way to add one. */
 const LEVELS = {
   /** 32px display — page titles that carry weight. */
   title: 'font-display text-title font-extrabold tracking-tight text-ink-high',
