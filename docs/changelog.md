@@ -5,6 +5,15 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.3.1] - 2026-09-21
+
+### Fixed
+
+- `NEXT_PUBLIC_SITE_URL`'s fallback pointed at `pullwise.app`, a domain that
+  was never actually registered — every canonical URL, hreflang tag, and
+  OG image would have shipped a dead domain. Corrected to the real Vercel
+  deployment, `pullwise-deck.vercel.app`.
+
 ## [0.3.0] - 2026-09-21
 
 Post-audit hardening batch (PWS-012) — an architecture audit against Next 16/
