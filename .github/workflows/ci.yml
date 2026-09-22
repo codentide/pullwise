@@ -32,3 +32,9 @@ jobs:
       # showed up once real pages were generated or the app was clicked
       # through by hand — never in lint, types or the unit tests.
       - run: pnpm build:only
+
+      # Next 16 writes real first-load JS numbers to
+      # .next/diagnostics/route-bundle-stats.json but no longer prints them —
+      # this is the mechanical check that a shared component doesn't silently
+      # drag heavy data into the public (site) pages' client bundle again.
+      - run: node scripts/check-bundle-budget.mjs
