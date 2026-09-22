@@ -5,6 +5,33 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.5.0] - 2026-09-22
+
+### Added
+
+- The missing-card hover preview (0.4.1) now shows what `Card` already
+  carries, not just art: rarity, set, type, weakness and evolves-from —
+  the same facts and the same `cardPage` translations the full card page
+  already shows, laid out compact (small art on the left, facts on the
+  right) for a quick glance rather than a read.
+
+### Fixed
+
+- 0.4.1's tooltip floated directly above whichever chip triggered it,
+  hand-positioned by measuring the chip — which for a chip anywhere but
+  the very top of the page could climb high enough to cover the pack's
+  own odds figures above it, the one thing it could least afford to hide.
+  Replaced the hand-rolled positioning with `@floating-ui/react-dom` —
+  already installed at zero extra weight, since it's the same engine
+  behind `@radix-ui/react-select`'s own popper — and defaulted to opening
+  below the chip rather than above: the library's `flip`/`shift` keep the
+  panel inside the viewport, but only a human call on which direction is
+  *usually* clear of other content actually avoids the odds figures in
+  practice. See `docs/decisions.md` for why, and for a second bug this
+  surfaced (the entrance animation and the library's own positioning both
+  wanted to animate `transform`, fixed by keeping positioning on
+  `top`/`left` instead).
+
 ## [0.4.1] - 2026-09-22
 
 ### Added

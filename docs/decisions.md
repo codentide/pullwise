@@ -381,3 +381,52 @@ was meant to also address — an 88px-displayed grid thumbnail still
 downloading its full 367×512 original — is **not** fixed by this change;
 real thumbnail-size reduction (pre-generated variants, or a different CDN
 strategy) stays open for later.
+
+## The missing-card hover preview (PWS-013 follow-up)
+
+Built in three passes in one sitting, each one the direct fix for what broke
+in the last — worth recording so the next pass doesn't rediscover the same
+two bugs by hand.
+
+**Pass 1: a per-chip floating tooltip, hand-positioned.** Measured the
+trigger chip's `getBoundingClientRect()`, decided above/below from an
+*estimated* panel height, positioned with plain `top`/`left`. Broke
+immediately: the estimate ran short for cards with more fields (a weakness
+line, an evolves-from line), so the panel opened "above" with less real
+room than it needed and climbed into whatever content happened to sit
+further up the page — for a chip low in an expanded "other pack" row, that
+was the winner card's own odds figures two sections up.
+
+**Pass 2: reserve space instead of floating.** Replaced the tooltip with a
+single preview slot in normal document flow below the chip row, so it could
+only ever push content down, never overlap it. Solved the overlap
+completely but traded it for a worse problem: hovering now reflowed the
+page under the cursor, which reads as broken in a way the original bug
+didn't. Rejected on sight.
+
+**Pass 3: `@floating-ui/react-dom`, not hand-rolled.** The actual fix.
+Already installed at zero extra weight — it's the positioning engine behind
+`@radix-ui/react-select`'s own popper (`node_modules/.pnpm` had it before
+`package.json` ever named it) — so using it directly costs nothing beyond
+declaring the dependency. Now the chip is a
+`useFloating` reference, the panel a floating element positioned by
+`flip()`/`shift()`/`autoUpdate`, portalled to `document.body` so no
+ancestor's `overflow` can clip it.
+
+Two things worth knowing for next time something like this comes up:
+
+- **`flip()`/`shift()` only respect the viewport (or an explicit boundary
+  element), not arbitrary sibling content.** They correctly conclude "there
+  is room above" when there's room above in viewport terms, even if a
+  dense card is sitting in that space. Switching libraries did not by
+  itself fix the pass-1 bug — defaulting `placement` to `'bottom'` instead
+  of `'top'` is what actually did, because empirically the space below a
+  chip on this page is reliably open (the rest of the list, then blank
+  page) where the space above is often another dense card. A heuristic, not
+  a guarantee.
+- **`floatingStyles`' convenience object positions via `transform`, which
+  collides with any entrance animation that also animates `transform`** —
+  the symptom was the panel visibly flying in from the wrong place before
+  settling, not a build error. Fixed by pulling `x`/`y`/`strategy` from
+  `useFloating()` directly and building a plain `top`/`left` style instead,
+  leaving `transform` free for `pw-roll` alone.

@@ -1,7 +1,7 @@
 {
   "name": "pullwise",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.5.0",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -27,6 +27,7 @@
     "sync:packs": "node scripts/sync-packs.mjs"
   },
   "dependencies": {
+    "@floating-ui/react-dom": "^2.1.9",
     "@radix-ui/react-checkbox": "^1.3.11",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-select": "^2.3.7",

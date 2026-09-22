@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, type CSSProperties, type Ref } from 'react'
+import { createPortal } from 'react-dom'
+import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/react-dom'
 import { useFormatter, useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
 import { CardImage } from '@/components/CardImage.tsx'
@@ -12,7 +14,7 @@ import { Link } from '@/i18n/navigation.ts'
 import { PackImage } from './PackImage.tsx'
 import { packHref, packMath, setName } from '@/lib/gameData.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
-import type { MissingCard, PackRef } from '@/lib/types.ts'
+import type { Card, MissingCard, PackRef } from '@/lib/types.ts'
 
 /** The predicate `coveredHere` already used to count what a pack covers, reused here to name the cards instead. */
 const missingIn = (missing: MissingCard[], pack: PackRef): MissingCard[] =>
@@ -230,7 +232,7 @@ function Figure ({ value, label, accent = false }: { value: string, label: strin
   )
 }
 
-/** The specific missing cards a pack covers, named — not just the count `coveredHere` already gave. Wraps rather than scrolling: a scrollable box would clip each chip's own hover-art tooltip at its edge, and in practice a pack's missing-card count stays well within a few wrapped rows (`DECK_SIZE` caps a single deck at 20). */
+/** The specific missing cards a pack covers, named — not just the count `coveredHere` already gave. */
 function MissingCardChips ({ cards }: { cards: MissingCard[] }) {
   return (
     <div className='flex flex-wrap gap-1'>
@@ -239,26 +241,65 @@ function MissingCardChips ({ cards }: { cards: MissingCard[] }) {
   )
 }
 
-/** A chip that shows the card's own art on hover (desktop) or tap (touch) — same hover/tap-toggle pattern as `Hint.tsx`, just with the whole chip as the trigger instead of an icon, and artwork instead of prose. */
-function CardChip ({ card }: { card: MissingCard['card'] }) {
+/** A chip that shows the card's own art and its already-known facts (rarity, set, type, weakness, evolves-from — whatever `Card` carries) in a floating preview on hover (desktop) or tap (touch). Positioning is `@floating-ui/react-dom` — already installed, at zero extra weight, as the engine behind `@radix-ui/react-select`'s own popper — rather than hand-rolled measurement: `flip()` and `shift()` keep the panel inside the *viewport*, and `autoUpdate` keeps that correct through scroll/resize for as long as the hover lasts. Note what they don't do: neither knows about arbitrary sibling content, only the viewport edge, so they can't on their own tell "there is room" from "there is room, but the pack's own odds figures are sitting in it." Defaulting to `bottom` rather than `top` is what actually avoids that in practice — the space below a chip is reliably open page, where above it is often another dense card. */
+function CardChip ({ card }: { card: Card }) {
   const [open, setOpen] = useState(false)
+  // `x`/`y` rather than the bundled `floatingStyles`: that convenience object positions via `transform`,
+  // which would fight the entrance animation's own `transform` (both can't own the property at once —
+  // the one applied last wins, and the visible symptom is the panel appearing to fly in from the wrong
+  // place before settling). Plain `top`/`left` leaves `transform` free for the animation alone.
+  const { refs, x, y, strategy } = useFloating({
+    open,
+    placement: 'bottom',
+    strategy: 'fixed',
+    middleware: [offset(8), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate
+  })
 
   return (
     <Pressable
-      onClick={() => setOpen((current) => !current)}
+      ref={refs.setReference}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
       onBlur={() => setOpen(false)}
-      className='group/chip relative inline-flex items-center gap-1 rounded-control border border-line bg-overlay px-2 py-1 text-label text-ink-mid transition-colors duration-150 hover:border-line-strong'
+      onClick={() => setOpen((current) => !current)}
+      className={`inline-flex items-center gap-1 rounded-control border px-2 py-1 text-label transition-colors duration-150 ${
+        open ? 'border-line-strong bg-raised text-ink-high' : 'border-line bg-overlay text-ink-mid hover:border-line-strong'
+      }`}
     >
       {card.name}
       <RarityPips rarity={card.rarity} />
-      <span
-        className={`pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-24 -translate-x-1/2 rounded-control border border-line-strong bg-raised p-1 transition-opacity duration-150 ${
-          open ? 'opacity-100' : 'opacity-0 group-hover/chip:opacity-100'
-        }`}
-      >
-        <CardImage card={card} radius='control' />
-      </span>
+      {open && createPortal(
+        <CardPreview card={card} ref={refs.setFloating} style={{ position: strategy, top: y ?? 0, left: x ?? 0 }} />,
+        document.body
+      )}
     </Pressable>
+  )
+}
+
+/** The floating panel's own content — positioning is entirely the caller's job (`ref`/`style` come straight from `useFloating`), this just lays out what goes inside it. Same shape as the card detail page's own header (`card/[id]/page.tsx`): art on the left in a fixed-width column, facts on the right — just smaller, since this is a hover glance, not the page itself. */
+function CardPreview ({ card, ref, style }: { card: Card, ref: Ref<HTMLDivElement>, style: CSSProperties }) {
+  const t = useTranslations('cardPage')
+
+  return (
+    <div
+      ref={ref}
+      style={style}
+      className='pw-roll pointer-events-none z-50 flex w-60 items-start gap-2 rounded-control border border-line-strong bg-raised p-2'
+    >
+      <CardImage card={card} radius='control' className='w-20 shrink-0' />
+      <div className='min-w-0'>
+        <p className='flex flex-wrap items-center gap-1 text-meta font-semibold text-ink-high'>
+          {card.name}
+          <RarityPips rarity={card.rarity} />
+        </p>
+        <p className='game-name mt-1 text-label text-ink-mid'>{setName(card.set)}</p>
+        {card.element != null && <p className='mt-1 text-label text-ink-mid'>{card.element}</p>}
+        {card.weakness != null && <p className='text-label text-ink-mid'>{t('weakTo', { type: card.weakness })}</p>}
+        {card.evolvesFrom != null && <p className='text-label text-ink-mid'>{t('evolvesFrom', { name: card.evolvesFrom })}</p>}
+      </div>
+    </div>
   )
 }
 
