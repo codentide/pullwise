@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useFormatter, useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon.tsx'
+import { CardImage } from '@/components/CardImage.tsx'
 import { Hint } from '@/components/Hint.tsx'
 import { Badge } from '@/components/Indicators.tsx'
 import { Heading } from '@/components/Heading.tsx'
@@ -229,20 +230,35 @@ function Figure ({ value, label, accent = false }: { value: string, label: strin
   )
 }
 
-/** The specific missing cards a pack covers, named — not just the count `coveredHere` already gave. Capped height so a pack covering many cards scrolls inside its own box instead of stretching the card around it. */
+/** The specific missing cards a pack covers, named — not just the count `coveredHere` already gave. Wraps rather than scrolling: a scrollable box would clip each chip's own hover-art tooltip at its edge, and in practice a pack's missing-card count stays well within a few wrapped rows (`DECK_SIZE` caps a single deck at 20). */
 function MissingCardChips ({ cards }: { cards: MissingCard[] }) {
   return (
-    <div className='flex max-h-40 flex-wrap gap-1 overflow-y-auto'>
-      {cards.map(({ card }) => (
-        <span
-          key={card.id}
-          className='inline-flex items-center gap-1 rounded-control border border-line bg-overlay px-2 py-1 text-label text-ink-mid'
-        >
-          {card.name}
-          <RarityPips rarity={card.rarity} />
-        </span>
-      ))}
+    <div className='flex flex-wrap gap-1'>
+      {cards.map(({ card }) => <CardChip key={card.id} card={card} />)}
     </div>
+  )
+}
+
+/** A chip that shows the card's own art on hover (desktop) or tap (touch) — same hover/tap-toggle pattern as `Hint.tsx`, just with the whole chip as the trigger instead of an icon, and artwork instead of prose. */
+function CardChip ({ card }: { card: MissingCard['card'] }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Pressable
+      onClick={() => setOpen((current) => !current)}
+      onBlur={() => setOpen(false)}
+      className='group/chip relative inline-flex items-center gap-1 rounded-control border border-line bg-overlay px-2 py-1 text-label text-ink-mid transition-colors duration-150 hover:border-line-strong'
+    >
+      {card.name}
+      <RarityPips rarity={card.rarity} />
+      <span
+        className={`pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-24 -translate-x-1/2 rounded-control border border-line-strong bg-raised p-1 transition-opacity duration-150 ${
+          open ? 'opacity-100' : 'opacity-0 group-hover/chip:opacity-100'
+        }`}
+      >
+        <CardImage card={card} radius='control' />
+      </span>
+    </Pressable>
   )
 }
 

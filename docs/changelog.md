@@ -5,6 +5,15 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.4.1] - 2026-09-22
+
+### Added
+
+- Each missing-card chip from `PWS-013` now shows the card's own art on
+  hover (desktop) or tap (touch) — a quick visual check before opening the
+  pack page itself. Reuses `CardImage`; no new data or sync work needed,
+  `Card` already carries everything `imageUrl()` needs.
+
 ## [0.4.0] - 2026-09-22
 
 ### Added
