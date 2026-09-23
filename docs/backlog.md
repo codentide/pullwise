@@ -10,15 +10,14 @@ are — one repo, one live list, no duplicate that drifts out of sync with itsel
 | [#2](https://github.com/codentide/pullwise/issues/2) | Shareable deck URLs with an OG image | Pairs with the closed #1: the link people actually post |
 | [#3](https://github.com/codentide/pullwise/issues/3) | Deploy Pullwise | `priority:high` — nobody but the developer can open the app today |
 | [#4](https://github.com/codentide/pullwise/issues/4) | Use the app by hand at least once | Every check so far has gone through Playwright, never a person |
-| [#6](https://github.com/codentide/pullwise/issues/6) | Fill the empty space in the pack page's header | Validated: the release date and sibling packs are both real, unused data |
 | [#7](https://github.com/codentide/pullwise/issues/7) | Type data for B3 onwards | `on-demand` — no code to write, waiting on upstream |
 | [#8](https://github.com/codentide/pullwise/issues/8) | Spanish card art | `on-demand` — same shape of wait |
 | [#9](https://github.com/codentide/pullwise/issues/9) | Real pull rates for B4 and B4a | `on-demand` — the fallback already empties itself when this lands |
 | [#10](https://github.com/codentide/pullwise/issues/10) | Accounts and cross-device sync | `needs clarification` — a "when," not an "if," but the auth method, backend and deck-URL model interaction are still undecided |
 | [PWS-011](https://github.com/codentide/pullwise/issues/11) | Show full card details in a hover/tap popover | Feasibility checked before filing: TCGdex has real attacks/abilities/HP, `sync-data.mjs` just doesn't pull them yet |
 | [PWS-014](https://github.com/codentide/pullwise/issues/14) | Generate our own pack/set logo assets, English and Spanish | `priority:low` — no external source has usable coverage (checked live: TCGdex has zero logos in Spanish, and its English coverage doesn't reach B4a) |
-| [PWS-015](https://github.com/codentide/pullwise/issues/15) | Translate element, weakness and rarity-grade names on /es pages | An existing, working `energies` i18n namespace sits unused on the card detail page, and Pullwise's own rarity grades have no i18n at all |
 | [PWS-016](https://github.com/codentide/pullwise/issues/16) | Find vector versions of the 10 energy-type icons | `needs research` — Bulbagarden Archives (today's PNG source) has no SVG variant; a couple of unconfirmed leads noted for next time |
+| [PWS-017](https://github.com/codentide/pullwise/issues/17) | Decklist paste silently picks the wrong card when two different cards share a name | `needs clarification` — reproduced live (Nidoran♀/♂ collide under `normalizeName`), but the actual fix (warn vs. disambiguate vs. something else) is a real product decision |
 
 ## Resolved, not through an issue
 
@@ -49,3 +48,12 @@ isn't lost:
   missing cards a recommended pack actually yields. `PackRanking` already
   computed `coveredHere`; now the winner pack and every "other pack" row have
   a collapsed-by-default "Show cards" toggle naming them (name + rarity).
+- [#6](https://github.com/codentide/pullwise/issues/6) — Fill the empty
+  space in the pack page's header. Reused already-loaded data: the set's
+  release date (`setPage.released`, already translated) and links to every
+  other pack in the same set (`set.packs`).
+- [PWS-015](https://github.com/codentide/pullwise/issues/15) — Translate
+  element, weakness and rarity-grade names on `/es` pages. Reused the
+  existing `energies` i18n namespace and added a new `grades` one;
+  `weaknessEnergy`/`isEnergy`/`Energy` moved into `src/lib/energy.ts` so
+  both a Server and a Client Component could share the normaliser.

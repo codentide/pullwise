@@ -5,6 +5,18 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.7.1] - 2026-09-23
+
+### Fixed
+
+- A deck card's copies stepper (+/-) and remove button were only revealed
+  on hover or keyboard focus, unlike the sibling copy-lights control right
+  next to them in the same slot — which already had a `hover:none` media
+  fallback for touch devices. On a touchscreen (no hover), those two
+  controls were effectively invisible with no way to discover them. Found
+  by hand while walking #4, not by the existing hover-simulating test
+  suite.
+
 ## [0.7.0] - 2026-09-22
 
 ### Added

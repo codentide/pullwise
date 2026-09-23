@@ -143,7 +143,7 @@ export function DeckCardTile ({
 
         <CopyLights owned={owned} needed={copies} onSet={onSetOwned} cardName={card.name} />
 
-        <div className='absolute left-1 top-1 flex items-center gap-px rounded-chip bg-base/85 opacity-0 backdrop-blur transition-opacity duration-150 focus-within:opacity-100 group-hover:opacity-100'>
+        <div className='absolute left-1 top-1 flex items-center gap-px rounded-chip bg-base/85 opacity-0 backdrop-blur transition-opacity duration-150 focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100'>
           <Button variant='ghost' onClick={() => onCopies(copies - 1)} aria-label={t('removeCopy', { name: card.name })} className='px-1 py-1'>
             <Icon name='minus' size={11} />
           </Button>
@@ -156,7 +156,7 @@ export function DeckCardTile ({
         <Pressable
           onClick={onRemove}
           aria-label={t('removeCard', { name: card.name })}
-          className='absolute right-1 top-1 rounded-chip bg-base/85 p-1 text-ink-mid opacity-0 backdrop-blur transition-opacity duration-150 hover:text-invalid focus-visible:opacity-100 group-hover:opacity-100'
+          className='absolute right-1 top-1 rounded-chip bg-base/85 p-1 text-ink-mid opacity-0 backdrop-blur transition-opacity duration-150 hover:text-invalid focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100'
         >
           <Icon name='trash' size={11} />
         </Pressable>
