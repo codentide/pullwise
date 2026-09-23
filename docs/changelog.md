@@ -5,6 +5,16 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.7.0] - 2026-09-22
+
+### Added
+
+- The pack page's header now fills the space its artwork used to leave
+  empty next to two short lines of text: the set's release date (reusing
+  `setPage.released`, already shown on `/set/[code]`) and links to every
+  other pack in the same set — previously the only way from one pack page
+  to another in the same set was back out through `/set/[code]`.
+
 ## [0.6.2] - 2026-09-22
 
 ### Fixed

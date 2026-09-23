@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation.ts'
 import { routing } from '@/i18n/routing.ts'
 import { SiteChrome } from '../../../_components/SiteChrome.tsx'
 import { CardGridLinks } from '../../../_components/CardGridLinks.tsx'
-import { allPacks, cardsInPack, packMath, rarityBreakdown, setName } from '@/lib/gameData.ts'
+import { allPacks, cardsInPack, packMath, rarityBreakdown, setName, setsByCode } from '@/lib/gameData.ts'
 import { Heading } from '@/components/Heading.tsx'
 import { PackImage } from '@/components/PackImage.tsx'
 import { localeAlternates } from '@/i18n/site.ts'
@@ -54,8 +54,12 @@ export default async function PackPage ({ params }: Props) {
   if (pack == null) notFound()
 
   const t = await getTranslations('packPage')
+  const tSet = await getTranslations('setPage')
+  const format = await getFormatter()
   const cards = cardsInPack(pack.set, pack.pack)
   const breakdown = rarityBreakdown(pack.set, pack.pack)
+  const set = setsByCode.get(pack.set)
+  const siblingPacks = set?.packs.filter((name) => name !== pack.pack) ?? []
 
   return (
     <SiteChrome>
@@ -74,7 +78,23 @@ export default async function PackPage ({ params }: Props) {
               {setName(pack.set)}
             </Link>
             {' · '}{t('cardCount', { count: cards.length })}
+            {set != null && ` · ${tSet('released', { date: format.dateTime(new Date(set.releaseDate), { dateStyle: 'long' }) })}`}
           </p>
+          {siblingPacks.length > 0 && (
+            <ul className='mt-3 flex flex-wrap gap-2'>
+              {siblingPacks.map((siblingPack) => (
+                <li key={siblingPack}>
+                  <Link
+                    href={`/pack/${pack.set}/${encodeURIComponent(siblingPack)}`}
+                    className='flex items-center gap-2 rounded-control border border-line-control py-1 pl-1 pr-2 text-label text-ink-mid transition-colors duration-150 hover:border-accent hover:text-ink-high'
+                  >
+                    <PackImage set={pack.set} pack={siblingPack} radius='control' className='w-6' />
+                    {siblingPack}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </header>
 
