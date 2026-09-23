@@ -31,3 +31,21 @@ export function resolvedEnergy (deck: Deck): ResolvedEnergy {
     ? { energy: deck.energy, inferred: false }
     : { energy: inferEnergy(deck), inferred: true }
 }
+
+/** The ten TCG energy symbols. Lives here rather than a component so it can be reused by both client and server code without crossing the RSC boundary. */
+export type Energy =
+  | 'grass' | 'fire' | 'water' | 'lightning' | 'psychic'
+  | 'fighting' | 'darkness' | 'metal' | 'dragon' | 'colorless'
+
+const ENERGIES: readonly Energy[] = [
+  'grass', 'fire', 'water', 'lightning', 'psychic',
+  'fighting', 'darkness', 'metal', 'dragon', 'colorless'
+]
+
+export const isEnergy = (value: string): value is Energy => (ENERGIES as string[]).includes(value)
+
+/** `card.weakness` is a capitalised game string (`'Fire'`, `'Dark'`) that doesn't match the `Energy` keys directly — normalises it to one, or `null` if it's not a recognised energy. */
+export const weaknessEnergy = (weakness: string): Energy | null => {
+  const key = weakness.toLowerCase() === 'dark' ? 'darkness' : weakness.toLowerCase()
+  return isEnergy(key) ? key : null
+}

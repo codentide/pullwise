@@ -8,6 +8,7 @@ import { StaticCardImage } from '../../_components/StaticCardImage.tsx'
 import { CardGridLinks } from '../../_components/CardGridLinks.tsx'
 import { cards, cardsById, imageUrl, setName } from '@/lib/gameData.ts'
 import { cardOdds } from '@/lib/deckAnalysis.ts'
+import { isEnergy, weaknessEnergy } from '@/lib/energy.ts'
 import { Heading } from '@/components/Heading.tsx'
 import { localeAlternates } from '@/i18n/site.ts'
 
@@ -58,6 +59,7 @@ export default async function CardPage ({ params }: Props) {
   if (card == null) notFound()
 
   const t = await getTranslations('cardPage')
+  const tEnergies = await getTranslations('energies')
   const format = await getFormatter()
   const odds = cardOdds(card)
   const best = odds[0]
@@ -65,6 +67,10 @@ export default async function CardPage ({ params }: Props) {
 
   const percent = (value: number): string =>
     format.number(value, { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+  const elementName = card.element != null && isEnergy(card.element) ? tEnergies(card.element) : card.element
+  const weakEnergy = card.weakness != null ? weaknessEnergy(card.weakness) : null
+  const weaknessName = weakEnergy != null ? tEnergies(weakEnergy) : card.weakness
 
   return (
     <SiteChrome>
@@ -80,8 +86,8 @@ export default async function CardPage ({ params }: Props) {
               </Link>
               {' · '}{t('cardNumber', { number: card.number })}
               {' · '}{t('rarity', { rarity: card.rarity })}
-              {card.element != null && ` · ${card.element}`}
-              {card.weakness != null && ` · ${t('weakTo', { type: card.weakness })}`}
+              {card.element != null && ` · ${elementName}`}
+              {card.weakness != null && ` · ${t('weakTo', { type: weaknessName ?? card.weakness })}`}
             </p>
             {card.evolvesFrom != null && (
               <p className='mt-1 text-meta text-ink-mid'>{t('evolvesFrom', { name: card.evolvesFrom })}</p>

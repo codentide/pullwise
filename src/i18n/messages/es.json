@@ -195,6 +195,13 @@
     "dragon": "Dragón",
     "colorless": "Incoloro"
   },
+  "grades": {
+    "1": "Base",
+    "2": "Constante",
+    "3": "Aguda",
+    "4": "Óptima",
+    "5": "Cúspide"
+  },
   "groups": {
     "basic": "Básicos",
     "evolution": "Evoluciones",

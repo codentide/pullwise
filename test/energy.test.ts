@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { inferEnergy, resolvedEnergy } from '../src/lib/energy.ts'
+import { inferEnergy, resolvedEnergy, isEnergy, weaknessEnergy } from '../src/lib/energy.ts'
 import type { Deck } from '../src/lib/types.ts'
 
 const deck = (entries: Array<[string, number]>, energy?: string[]): Deck => ({
@@ -47,4 +47,21 @@ test('la inferencia nunca excede los 3 tipos que la Energy Zone realmente tiene'
   ]))
   assert.equal(result.length, 3)
   assert.deepEqual(result.slice(0, 2).sort(), ['lightning', 'metal'])
+})
+
+test('isEnergy reconoce las diez claves y rechaza lo demás', () => {
+  assert.equal(isEnergy('grass'), true)
+  assert.equal(isEnergy('darkness'), true)
+  assert.equal(isEnergy('Fire'), false) // el guard no normaliza mayúsculas por sí solo
+  assert.equal(isEnergy('unknown'), false)
+})
+
+test('weaknessEnergy normaliza mayúsculas y el caso especial "Dark" -> "darkness"', () => {
+  assert.equal(weaknessEnergy('Fire'), 'fire')
+  assert.equal(weaknessEnergy('Dark'), 'darkness')
+  assert.equal(weaknessEnergy('Water'), 'water')
+})
+
+test('weaknessEnergy devuelve null para un valor que no es una energía real', () => {
+  assert.equal(weaknessEnergy('Unknown'), null)
 })

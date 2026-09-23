@@ -5,6 +5,24 @@ bump. See `CLAUDE.md`'s Versioning section for what earns which bump.
 Versions before this file existed aren't reconstructed — `docs/decisions.md`
 has that history.
 
+## [0.6.2] - 2026-09-22
+
+### Fixed
+
+- `card/[id]/page.tsx` printed the element and weakness type as raw literal
+  strings even on `/es` — a Spanish visitor saw "grass" and "débil a Fire".
+  A complete `energies` i18n namespace already existed, already used
+  correctly elsewhere (`CardFilters.tsx`, `DeckEditor.tsx`, `DeckCode.tsx`),
+  just never reused here. Now both reuse it, with `weaknessEnergy()`
+  (moved from `PackRanking.tsx` into `src/lib/energy.ts`, alongside `Energy`
+  and `isEnergy`, so both a Server Component and a Client Component can
+  share it) reconciling `card.weakness`'s raw game casing against the
+  namespace's own keys.
+- `RarityPips`' shown grade name (Base/Steady/Keen/Prime/Apex — Pullwise's
+  own 5-grade system, not the game's) was a hardcoded English constant with
+  no i18n at all, anywhere it renders. Now translated via a new `grades`
+  namespace.
+
 ## [0.6.1] - 2026-09-22
 
 ### Fixed

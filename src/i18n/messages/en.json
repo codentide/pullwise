@@ -195,6 +195,13 @@
     "dragon": "Dragon",
     "colorless": "Colorless"
   },
+  "grades": {
+    "1": "Base",
+    "2": "Steady",
+    "3": "Keen",
+    "4": "Prime",
+    "5": "Apex"
+  },
   "groups": {
     "basic": "Basic",
     "evolution": "Evolutions",

@@ -1,4 +1,5 @@
-import { gradeOf, GRADE_NAMES, type Grade } from '@/lib/rarity.ts'
+import { useTranslations } from 'next-intl'
+import { gradeOf, type Grade } from '@/lib/rarity.ts'
 
 /** Rarity is always doubly encoded: colour **and** pips, never colour alone — neither for colour blindness nor for 24px thumbnails, where a hue is a guess. */
 const TONE: Record<Grade, string> = {
@@ -11,7 +12,8 @@ const TONE: Record<Grade, string> = {
 
 export function RarityPips ({ rarity, showName = false, className = '' }: { rarity: string, showName?: boolean, className?: string }) {
   const grade = gradeOf(rarity)
-  const name = GRADE_NAMES[grade]
+  const t = useTranslations('grades')
+  const name = t(String(grade))
 
   return (
     <span

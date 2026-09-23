@@ -14,6 +14,7 @@ import { RarityPips } from '@/components/Rarity.tsx'
 import { Link } from '@/i18n/navigation.ts'
 import { PackImage } from './PackImage.tsx'
 import { packHref, packMath, setName } from '@/lib/gameData.ts'
+import { weaknessEnergy } from '@/lib/energy.ts'
 import type { DeckAnalysis } from '@/lib/deckAnalysis.ts'
 import type { Card, MissingCard, PackRef } from '@/lib/types.ts'
 
@@ -280,11 +281,6 @@ function CardChip ({ card }: { card: Card }) {
 }
 
 /** The secondary facts (element, weakness) joined with " · " — the set itself renders separately, as `SetLogo`, not as text in this line. Filters out whichever aren't present on this card instead of leaving a trailing separator. */
-/** `weakness` comes from the dataset capitalised and, for one energy, spelled differently from `Energy`'s own key ("Dark" vs. "darkness") — the same 10-symbol vocabulary `energy.ts`/`EnergyIcon` already use everywhere else, just needing that one name reconciled before `isEnergy` can recognise it. */
-const weaknessEnergy = (weakness: string) => {
-  const key = weakness.toLowerCase() === 'dark' ? 'darkness' : weakness.toLowerCase()
-  return isEnergy(key) ? key : null
-}
 
 /**
  * PWS-014 preview, not the shipped answer: TCGdex has a real wordmark-only logo
